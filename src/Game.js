@@ -27,26 +27,26 @@ const game = {
                 return false
             }
 
-            if (this.state[y + indexY][x - 1].type === "block") {
+            if (this.state[y + indexY]?.[x - 1]?.type === "block") {
                 return true
             }
 
             return false
         })
 
-        
+
         const haveBlocksOnRight = this.atualFigure.figure.some((line, indexY) => {
             if (line[0].type === "null") {
                 return false
             }
 
-            if (this.state[y + indexY][x + line.length].type === "block") {
+            if (this.state[y + indexY]?.[x + line.length]?.type === "block") {
                 return true
             }
 
             return false
         })
-        
+
 
         if (direction === "right" && !haveBlocksOnRight) {
             if (this.atualFigure.x + this.atualFigure.figure[0].length <= 14)
