@@ -1,4 +1,5 @@
-import { game, playGame, collision, addToState, spawnNewFigure } from "./Game.js"
+import { game, collision, addToState, spawnNewFigure } from "./Game.js"
+import { range } from "./Util.js"
 
 const acelerate = () => {
     if(!game.moveLock && !collision()){
@@ -8,21 +9,31 @@ const acelerate = () => {
             spawnNewFigure()
         }
         game.moveLock = true
-        setTimeout(() => game.moveLock = false, 100);
+        setTimeout(() => game.moveLock = false, 100)
     }
 }
 
-const returnNormalVel = () => {
-    
+const rotate = () => {
+    const { figure } = game.atualFigure
+    const newFigure = []
+
+    for( const block of range(0, figure[0].length)){
+        const newLine = []
+        for(const line of range(0,figure.length)){
+            newLine.unshift(figure[line][block])
+        }
+        newFigure.push(newLine)
+    }
+
+    game.atualFigure.figure = newFigure
 }
-
-
 
 const keyDownFunctions = {
     "ArrowLeft": () => game.move("left"),
     "ArrowRight": () => game.move("right"),
     "a": () => game.move("left"),
-    "d": () => game.move("right")
+    "d": () => game.move("right"),
+    'r': rotate
 }
 
 const keyPressFunctions = {
@@ -30,17 +41,8 @@ const keyPressFunctions = {
     "s": acelerate
 }
 
-const keyUpFunctions = {
-    "ArrowDown": returnNormalVel,
-    "s": returnNormalVel
-}
-
 window.onkeypress = event => {
     keyPressFunctions[event.key]?.()
-}
-
-window.onkeyup = event => {
-    keyUpFunctions[event.key]?.()
 }
 
 window.onkeydown = event => {
