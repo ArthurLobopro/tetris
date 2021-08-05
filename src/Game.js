@@ -57,12 +57,46 @@ const spawnNewFigure = () => {
     game.atualFigure.figure = figures.random()
     game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.figure[0].length / 2)
 }
+const collision = () => {
+    const { x, y, figure } = game.atualFigure
+
+    const bottomY = y + figure.length
+
+    if (bottomY === game.height) {
+        return true
+    }
+
+    const colidBlock = figure[figure.length -1 ].some( (block, indexX) => {
+        if(block.type === "null"){
+            return false
+        }
+
+        if(game.state[bottomY][x + indexX].type === 'block'){
+            return true
+        }
+
+        return false
+    })
+
+    return colidBlock
+}
+
+const playGame = () => {
+    if (!collision()) {
+        game.atualFigure.y = game.atualFigure.y + 1
+        return
+    }
+
+    spawnNewFigure()
+}
+
 game.state = getNewGameState()
 spawnNewFigure()
 
 canvas.width = (game.width * game.squareWidth) + game.width - 1
 canvas.height = (game.height * game.squareWidth) + game.height - 1
 
+setInterval(playGame, 500);
 
 const keyFunctions = {
     "ArrowLeft": () => game.move("left"),
