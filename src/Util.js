@@ -1,5 +1,6 @@
 const range = (min,max,pass=1) => {
     let array = []
+    if(min > max && pass > 0){ pass*=-1 }
     for(let i = min;i<max;i+=pass){ array.push(i) }
     return array
 }
