@@ -69,7 +69,10 @@ const addToState = () => {
 
             game.state[y + indexY] = game.state[y + indexY].map((stateBlock, stateX) => {
                 if ([x + indexX] == stateX) {
-                    return { type: 'block', color }
+                    if(block.type === 'block'){
+                        return { ...block, color: game.atualFigure.color}
+                    }
+                    return stateBlock                    
                 }
 
                 return stateBlock
@@ -87,16 +90,19 @@ const collision = () => {
         return true
     }
 
-    const colidBlock = figure[figure.length - 1].some((block, indexX) => {
-        if (block.type === "null") {
+    const colidBlock = figure.some( (line, indexY) => {
+        return line.some((block, indexX) => {
+            if (block.type === "null") {
+                return false
+            }
+    
+            console.log(game.state[y + indexY][x + indexX]);
+            if (game.state[y + indexY + 1][x + indexX].type === 'block') {
+                return true
+            }
+    
             return false
-        }
-
-        if (game.state[bottomY][x + indexX].type === 'block') {
-            return true
-        }
-
-        return false
+        })
     })
 
     return colidBlock
