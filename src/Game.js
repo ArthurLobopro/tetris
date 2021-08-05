@@ -20,12 +20,40 @@ const game = {
     move(direction) {
         if (this.moveLock) return
 
-        if (direction === "right") {
+        const { y, x } = this.atualFigure
+
+        const haveBlocksOnLeft = this.atualFigure.figure.some((line, indexY) => {
+            if (line[0].type === "null") {
+                return false
+            }
+
+            if (this.state[y + indexY][x - 1].type === "block") {
+                return true
+            }
+
+            return false
+        })
+
+        
+        const haveBlocksOnRight = this.atualFigure.figure.some((line, indexY) => {
+            if (line[0].type === "null") {
+                return false
+            }
+
+            if (this.state[y + indexY][x + line.length].type === "block") {
+                return true
+            }
+
+            return false
+        })
+        
+
+        if (direction === "right" && !haveBlocksOnRight) {
             if (this.atualFigure.x + this.atualFigure.figure[0].length <= 14)
                 this.atualFigure.x++
         }
 
-        if (direction === "left") {
+        if (direction === "left" && !haveBlocksOnLeft) {
             if (this.atualFigure.x > 0)
                 this.atualFigure.x--
         }
@@ -70,11 +98,11 @@ const removeCompleteLines = () => {
         voidLine.push(nullBlock)
     }
 
-    game.state = game.state.filter( line => {
+    game.state = game.state.filter(line => {
 
-        return line.some( block => {
+        return line.some(block => {
             return block.type === 'null'
-        } )
+        })
 
     })
 
@@ -94,10 +122,10 @@ const addToState = () => {
 
             game.state[y + indexY] = game.state[y + indexY].map((stateBlock, stateX) => {
                 if ([x + indexX] == stateX) {
-                    if(block.type === 'block'){
+                    if (block.type === 'block') {
                         return { ...block, color }
                     }
-                    return stateBlock                    
+                    return stateBlock
                 }
 
                 return stateBlock
@@ -117,16 +145,16 @@ const collision = () => {
         return true
     }
 
-    const colidBlock = figure.some( (line, indexY) => {
+    const colidBlock = figure.some((line, indexY) => {
         return line.some((block, indexX) => {
             if (block.type === "null") {
                 return false
             }
-    
+
             if (game.state[y + indexY + 1][x + indexX].type === 'block') {
                 return true
             }
-    
+
             return false
         })
     })
