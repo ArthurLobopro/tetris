@@ -57,6 +57,26 @@ const spawnNewFigure = () => {
     game.atualFigure.figure = figures.random()
     game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.figure[0].length / 2)
 }
+const addToState = () => {
+    const { x, y, figure, color } = game.atualFigure
+
+    console.table({ x, y });
+
+    figure.forEach( (line, indexY) => {
+
+        line.forEach( (block, indexX) => {
+
+            game.state[y + indexY] = game.state[y + indexY].map( (stateBlock, stateX) => {
+                if([x + indexX] == stateX){
+                    return { type: 'block', color}
+                }
+                
+                return stateBlock
+            })
+        })
+    })
+}
+
 const collision = () => {
     const { x, y, figure } = game.atualFigure
 
@@ -87,6 +107,7 @@ const playGame = () => {
         return
     }
 
+    addToState()
     spawnNewFigure()
 }
 
