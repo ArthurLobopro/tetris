@@ -2,9 +2,9 @@ import { game, collision, addToState, spawnNewFigure } from "./Game.js"
 import { range } from "./Util.js"
 
 const acelerate = () => {
-    if(!game.moveLock && !collision()){
+    if (!game.moveLock && !collision()) {
         game.atualFigure.y++
-        if(collision()){
+        if (collision()) {
             addToState()
             spawnNewFigure()
         }
@@ -17,9 +17,9 @@ const rotate = () => {
     const { figure } = game.atualFigure
     const newFigure = []
 
-    for( const block of range(0, figure[0].length)){
+    for (const block of range(0, figure[0].length)) {
         const newLine = []
-        for(const line of range(0,figure.length)){
+        for (const line of range(0, figure.length)) {
             newLine.unshift(figure[line][block])
         }
         newFigure.push(newLine)
