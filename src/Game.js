@@ -1,5 +1,6 @@
 import { range } from "./Util.js"
 import { figures } from "./Figures.js"
+import "./Controllers.js"
 
 const canvas = document.getElementById('game')
 
@@ -8,6 +9,7 @@ const game = {
     width: 15,
     squareWidth: 16,
     state: [],
+    interval: null,
     atualFigure: {
         figure: [[]],
         x: 0,
@@ -58,6 +60,29 @@ const spawnNewFigure = () => {
     game.atualFigure.figure = figures.random()
     game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.figure[0].length / 2)
 }
+
+const removeCompleteLines = () => {
+    const nullBlock = { type: "null" }
+
+    const voidLine = []
+
+    for (let i in range(0, game.width)) {
+        voidLine.push(nullBlock)
+    }
+
+    game.state = game.state.filter( line => {
+
+        return line.some( block => {
+            return block.type === 'null'
+        } )
+
+    })
+
+    while (game.state.length < game.height) {
+        game.state.unshift(voidLine)
+    }
+}
+
 const addToState = () => {
     const { x, y, figure, color } = game.atualFigure
 
@@ -70,7 +95,7 @@ const addToState = () => {
             game.state[y + indexY] = game.state[y + indexY].map((stateBlock, stateX) => {
                 if ([x + indexX] == stateX) {
                     if(block.type === 'block'){
-                        return { ...block, color: game.atualFigure.color}
+                        return { ...block, color }
                     }
                     return stateBlock                    
                 }
@@ -79,6 +104,8 @@ const addToState = () => {
             })
         })
     })
+
+    removeCompleteLines()
 }
 
 const collision = () => {
@@ -96,7 +123,6 @@ const collision = () => {
                 return false
             }
     
-            console.log(game.state[y + indexY][x + indexX]);
             if (game.state[y + indexY + 1][x + indexX].type === 'block') {
                 return true
             }
@@ -110,7 +136,7 @@ const collision = () => {
 
 const playGame = () => {
     if (!collision()) {
-        game.atualFigure.y = game.atualFigure.y + 1
+        game.atualFigure.y++
         return
     }
 
@@ -124,20 +150,6 @@ spawnNewFigure()
 canvas.width = (game.width * game.squareWidth) + game.width - 1
 canvas.height = (game.height * game.squareWidth) + game.height - 1
 
-setInterval(playGame, 500);
+game.interval = setInterval(playGame, 500);
 
-const keyFunctions = {
-    "ArrowLeft": () => game.move("left"),
-    "ArrowDown": () => game.move("down"),
-    "ArrowRight": () => game.move("right"),
-
-    "a": () => game.move("left"),
-    "s": () => game.move("down"),
-    "d": () => game.move("right")
-}
-
-window.onkeydown = event => {
-    keyFunctions[event.key]?.()
-}
-
-export { game }
+export { game, playGame, collision, addToState, spawnNewFigure }
