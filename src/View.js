@@ -41,15 +41,18 @@ const drawAtualFigure = () => {
     const { squareWidth } = game
     const { x, y , figure, color } = game.atualFigure
 
-    ctx.fillStyle = color
+    
     
     figure.forEach( ( line, indexY ) => {
         line.forEach( (block, indexX) => {
-            ctx.fillRect(
-                ( x + indexX) * squareWidth + (1 * x + indexX),
-                ( y + indexY ) * squareWidth + (1 * y + indexY),
-                squareWidth, squareWidth
-            )
+            if(block.type === 'block'){
+                ctx.fillStyle =  color
+                ctx.fillRect(
+                    ( x + indexX) * squareWidth + (1 * x + indexX),
+                    ( y + indexY ) * squareWidth + (1 * y + indexY),
+                    squareWidth, squareWidth
+                )
+            }
         })
     })
 }
