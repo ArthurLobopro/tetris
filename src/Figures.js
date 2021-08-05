@@ -81,4 +81,17 @@ figures.types.push([
         { type: 'block' }
     ]
 ])
+
+figures.types.push([
+    [
+        { type: 'null' },
+        { type: 'block' },
+        { type: 'null' }
+    ],
+    [
+        { type: 'block' },
+        { type: 'block' },
+        { type: 'block' }
+    ]
+])
 export { figures }
