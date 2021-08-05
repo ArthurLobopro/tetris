@@ -1,4 +1,5 @@
 import { range } from "./Util.js"
+import { figures } from "./Figures.js"
 
 const canvas = document.getElementById('game')
 
@@ -35,17 +36,17 @@ const game = {
 }
 
 const getNewGameState = () => {
-    const nullBlock = { type: "null"}
-    
+    const nullBlock = { type: "null" }
+
     const line = []
 
-    for(let i in range(0,game.width)){
+    for (let i in range(0, game.width)) {
         line.push(nullBlock)
     }
 
     const table = []
 
-    for(let i in range(0,game.height)){
+    for (let i in range(0, game.height)) {
         table.push(line)
     }
 
@@ -62,15 +63,15 @@ const addToState = () => {
 
     console.table({ x, y });
 
-    figure.forEach( (line, indexY) => {
+    figure.forEach((line, indexY) => {
 
-        line.forEach( (block, indexX) => {
+        line.forEach((block, indexX) => {
 
-            game.state[y + indexY] = game.state[y + indexY].map( (stateBlock, stateX) => {
-                if([x + indexX] == stateX){
-                    return { type: 'block', color}
+            game.state[y + indexY] = game.state[y + indexY].map((stateBlock, stateX) => {
+                if ([x + indexX] == stateX) {
+                    return { type: 'block', color }
                 }
-                
+
                 return stateBlock
             })
         })
@@ -86,12 +87,12 @@ const collision = () => {
         return true
     }
 
-    const colidBlock = figure[figure.length -1 ].some( (block, indexX) => {
-        if(block.type === "null"){
+    const colidBlock = figure[figure.length - 1].some((block, indexX) => {
+        if (block.type === "null") {
             return false
         }
 
-        if(game.state[bottomY][x + indexX].type === 'block'){
+        if (game.state[bottomY][x + indexX].type === 'block') {
             return true
         }
 
