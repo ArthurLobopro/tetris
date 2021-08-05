@@ -4,4 +4,6 @@ const range = (min,max,pass=1) => {
     return array
 }
 
-export { range }
+const randint = (min,max) => Math.floor(Math.random() * (max-min+1)) + min
+
+export { range, randint }
