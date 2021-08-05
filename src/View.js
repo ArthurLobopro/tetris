@@ -41,7 +41,6 @@ const drawSquares = () => {
             const color = block.type === "null" ? "#1e1e1e" : block.color
 
             ctx.fillStyle = color
-            console.log(`Index Y: ${indexY}\nIndex X: ${indexX}`);
             ctx.fillRect(indexX * squareWidth + (1 * indexX), indexY * squareWidth + (1 * indexY), squareWidth, squareWidth)
             
         })
@@ -49,11 +48,29 @@ const drawSquares = () => {
     })
 }
 
+const drawAtualFigure = () => {
+    const { squareWidth } = game
+    const { x, y , figure, color } = game.atualFigure
+
+    ctx.fillStyle = color
+    
+    figure.forEach( ( line, indexY ) => {
+        line.forEach( (block, indexX) => {
+            ctx.fillRect(
+                ( x + indexX) * squareWidth + (1 * x + indexX),
+                ( y + indexY ) * squareWidth + (1 * y + indexY),
+                squareWidth, squareWidth
+            )
+        })
+    })
+}
+
 const renderAll = () => {
     drawBackground()
     drawLines()
     drawSquares()
-    controlSquares()
+    // controlSquares()
+    drawAtualFigure()
 }
 
 export { renderAll }
