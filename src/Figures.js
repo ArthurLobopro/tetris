@@ -28,4 +28,57 @@ figures.types.push([
     ]
 ])
 
+figures.types.push([
+    [
+        { type: 'block' },
+        { type: 'block' },
+        { type: 'null' }
+    ],
+    [
+        { type: 'null' },
+        { type: 'block' },
+        { type: 'block' }
+    ]
+
+])
+
+figures.types.push([
+    [
+        { type: 'null' },
+        { type: 'block' },
+        { type: 'block' }
+    ],
+    [
+        { type: 'block' },
+        { type: 'block' },
+        { type: 'null' }
+    ]
+
+])
+
+figures.types.push([
+    [
+        { type: 'block' },
+        { type: 'null' },
+        { type: 'null' }
+    ],
+    [
+        { type: 'block' },
+        { type: 'block' },
+        { type: 'block' }
+    ]
+])
+
+figures.types.push([
+    [
+        { type: 'null' },
+        { type: 'null' },
+        { type: 'block' }
+    ],
+    [
+        { type: 'block' },
+        { type: 'block' },
+        { type: 'block' }
+    ]
+])
 export { figures }
