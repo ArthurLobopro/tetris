@@ -23,17 +23,6 @@ const drawLines = () => {
     }
 }
 
-//Temp
-const controlSquares = () => {
-    const { squareWidth } = game
-    //Quadrados nos cantos
-    ctx.fillStyle = '#f55c47'
-    ctx.fillRect(0,0,squareWidth,squareWidth)
-    ctx.fillRect(canvas.width - squareWidth, 0, squareWidth, squareWidth)
-    ctx.fillRect(0,canvas.height - squareWidth,squareWidth,squareWidth)
-    ctx.fillRect(canvas.width - squareWidth, canvas.height - squareWidth, squareWidth, squareWidth)
-}
-
 const drawSquares = () => {
     const { state, squareWidth } = game
     state.forEach( (line, indexY) => {
@@ -69,7 +58,6 @@ const renderAll = () => {
     drawBackground()
     drawLines()
     drawSquares()
-    // controlSquares()
     drawAtualFigure()
 }
 
