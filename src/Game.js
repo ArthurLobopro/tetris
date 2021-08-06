@@ -12,6 +12,7 @@ const game = {
     squareWidth: 16,
     state: [],
     interval: null,
+    pointsPerBlock: 10,
     pontos: 0,
     nextFigure: {
         figure: figures.random(),
@@ -76,6 +77,30 @@ const game = {
 
 }
 
+//#region Pontuação
+
+const addLinePoints = () => {
+    game.pontos += game.pointsPerBlock * game.width * 2
+}
+
+const addFigurePoints = () => {
+    const { figure } = game.atualFigure
+
+    let figureBlocks = 0
+
+    figure.forEach( line => {
+        line.forEach( block => {
+            if(block.type === 'block'){
+                figureBlocks++
+            }
+        })
+    } )
+    
+    game.pontos += figureBlocks * game.pointsPerBlock
+}
+
+//#endregion
+
 const getNewGameState = () => {
     const nullBlock = { type: "null" }
 
@@ -101,6 +126,7 @@ const spawnNewFigure = () => {
     game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.figure[0].length / 2)
 }
 
+//#region Update game.state
 const removeCompleteLines = () => {
     const nullBlock = { type: "null" }
 
@@ -119,6 +145,7 @@ const removeCompleteLines = () => {
     })
 
     while (game.state.length < game.height) {
+        addLinePoints()
         game.state.unshift(voidLine)
     }
 }
@@ -147,6 +174,7 @@ const addToState = () => {
 
     removeCompleteLines()
 }
+//#endregion
 
 const collision = () => {
     const { x, y, figure } = game.atualFigure
@@ -178,10 +206,13 @@ const playGame = () => {
     if (!collision()) {
         game.atualFigure.y++
         return
+    }else{
+        addFigurePoints()
+        addToState()
+        spawnNewFigure()
     }
 
-    addToState()
-    spawnNewFigure()
+    document.getElementById('pontos').innerText = game.pontos
 }
 
 game.state = getNewGameState()
@@ -195,4 +226,4 @@ nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextC
 
 game.interval = setInterval(playGame, 500);
 
-export { game, playGame, collision, addToState, spawnNewFigure }
+export { game, playGame, collision, addToState, spawnNewFigure, addFigurePoints }
