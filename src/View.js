@@ -7,7 +7,7 @@ const gameCtx = gameCanvas.getContext('2d')
 const nextCanvas = document.getElementById('next')
 const nextCtx = nextCanvas.getContext('2d')
 
-
+//#region Next Figure Draw
 const drawNextFigure = () => {
     const { squareWidth } = game
     const { width, height } = game.nextCanvasSize
@@ -49,7 +49,9 @@ const drawNextBackground = () => {
     nextCtx.fillStyle = '#1E1E1E'
     nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height)
 }
+//#endregion
 
+//#region Main Draw
 const drawBackground = () => {
     gameCtx.fillStyle = '#1E1E1E'
     gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height)
@@ -100,6 +102,7 @@ const drawAtualFigure = () => {
         })
     })
 }
+//#endregion
 
 const renderAll = () => {
     // Main game
