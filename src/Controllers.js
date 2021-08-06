@@ -29,12 +29,19 @@ const rotate = () => {
     game.atualFigure.figure = newFigure
 }
 
+const downFigure = () => {
+    while (!collision()) {
+        playGame()
+    }
+}
+
 const keyDownFunctions = {
     "ArrowLeft": () => game.move("left"),
     "ArrowRight": () => game.move("right"),
     "a": () => game.move("left"),
     "d": () => game.move("right"),
-    'r': rotate
+    'r': rotate,
+    ' ': downFigure
 }
 
 const keyPressFunctions = {
