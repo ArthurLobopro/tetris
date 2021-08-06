@@ -1,10 +1,11 @@
-import { game, collision, addToState, spawnNewFigure } from "./Game.js"
+import { game, collision, addToState, spawnNewFigure, playGame } from "./Game.js"
 import { range } from "./Util.js"
 
 const acelerate = () => {
     if (!game.moveLock && !collision()) {
         game.atualFigure.y++
         if (collision()) {
+            addFigurePoints()
             addToState()
             spawnNewFigure()
         }
