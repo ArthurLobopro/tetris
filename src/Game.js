@@ -14,6 +14,7 @@ const game = {
     interval: null,
     pointsPerBlock: 10,
     pontos: 0,
+    recordes: [],
     nextFigure: {
         figure: figures.random(),
         color: '#ddd'
@@ -202,17 +203,25 @@ const collision = () => {
     return colidBlock
 }
 
+const gameOver = () => {
+    game.pontos = 0
+    spawnNewFigure()
+    game.state = getNewGameState()
+}
+
 const playGame = () => {
     if (!collision()) {
         game.atualFigure.y++
-        return
     }else{
+        if(game.atualFigure.y == 0 ){
+            return gameOver()
+        }
         addFigurePoints()
         addToState()
         spawnNewFigure()
     }
 
-    document.getElementById('pontos').innerText = game.pontos
+    pontosSpan.innerText = String(game.pontos).padStart(4,'0')
 }
 
 game.state = getNewGameState()
