@@ -5,10 +5,11 @@ const tela = document.getElementById('tela')
 const container = document.getElementById('container')
 
 export default async function viewGameOver() {
+    const image = canvasGame.toDataURL('image/png')
     const telaGameOver = document.createElement('div')
     telaGameOver.className = 'telas-wrapper'
     telaGameOver.innerHTML = `
-    <fieldset>
+    <fieldset style="height: 90%">
         <legend>GAME OVER</legend>
         <div class="table">
             <div class="line">
@@ -16,7 +17,7 @@ export default async function viewGameOver() {
                 <div>${game.pontos}</div>
             </div>
         </div>
-        <img src="${canvasGame.toDataURL('image/png')}" style="border: 1px solid #aaa" id="game-over-print">
+        <img src="${image}" style="border: 1px solid #aaa;max-height:73%" id="game-over-print">
         <button class="focus">NEW GAME</button>
     </fieldset>`
     container.appendChild(telaGameOver)
