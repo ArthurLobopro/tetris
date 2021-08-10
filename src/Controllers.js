@@ -1,21 +1,17 @@
-import { game, collision, addToState, spawnNewFigure, playGame } from "./Game.js"
+import { game, collision, playGame } from "./Game.js"
 import { range } from "./Util.js"
 
 const acelerate = () => {
     if (!game.moveLock && !collision()) {
-        game.atualFigure.y++
-        if (collision()) {
-            addFigurePoints()
-            addToState()
-            spawnNewFigure()
-        }
+        playGame()
         game.moveLock = true
         setTimeout(() => game.moveLock = false, 100)
     }
 }
 
 const rotate = () => {
-    const { figure } = game.atualFigure
+    // if(game.moveLock) return
+    const { figure, x, y } = game.atualFigure
     const newFigure = []
 
     for (const block of range(0, figure[0].length)) {
@@ -26,6 +22,40 @@ const rotate = () => {
         newFigure.push(newLine)
     }
 
+    const widthDifference = figure.length - newFigure.length
+    
+    const haveBlocksOnRight = x + newFigure[0].length > game.width || newFigure.some( (line, indexY) => {
+        if(line[line.length - 1].type == "null"){
+            return false
+        }
+
+        const increment = widthDifference > 0 ? widthDifference : 0
+
+        return line.some( (block, indexX) => {
+            return game.state[y + indexY]?.[x + newFigure.length +  increment - indexX]?.type === "block"
+        })
+    })
+
+    const haveBlocksOnLeft = x - widthDifference < 0 || newFigure.some( (line, indexY) => {
+        if (line[0].type === "null") {
+            return false
+        }
+
+        const decrement = widthDifference > 0 ? widthDifference : 0
+
+        return line.some( (block, indexX) => {
+            return game.state[y + indexY]?.[x - decrement + indexX]?.type === "block"
+        })
+    })
+
+    if (haveBlocksOnRight) {
+        console.log(haveBlocksOnLeft);
+        if(!haveBlocksOnLeft){
+            game.atualFigure.x -= widthDifference
+        }else{
+            return
+        }
+    }
     game.atualFigure.figure = newFigure
 }
 
@@ -56,5 +86,3 @@ window.onkeypress = event => {
 window.onkeydown = event => {
     keyDownFunctions[event.key]?.()
 }
-
-onload = () => console.log(game.state);
