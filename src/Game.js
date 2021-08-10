@@ -1,6 +1,9 @@
 import { range } from "./Util.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
+import viewGameOver from "./Telas/GameOver.js"
+import { renderAll } from "./View.js"
+import { Audios } from "./Audio.js"
 
 const gameCanvas = document.getElementById('game')
 const nextCanvas = document.getElementById('next')
@@ -40,34 +43,26 @@ const game = {
                 return false
             }
 
-            if (this.state[y + indexY]?.[x - 1]?.type === "block") {
-                return true
-            }
-
-            return false
+            return this.state[y + indexY]?.[x - 1]?.type === "block"
         })
 
 
         const haveBlocksOnRight = this.atualFigure.figure.some((line, indexY) => {
-            if (line[0].type === "null") {
+            if (line[line.length - 1].type === "null") {
                 return false
             }
 
-            if (this.state[y + indexY]?.[x + line.length]?.type === "block") {
-                return true
-            }
-
-            return false
+            return this.state[y + indexY]?.[x + line.length]?.type === "block"
         })
 
 
         if (direction === "right" && !haveBlocksOnRight) {
-            if (this.atualFigure.x + this.atualFigure.figure[0].length <= 14)
+            if (x + this.atualFigure.figure[0].length <= 14)
                 this.atualFigure.x++
         }
 
         if (direction === "left" && !haveBlocksOnLeft) {
-            if (this.atualFigure.x > 0)
+            if (x > 0)
                 this.atualFigure.x--
         }
 
@@ -89,14 +84,14 @@ const addFigurePoints = () => {
 
     let figureBlocks = 0
 
-    figure.forEach( line => {
-        line.forEach( block => {
-            if(block.type === 'block'){
+    figure.forEach(line => {
+        line.forEach(block => {
+            if (block.type === 'block') {
                 figureBlocks++
             }
         })
-    } )
-    
+    })
+
     game.pontos += figureBlocks * game.pointsPerBlock
 }
 
@@ -154,8 +149,6 @@ const removeCompleteLines = () => {
 const addToState = () => {
     const { x, y, figure, color } = game.atualFigure
 
-    console.table({ x, y });
-
     figure.forEach((line, indexY) => {
 
         line.forEach((block, indexX) => {
@@ -207,13 +200,16 @@ const gameOver = () => {
     game.pontos = 0
     spawnNewFigure()
     game.state = getNewGameState()
+    pontosSpan.innerText = String(game.pontos).padStart(4, '0')
+    renderAll()
+    game.interval = setInterval(playGame, 500);
 }
 
 const playGame = () => {
     if (!collision()) {
         game.atualFigure.y++
-    }else{
-        if(game.atualFigure.y == 0 ){
+    } else {
+        if (game.atualFigure.y == 0) {
             return gameOver()
         }
         addFigurePoints()
@@ -221,7 +217,7 @@ const playGame = () => {
         spawnNewFigure()
     }
 
-    pontosSpan.innerText = String(game.pontos).padStart(4,'0')
+    pontosSpan.innerText = String(game.pontos).padStart(4, '0')
 }
 
 game.state = getNewGameState()
@@ -233,6 +229,10 @@ gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
 nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCanvasSize.width - 1
 nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
 
-game.interval = setInterval(playGame, 500);
+game.interval = setInterval(playGame, 500)
 
-export { game, playGame, collision, addToState, spawnNewFigure, addFigurePoints }
+window.onload = () => {
+    // Audios.theme.play()
+}
+
+export { game, playGame, collision, addFigurePoints}
