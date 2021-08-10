@@ -1,0 +1,69 @@
+.telas-wrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.line{
+    padding: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    color: #ccc;
+}
+
+fieldset{
+    align-self: center;
+    width: max-content;
+    min-width: 400px;
+    height: max-content;
+    min-height: 150px;
+    padding: 0 5px;
+    border: 2px solid  #ccc;;
+    color: #ccc;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Press Start 2P',"Nunito";
+    & legend{
+        margin: 0 auto;
+        padding-inline: 5px;
+        user-select: none;
+    }
+    & > img{
+        margin: 25px auto;
+    }
+    & > div {
+        overflow: auto;
+        height: 100%;
+    }
+    &  button{
+        background-color: #000;
+        color: #ccc;
+        width: max-content;
+        padding: 5px 10px;
+        margin: 15px auto;
+        border: 2px solid;
+        border-radius: 3px;
+        user-select: none;
+        font-family: 'Press Start 2P',"Nunito";
+        &:active{
+            color: #909090;
+        }
+        &.focus{
+            color: #fff;
+        }
+    }
+    & .button-wrapper{
+        width: max-content;
+        align-self: center;
+        & button{
+            width: 100%;
+            min-width: max-content;
+        }
+    }
+}
