@@ -48,15 +48,31 @@ const rotate = () => {
         })
     })
 
+    let newX = x
+
     if (haveBlocksOnRight) {
         console.log(haveBlocksOnLeft);
         if(!haveBlocksOnLeft){
-            game.atualFigure.x -= widthDifference
+            newX = x - widthDifference
         }else{
             return
         }
     }
-    game.atualFigure.figure = newFigure
+
+    const haveBlocksOnDown = newFigure.some( (line, indexY) => {
+        return line.some((block, indexX) => {
+            if (block.type === "null") {
+                return false
+            }
+
+            return game.state[y + indexY + 1][newX + indexX].type === 'block'
+        })
+    })
+
+    if(!haveBlocksOnDown){
+        game.atualFigure.x = newX
+        game.atualFigure.figure = newFigure
+    }
 }
 
 const downFigure = () => {
