@@ -185,24 +185,26 @@ const collision = () => {
                 return false
             }
 
-            if (game.state[y + indexY + 1][x + indexX].type === 'block') {
-                return true
-            }
-
-            return false
+            return game.state[y + indexY + 1][x + indexX].type === 'block'
         })
     })
 
     return colidBlock
 }
 
-const gameOver = () => {
-    game.pontos = 0
-    spawnNewFigure()
+const gameOver = async () => {
+    clearInterval(game.interval)
+    await viewGameOver()
+    newGame()    
+}
+
+const newGame = () => {
     game.state = getNewGameState()
+    game.pontos = 0
     pontosSpan.innerText = String(game.pontos).padStart(4, '0')
+    spawnNewFigure()
     renderAll()
-    game.interval = setInterval(playGame, 500);
+    game.interval = setInterval(playGame, 500)
 }
 
 const playGame = () => {
@@ -232,7 +234,8 @@ nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextC
 game.interval = setInterval(playGame, 500)
 
 window.onload = () => {
-    // Audios.theme.play()
+    Audios.theme.play()
+    Audios.theme.loop = true
 }
 
 export { game, playGame, collision, addFigurePoints}
