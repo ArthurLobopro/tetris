@@ -95,10 +95,12 @@ const keyPressFunctions = {
     "s": acelerate
 }
 
-window.onkeypress = event => {
+const mainKeyPress = event => {
     keyPressFunctions[event.key]?.()
 }
 
-window.onkeydown = event => {
+const mainKeyDown = event => {
     keyDownFunctions[event.key]?.()
 }
+
+export { mainKeyDown, mainKeyPress}
