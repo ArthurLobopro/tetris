@@ -4,6 +4,8 @@ import "./Controllers.js"
 import viewGameOver from "./Telas/GameOver.js"
 import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
+import viewInit from "./Telas/Init.js"
+import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 
 const gameCanvas = document.getElementById('game')
 const nextCanvas = document.getElementById('next')
@@ -18,8 +20,9 @@ const game = {
     pointsPerBlock: 10,
     pontos: 0,
     recordes: [],
+    status: "inactive",
     nextFigure: {
-        figure: figures.random(),
+        figure: null,
         color: '#ddd'
     },
     nextCanvasSize: {
@@ -199,12 +202,17 @@ const gameOver = async () => {
 }
 
 const newGame = () => {
+    game.status = "active"
     game.state = getNewGameState()
     game.pontos = 0
     pontosSpan.innerText = String(game.pontos).padStart(4, '0')
     spawnNewFigure()
     renderAll()
     game.interval = setInterval(playGame, 500)
+}
+
+const pause = () => {
+    game.status = "paused"
 }
 
 const playGame = () => {
@@ -222,20 +230,24 @@ const playGame = () => {
     pontosSpan.innerText = String(game.pontos).padStart(4, '0')
 }
 
-game.state = getNewGameState()
-spawnNewFigure()
-
 gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
 gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
 
 nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCanvasSize.width - 1
 nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
 
-game.interval = setInterval(playGame, 500)
-
-window.onload = () => {
+window.onload = async() => {
+    await viewInit()
+    setInterval(renderAll, 100)
+    game.state = getNewGameState()
+    
+    game.nextFigure.figure = figures.random()
+    spawnNewFigure()
+    window.onkeydown = mainKeyDown
+    window.onkeypress = mainKeyPress
+    game.interval = setInterval(playGame, 500)
     Audios.theme.play()
     Audios.theme.loop = true
 }
 
-export { game, playGame, collision, addFigurePoints}
+export { game, playGame, collision, addFigurePoints, newGame }
