@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+require('./api')
 
 // Faz com que o programa não inicie várias vezes durante a instalação
 if (require('electron-squirrel-startup')) {
@@ -11,8 +12,10 @@ const createWindow = () => {
         width: 800,
         height: 600,
         autoHideMenuBar: true,
+        icon: path.resolve( app.getAppPath() , 'assets', 'icon.png'),
         webPreferences:{
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.resolve(__dirname, 'preload.js')
         }
     });
 
@@ -46,4 +49,9 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
+})
+
+ipcMain.on('close', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    win.close()
 })
