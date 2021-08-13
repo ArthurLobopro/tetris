@@ -6,7 +6,7 @@ import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
 import viewInit from "./Telas/Init.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
-import { gameData, saveLastPontuation, userPreferences } from "./Data.js"
+import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
 import viewPause from "./Telas/Pause.js"
 
 const gameCanvas = document.getElementById('game')
@@ -70,9 +70,8 @@ const game = {
                 this.atualFigure.x++
         }
 
-        if (direction === "left" && !haveBlocksOnLeft) {
-            if (x > 0)
-                this.atualFigure.x--
+        if (direction === "left" && !haveBlocksOnLeft && x > 0) {
+            this.atualFigure.x--
         }
 
         this.moveLock = true
@@ -211,9 +210,10 @@ const pause = () => {
 
 const gameOver = async () => {
     clearInterval(game.interval)
+    verifyRecords()
     saveLastPontuation()
     await viewGameOver()
-    newGame()    
+    newGame()
 }
 
 const newGame = () => {
@@ -244,10 +244,39 @@ const playGame = () => {
 }
 
 const loadGameData = () => {
-    gameData.records.forEach( record => {
+    gameData.records.forEach(record => {
         game.records.push(record)
     })
     game.lastPontuation = gameData.lastPontuation
+}
+
+const verifyRecords = () => {
+    const { pontos, records } = game
+    console.log(records);
+    const atualPointsIsNewRecord = records.some(record => {
+        return record.points < pontos
+    })
+    if (atualPointsIsNewRecord) {
+        game.records.pop()
+        game.records.push({ points: pontos })
+        while (
+            game.records[0].points < game.records[1].points 
+            || game.records[1].points < game.records[2].points
+            ){
+            game.records.forEach( (record, index) => {
+                if(record.points < game.records[index+1]?.points){
+                    [ 
+                        game.records[index],
+                        game.records[index + 1]
+                    ] = [
+                        game.records[index + 1],
+                        game.records[index]
+                    ]
+                }
+            })
+        }
+        saveRecords()
+    }
 }
 
 gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
@@ -256,7 +285,7 @@ gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
 nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCanvasSize.width - 1
 nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
 
-window.onload = async() => {
+window.onload = async () => {
     await viewInit()
     setInterval(renderAll, 100)
     game.state = getNewGameState()
@@ -267,7 +296,7 @@ window.onload = async() => {
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress
     game.interval = setInterval(playGame, 500)
-    if(userPreferences.music){
+    if (userPreferences.music) {
         Audios.theme.volume = userPreferences.musicVolume
         Audios.theme.play()
         Audios.theme.loop = true
