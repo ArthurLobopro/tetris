@@ -2,7 +2,7 @@ const Store = require('electron-store')
 
 const dataPath = "gameData"
 
-const userSchema = {
+const gameSchema = {
     lastPontuation: {
         type: 'number',
         minimum: 0,
@@ -17,7 +17,8 @@ const userSchema = {
         ]
     }
 }
-const userData = new Store({ cwd: `${dataPath}/user`, schema: userSchema })
+
+const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema })
 
 const preferencesSchema = {
     music: {
@@ -31,11 +32,13 @@ const preferencesSchema = {
         default: 1
     }
 }
+
 const userPreferences = new Store({ cwd: `${dataPath}/userPreferences`, schema: preferencesSchema })
 
-function setUserPreferences(configName, value) {
-    userPreferences.set(configName, value)
-}
-const getUserPreferences = () => userPreferences.store
+const setUserPreferences = (configName, value) => userPreferences.set(configName, value)
+const setGameData = (configName, value) => gameData.set(configName, value)
 
-module.exports = { setUserPreferences, getUserPreferences }
+const getUserPreferences = () => userPreferences.store
+const getGameData = () => gameData.store
+
+module.exports = { setUserPreferences, getUserPreferences, getGameData, setGameData }
