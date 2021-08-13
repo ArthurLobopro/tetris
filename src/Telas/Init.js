@@ -1,4 +1,5 @@
 import navigationFunctions from "./navigation.js"
+import viewConfig from "./Config.js"
 
 const container = document.getElementById('container')
 const get = id => document.getElementById(id)
@@ -21,6 +22,9 @@ export default async function viewInit() {
         get('start').onclick = () => {
             container.removeChild(init_wrapper)
             res(true)
+        }
+        get('config').onclick =  () => {
+            viewConfig()
         }
         get('exit').onclick = () => {
             ipcRenderer.send('close')
