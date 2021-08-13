@@ -6,12 +6,11 @@ window.addEventListener('load', () => {
     gameData = api.getGameData()
 })
 
-const saveUserPreferences = () => {
-    api.setUserPreferences(userPreferences)
-}
+const saveUserPreferences = () => api.setUserPreferences(userPreferences)
 
-const saveLastPontuation = () => {
-    api.setGameData('lastPontuation', game.pontos)
-}
+const saveLastPontuation = () => api.setGameData('lastPontuation', game.pontos)
 
-export { userPreferences, saveUserPreferences, gameData, saveLastPontuation }
+const saveRecords = () => api.setGameData('records', game.records)
+
+
+export { userPreferences, saveUserPreferences, gameData, saveLastPontuation, saveRecords }
