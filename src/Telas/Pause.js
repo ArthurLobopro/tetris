@@ -1,8 +1,12 @@
+import { playGame, newGame, game } from "../Game.js"
+import { mainKeyDown } from "../Controllers.js"
+import viewConfig from "./Config.js"
+
 const get = id => document.getElementById(id)
 const tela = get('tela')
 const container = document.getElementById('container')
 
-export default async function viewPause({play, newGame}) {
+export default async function viewPause() {
     const pause_wrapper = document.createElement('div')
     pause_wrapper.id = "pause-wrapper"
     pause_wrapper.innerHTML = `
@@ -18,14 +22,16 @@ export default async function viewPause({play, newGame}) {
     container.appendChild(pause_wrapper)
     get('continue').onclick = () => {
         container.removeChild(pause_wrapper)
-        setTimeout( play, 150)
+        window.onkeydown = mainKeyDown
+        game.interval = setInterval( playGame, 500);
     }
     get('new-game').onclick = () => {
         container.removeChild(pause_wrapper)
-        setTimeout( newGame, 150)
+        window.onkeydown = mainKeyDown
+        newGame()
     }
     get('config').onclick = async () => {
-        await config()
+        await viewConfig()
         window.onkeydown = event => functions[event.key]?.(pause_wrapper)
     }
     window.onkeydown = event => functions[event.key]?.(pause_wrapper)
