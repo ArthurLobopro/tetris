@@ -1,5 +1,5 @@
-import { game } from './Game.js'
-import { range } from './Util.js'
+import { formatPoints, game } from './Game.js'
+import { loadImage, range } from './Util.js'
 
 const gameCanvas = document.querySelector('canvas#game')
 const gameCtx = gameCanvas.getContext('2d')
@@ -104,6 +104,25 @@ const drawAtualFigure = () => {
 }
 //#endregion
 
+const medals = [
+    "../assets/medals/1.png",
+    "../assets/medals/2.png",
+    "../assets/medals/3.png"
+]
+
+const showRecords = () => {
+    const lines = []
+    game.records.forEach( ({points},index) => {
+        const line = `
+        <div class="line">
+            <img src=" ${medals[index]}" width="16px">
+            <div>${formatPoints(points)}</div>
+        </div>`
+        lines.push(line)
+    })
+    document.getElementById('recordes').innerHTML = lines.join('')
+}
+
 const renderAll = () => {
     // Main game
     drawBackground()
@@ -115,6 +134,8 @@ const renderAll = () => {
     drawNextBackground()
     drawNextLines()
     drawNextFigure()
+
+    showRecords()
 }
 
 export { renderAll }
