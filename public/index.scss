@@ -33,13 +33,25 @@ body{
     // justify-content: space-evenly;
     font-family: 'Press Start 2P';
     font-size: 14px;
-    & > div{
+    & > #next-wrapper{
         @extend .flex-center;
         flex-direction: column;
+    }
+    & #last-pontuation{
+        margin-top: 5px;
     }
 }
 
 canvas {
     background-color: #000;
     border: 1px solid #bbb;
+}
+
+.line{
+    padding: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    color: #ccc;
 }
