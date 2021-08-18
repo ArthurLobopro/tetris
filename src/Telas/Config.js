@@ -3,11 +3,15 @@
 // import cores from "./configs/cores.js"
 import { game } from "../Game.js"
 import viewMusic from "./Config/Music.js"
+import viewVelocity from "./Config/Velocity.js"
+import navigation from "./navigation.js"
 
 const container = document.getElementById('container')
+const get = id => document.getElementById(id)
 
 const configs = {
-    music: viewMusic
+    music: viewMusic,
+    velocity: viewVelocity
 }
 
 export default async function viewConfig() {
@@ -19,6 +23,7 @@ export default async function viewConfig() {
         <legend>CONFIGURAÇÃO</legend>
         <div class="button-wrapper">
             <button data-type="music" class="focus">Musica</button>
+            <button data-type="velocity">Velocidade</button>
             <button data-type="voltar">Voltar</button>
         </div>
     </fieldset>`
@@ -30,12 +35,17 @@ export default async function viewConfig() {
 
     container.appendChild(config_screen)
     const buttons = config_screen.querySelectorAll('button')
-    // window.onkeydown = event => functions[event.key]?.(config_screen)
+    window.onkeydown = event => navigation[event.key]?.(config_screen)
     configs.voltar = () => container.removeChild(config_screen)
     return new Promise( resolve => {
         buttons.forEach( button => {
-            button.onclick = event => configs[button.dataset.type]?.(game)
-            resolve(true)
+            button.onclick = async event => {
+                const { type } = event.target.dataset
+                await configs[type]?.(game)
+                if(type === "voltar"){
+                    resolve(true)
+                }
+            }
         })
     })
 }
