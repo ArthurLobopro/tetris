@@ -23,8 +23,9 @@ export default async function viewInit() {
             container.removeChild(init_wrapper)
             res(true)
         }
-        get('config').onclick =  () => {
-            viewConfig()
+        get('config').onclick = async () => {
+            await viewConfig()
+            window.onkeydown = event => navigationFunctions[event.key]?.(init_wrapper)
         }
         get('exit').onclick = () => {
             ipcRenderer.send('close')

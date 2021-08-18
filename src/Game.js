@@ -26,7 +26,11 @@ const game = {
     lastPontuation: 0,
     pontos: 0,
     records: [],
+    renderVelocity: 1000/60,
     status: "inactive",
+    userPreferences:{
+        gameplayVelocity: null
+    },
     nextFigure: {
         figure: null,
         color: '#ddd'
@@ -55,7 +59,6 @@ const game = {
             return this.state[y + indexY]?.[x - 1]?.type === "block"
         })
 
-
         const haveBlocksOnRight = this.atualFigure.figure.some((line, indexY) => {
             if (line[line.length - 1].type === "null") {
                 return false
@@ -63,7 +66,6 @@ const game = {
 
             return this.state[y + indexY]?.[x + line.length]?.type === "block"
         })
-
 
         if (direction === "right" && !haveBlocksOnRight) {
             if (x + this.atualFigure.figure[0].length <= 14)
@@ -202,10 +204,14 @@ const collision = () => {
     return colidBlock
 }
 
-const pause = () => {
+//#region Gameplay
+const pause = async () => {
     clearInterval(game.interval)
     game.status = "paused"
-    viewPause()
+    if(await viewPause()){
+        game.status = "active"
+        game.interval = setInterval( playGame, game.userPreferences.gameplayVelocity);
+    }
 }
 
 const gameOver = async () => {
@@ -225,11 +231,13 @@ const newGame = () => {
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
     spawnNewFigure()
     renderAll()
-    game.interval = setInterval(playGame, 500)
+    game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
+    const newGameEvent = new Event('new-game')
+    window.dispatchEvent(newGameEvent)
 }
 
 const playGame = () => {
-    if (!collision()) {
+    if (!collision() && game.status == "active") {
         game.atualFigure.y++
     } else {
         if (game.atualFigure.y == 0) {
@@ -242,13 +250,30 @@ const playGame = () => {
 
     pontosSpan.innerText = formatPoints(game.pontos)
 }
+//#endregion
 
 const loadGameData = () => {
     gameData.records.forEach(record => {
         game.records.push(record)
     })
+    Object.entries(userPreferences).forEach( ([key, value]) => {
+        game.userPreferences[key] = value
+    })
+    console.log(game.userPreferences);
     game.lastPontuation = gameData.lastPontuation
 }
+
+const reloadGameConfig = () => {
+    
+}
+
+;(
+    () =>{
+        window.addEventListener('new-game', () => {
+            console.log('teste');
+        })
+    }
+)()
 
 const verifyRecords = () => {
     const { pontos, records } = game
@@ -260,12 +285,12 @@ const verifyRecords = () => {
         game.records.pop()
         game.records.push({ points: pontos })
         while (
-            game.records[0].points < game.records[1].points 
-            || game.records[1].points < game.records[2].points
-            ){
-            game.records.forEach( (record, index) => {
-                if(record.points < game.records[index+1]?.points){
-                    [ 
+            game.records[0].points < game.records[1].points ||
+            game.records[1].points < game.records[2].points
+        ) {
+            game.records.forEach((record, index) => {
+                if (record.points < game.records[index + 1]?.points) {
+                    [
                         game.records[index],
                         game.records[index + 1]
                     ] = [
@@ -286,16 +311,17 @@ nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCan
 nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
 
 window.onload = async () => {
-    await viewInit()
-    setInterval(renderAll, 100)
-    game.state = getNewGameState()
     loadGameData()
-    lastPointsDiv.innerText = formatPoints(game.lastPontuation)
+    await viewInit()
+    game.status = "active"
+    game.state = getNewGameState()
     game.nextFigure.figure = figures.random()
+    game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
+    setInterval(renderAll, game.renderVelocity)
     spawnNewFigure()
+    lastPointsDiv.innerText = formatPoints(game.lastPontuation)
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress
-    game.interval = setInterval(playGame, 500)
     if (userPreferences.music) {
         Audios.theme.volume = userPreferences.musicVolume
         Audios.theme.play()
