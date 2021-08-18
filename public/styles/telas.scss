@@ -115,3 +115,10 @@ input[type='range']{
         content: url(../../assets/check.png);
     }
 }
+
+.radio{
+    @extend .check;
+    &[data-check='true']{
+        content: url(../../assets/x.png);
+    }
+}
