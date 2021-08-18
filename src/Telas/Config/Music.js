@@ -12,7 +12,7 @@ const saveConfig = () => {
     saveUserPreferences()
 }
 
-export default function viewMusic() {
+export default async function viewMusic() {
     configTemp = { ...userPreferences }
     console.log(configTemp);
     const music_screen = document.createElement('div')
@@ -48,14 +48,17 @@ export default function viewMusic() {
         configTemp.musicVolume = value/100
     }
 
-    const buttons = music_screen.querySelectorAll('button')
-    buttons.forEach( button => {
-        button.onclick = event => {
-            const { value } = event.target
-            if(value == "1"){
-                saveConfig()
+    return new Promise( resolve => {
+        const buttons = music_screen.querySelectorAll('button')
+        buttons.forEach( button => {
+            button.onclick = event => {
+                const { value } = event.target
+                if(value == "1"){
+                    saveConfig()
+                    resolve(true)
+                }
+                container.removeChild(music_screen)
             }
-            container.removeChild(music_screen)
-        }
+        })
     })
 }
