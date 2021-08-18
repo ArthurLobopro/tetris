@@ -89,20 +89,22 @@ const keyDownFunctions = {
     "d": () => game.move("right"),
     'r': rotate,
     ' ': downFigure,
-    'Escape': () => pause()
+    'Escape': async () => await pause()
 }
 
 const keyPressFunctions = {
-    "ArrowDown": acelerate,
-    "s": acelerate
+    // "ArrowDown": acelerate,
+    // "s": acelerate
 }
 
 const mainKeyPress = event => {
-    keyPressFunctions[event.key]?.()
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
+    keyPressFunctions[key]?.()
 }
 
 const mainKeyDown = event => {
-    keyDownFunctions[event.key]?.()
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
+    keyDownFunctions[key]?.()
 }
 
 export { mainKeyDown, mainKeyPress}
