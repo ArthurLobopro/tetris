@@ -26,9 +26,9 @@ const game = {
     lastPontuation: 0,
     pontos: 0,
     records: [],
-    renderVelocity: 1000/60,
+    renderVelocity: 1000 / 60,
     status: "inactive",
-    userPreferences:{
+    userPreferences: {
         gameplayVelocity: null
     },
     nextFigure: {
@@ -109,19 +109,14 @@ const addFigurePoints = () => {
 
 //#region New atributes from game
 const getNewGameState = () => {
-    const nullBlock = { type: "null" }
+    const makeNullBlock = () => { return { type: "null" } }
 
-    const line = []
-
-    for (let i in range(0, game.width)) {
-        line.push(nullBlock)
+    const makeALine = () => {
+        const line = Array.from({ length: game.width }, makeNullBlock)
+        return line
     }
 
-    const table = []
-
-    for (let i in range(0, game.height)) {
-        table.push(line)
-    }
+    const table = Array.from({ length: game.height }, makeALine)
 
     return table
 }
@@ -208,9 +203,9 @@ const collision = () => {
 const pause = async () => {
     clearInterval(game.interval)
     game.status = "paused"
-    if(await viewPause()){
+    if (await viewPause()) {
         game.status = "active"
-        game.interval = setInterval( playGame, game.userPreferences.gameplayVelocity);
+        game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity);
     }
 }
 
@@ -256,7 +251,7 @@ const loadGameData = () => {
     gameData.records.forEach(record => {
         game.records.push(record)
     })
-    Object.entries(userPreferences).forEach( ([key, value]) => {
+    Object.entries(userPreferences).forEach(([key, value]) => {
         game.userPreferences[key] = value
     })
     console.log(game.userPreferences);
@@ -264,16 +259,16 @@ const loadGameData = () => {
 }
 
 const reloadGameConfig = () => {
-    
+
 }
 
-;(
-    () =>{
-        window.addEventListener('new-game', () => {
-            console.log('teste');
-        })
-    }
-)()
+    ; (
+        () => {
+            window.addEventListener('new-game', () => {
+                console.log('teste');
+            })
+        }
+    )()
 
 const verifyRecords = () => {
     const { pontos, records } = game
@@ -294,9 +289,9 @@ const verifyRecords = () => {
                         game.records[index],
                         game.records[index + 1]
                     ] = [
-                        game.records[index + 1],
-                        game.records[index]
-                    ]
+                            game.records[index + 1],
+                            game.records[index]
+                        ]
                 }
             })
         }
