@@ -1,37 +1,9 @@
 const Store = require('electron-store')
+const { gameSchema, preferencesSchema } = require('./StoreSchemas')
 
 const dataPath = "gameData"
 
-const gameSchema = {
-    lastPontuation: {
-        type: 'number',
-        minimum: 0,
-        default: 0
-    },
-    records: {
-        type: 'array',
-        minItems: 3,
-        maxItems: 3,
-        default: [
-            { points: 0 }, { points: 0 }, { points: 0 }
-        ]
-    }
-}
-
-const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema })
-
-const preferencesSchema = {
-    music: {
-        type: 'boolean',
-        default: true
-    },
-    musicVolume: {
-        type: 'number',
-        minimum: 0,
-        maximum: 1,
-        default: 1
-    }
-}
+const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema, name: 'data' })
 
 const userPreferences = new Store({ cwd: `${dataPath}/userPreferences`, schema: preferencesSchema })
 
