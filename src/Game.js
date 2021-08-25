@@ -27,9 +27,12 @@ const game = {
     pontos: 0,
     records: [],
     renderVelocity: 1000 / 60,
+    gameplayVelocity: 0,
     status: "inactive",
+    isMusicOn: false,
     userPreferences: {
-        gameplayVelocity: null
+        gameplayVelocity: null,
+        music: null
     },
     nextFigure: {
         figure: null,
@@ -108,16 +111,15 @@ const addFigurePoints = () => {
 //#endregion
 
 //#region New atributes from game
+const makeNullBlock = () => { return { type: "null" } }
+
+const makeALine = () => {
+    const line = Array.from({ length: game.width }, makeNullBlock)
+    return line
+}
+
 const getNewGameState = () => {
-    const makeNullBlock = () => { return { type: "null" } }
-
-    const makeALine = () => {
-        const line = Array.from({ length: game.width }, makeNullBlock)
-        return line
-    }
-
     const table = Array.from({ length: game.height }, makeALine)
-
     return table
 }
 
@@ -131,13 +133,7 @@ const spawnNewFigure = () => {
 
 //#region Update game.state
 const removeCompleteLines = () => {
-    const nullBlock = { type: "null" }
-
-    const voidLine = []
-
-    for (let i in range(0, game.width)) {
-        voidLine.push(nullBlock)
-    }
+    const voidLine = makeALine()
 
     game.state = game.state.filter(line => {
 
@@ -214,6 +210,8 @@ const gameOver = async () => {
     verifyRecords()
     saveLastPontuation()
     await viewGameOver()
+    const newGameEvent = new Event('game-over')
+    window.dispatchEvent(newGameEvent)
     newGame()
 }
 
@@ -227,8 +225,6 @@ const newGame = () => {
     spawnNewFigure()
     renderAll()
     game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
-    const newGameEvent = new Event('new-game')
-    window.dispatchEvent(newGameEvent)
 }
 
 const playGame = () => {
@@ -259,16 +255,27 @@ const loadGameData = () => {
 }
 
 const reloadGameConfig = () => {
+    if(game.isMusicOn !== game.userPreferences.music){
+        game.isMusicOn = game.userPreferences.music
+    }
 
+    if(game.isMusicOn){
+        Audios.theme.volume = userPreferences.musicVolume
+        Audios.theme.play()
+        Audios.theme.loop = true
+    }else{
+        Audios.theme.pause()
+        Audios.theme.currentTime = 0
+    }
 }
 
-    ; (
-        () => {
-            window.addEventListener('new-game', () => {
-                console.log('teste');
-            })
-        }
-    )()
+; (
+    () => {
+        window.addEventListener('game-over', () => {
+            game.gameplayVelocity = game.userPreferences.gameplayVelocity
+        })
+    }
+)()
 
 const verifyRecords = () => {
     const { pontos, records } = game
@@ -318,10 +325,11 @@ window.onload = async () => {
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress
     if (userPreferences.music) {
+        game.isMusicOn = true
         Audios.theme.volume = userPreferences.musicVolume
         Audios.theme.play()
         Audios.theme.loop = true
     }
 }
 
-export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints }
+export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints, reloadGameConfig }
