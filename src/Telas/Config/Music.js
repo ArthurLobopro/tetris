@@ -1,4 +1,5 @@
 import { saveUserPreferences, userPreferences } from "../../Data.js"
+import { game } from "../../Game.js"
 const container = document.getElementById('container')
 
 const get = id => document.getElementById(id)
@@ -9,6 +10,7 @@ const saveConfig = () => {
     Object.entries(configTemp).forEach(([key,value]) => {
         userPreferences[key]= value
     })
+    game.userPreferences = {...userPreferences}
     saveUserPreferences()
 }
 

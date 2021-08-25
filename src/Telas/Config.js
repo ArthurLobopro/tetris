@@ -1,7 +1,7 @@
 // import functions from "./navegacao.js"
 // import velocidade from "./configs/velocidade.js"
 // import cores from "./configs/cores.js"
-import { game } from "../Game.js"
+import { game, reloadGameConfig } from "../Game.js"
 import viewMusic from "./Config/Music.js"
 import viewVelocity from "./Config/Velocity.js"
 import navigation from "./navigation.js"
@@ -15,7 +15,6 @@ const configs = {
 }
 
 export default async function viewConfig() {
-    const pause = game.status === "paused" ? get("pause-wrapper") : null
     const config_screen = document.createElement('div')
     config_screen.className = "telas-wrapper"
     config_screen.innerHTML = `
@@ -27,11 +26,6 @@ export default async function viewConfig() {
             <button data-type="voltar">Voltar</button>
         </div>
     </fieldset>`
-    // gameDiv.style.display = "none"
-
-    // if(game.status === "paused"){
-    //     pause.style.display = "none"
-    // }
 
     container.appendChild(config_screen)
     const buttons = config_screen.querySelectorAll('button')
@@ -43,6 +37,7 @@ export default async function viewConfig() {
                 const { type } = event.target.dataset
                 await configs[type]?.(game)
                 if(type === "voltar"){
+                    reloadGameConfig()
                     resolve(true)
                 }
             }

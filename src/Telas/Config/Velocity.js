@@ -9,11 +9,12 @@ const saveConfig = () => {
     Object.entries(configTemp).forEach(([key,value]) => {
         userPreferences[key]= value
     })
+    game.userPreferences = {...userPreferences}
     saveUserPreferences()
 }
 
 export default function viewVelocity(){
-    const { gameplayVelocity: velocidade } = game.userPreferences
+    const { gameplayVelocity: velocidade } = userPreferences
     configTemp = {...userPreferences}
     const velocity_screen = document.createElement('div')
     velocity_screen.className = 'telas-wrapper'
@@ -54,6 +55,7 @@ export default function viewVelocity(){
             })
            
             target.dataset.check = "true"
+            configTemp.gameplayVelocity = Number(target.dataset.value)
         }
     })
     container.appendChild(velocity_screen)

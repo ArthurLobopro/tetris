@@ -6,7 +6,7 @@ const acelerate = () => {
     if (!game.moveLock && !collision()) {
         playGame()
         game.moveLock = true
-        setTimeout(() => game.moveLock = false, 100)
+        setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)
     }
 }
 
@@ -94,7 +94,7 @@ const keyDownFunctions = {
 
 const keyPressFunctions = {
     // "ArrowDown": acelerate,
-    // "s": acelerate
+    "s": acelerate
 }
 
 const mainKeyPress = event => {
