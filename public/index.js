@@ -1,1 +1,1 @@
-import '../src/Game.js';
+import '../src/render/Game.js';
