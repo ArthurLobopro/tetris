@@ -5,26 +5,26 @@ const getButtons = element => {
 }
 
 const functions = {
-    up: element => {
+    up(element) {
         const { buttons, focused } = getButtons(element)
         let previus = focused.previousElementSibling
-        if(previus?.tagName !== "BUTTON"){
+        if (previus?.tagName !== "BUTTON") {
             previus = buttons[buttons.length - 1]
         }
         focused.classList.remove('focus')
         previus.classList.add('focus')
     },
-    down: element => {
+    down(element) {
         const { buttons, focused } = getButtons(element)
         let next = focused.nextElementSibling
-        if( !next || next?.tagName !== "BUTTON" || next == focused ){
+        if (!next || next?.tagName !== "BUTTON" || next == focused) {
             console.log('hey');
             next = buttons[0]
         }
         focused.classList.remove('focus')
         next.classList.add('focus')
     },
-    select: element => {
+    select(element) {
         const { focused } = getButtons(element)
         focused.click()
     }
