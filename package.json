@@ -21,9 +21,9 @@
       "packagerConfig": {
         "icon": "./build/icon.ico",
         "ignore": [
-          ".github",
-          ".gitignore",
-          "build/"
+          "\\.git",
+          "\\.scss",
+          "/build"
         ]
       },
       "makers": [
