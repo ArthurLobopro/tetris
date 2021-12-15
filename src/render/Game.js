@@ -255,15 +255,15 @@ const loadGameData = () => {
 }
 
 const reloadGameConfig = () => {
-    if(game.isMusicOn !== game.userPreferences.music){
+    if (game.isMusicOn !== game.userPreferences.music) {
         game.isMusicOn = game.userPreferences.music
     }
 
-    if(game.isMusicOn){
+    if (game.isMusicOn) {
         Audios.theme.volume = userPreferences.musicVolume
         Audios.theme.play()
         Audios.theme.loop = true
-    }else{
+    } else {
         Audios.theme.pause()
         Audios.theme.currentTime = 0
     }
