@@ -3,7 +3,7 @@
   "productName": "tetris",
   "version": "1.0.0",
   "description": "A simple tetris game",
-  "main": "electron/main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
