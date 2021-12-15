@@ -224,6 +224,8 @@ const newGame = () => {
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
     spawnNewFigure()
     renderAll()
+    window.onkeydown = mainKeyDown
+    window.onkeypress = mainKeyPress
     game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
 }
 

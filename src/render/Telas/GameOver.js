@@ -1,4 +1,5 @@
 import { game } from '../Game.js'
+import navigation from "./navigation.js"
 
 const canvasGame = document.getElementById('game')
 const tela = document.getElementById('tela')
@@ -21,13 +22,13 @@ export default async function viewGameOver() {
         <button class="focus">NEW GAME</button>
     </fieldset>`
     container.appendChild(telaGameOver)
-    tela.style.display='none'
-    const button = telaGameOver.getElementsByTagName('button')[0]
-    // window.onkeydown = event => functions[event.key]?.(telaGameOver)
-    return new Promise( resolve => {
+    tela.style.display = 'none'
+    const button = telaGameOver.querySelector('button')
+    window.onkeydown = event => navigation[event.key]?.(telaGameOver)
+    return new Promise(resolve => {
         button.onclick = () => {
             container.removeChild(telaGameOver)
-            tela.style.display=''
+            tela.style.display = ''
             resolve(true)
         }
     })
