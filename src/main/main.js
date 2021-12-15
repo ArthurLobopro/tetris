@@ -12,16 +12,14 @@ const createWindow = () => {
         width: 800,
         height: 600,
         autoHideMenuBar: true,
-        icon: path.resolve( app.getAppPath() , 'assets', 'icon.png'),
-        webPreferences:{
+        icon: path.resolve(app.getAppPath(), 'assets', 'icon.png'),
+        webPreferences: {
             nodeIntegration: true,
             preload: path.resolve(__dirname, 'preload.js')
         }
     });
 
-    mainWindow.loadFile(path.resolve( app.getAppPath(), 'public', 'index.html'));
-
-    //mainWindow.webContents.openDevTools();
+    mainWindow.loadFile(path.resolve(app.getAppPath(), 'public', 'index.html'));
 };
 
 const isUnicWindow = app.requestSingleInstanceLock() //Verifica se o app já foi iniciado
@@ -49,4 +47,9 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
+})
+
+ipcMain.on('close', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    win.close()
 })
