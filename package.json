@@ -3,7 +3,7 @@
   "productName": "tetris",
   "version": "1.0.0",
   "description": "A simple tetris game",
-  "main": "electron/main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -21,9 +21,9 @@
       "packagerConfig": {
         "icon": "./build/icon.ico",
         "ignore": [
-          ".github",
-          ".gitignore",
-          "build/"
+          "\\.git",
+          "\\.scss",
+          "/build"
         ]
       },
       "makers": [
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.0.0"
+    "electron-store": "^8.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.59",
@@ -63,6 +63,6 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.59",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.59",
     "@electron-forge/maker-zip": "^6.0.0-beta.59",
-    "electron": "^13.1.9"
+    "electron": "^16.0.4"
   }
 }

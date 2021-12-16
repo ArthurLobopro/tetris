@@ -1,7 +1,7 @@
 const { ipcRenderer, contextBridge } = require('electron')
-const api = require("./api")
+const Store = require("./Store")
 
 document.addEventListener('DOMContentLoaded', () => {
     contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer)
-    contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('api', Store)
 })

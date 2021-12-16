@@ -1,5 +1,5 @@
 import { saveUserPreferences, userPreferences } from "../../Data.js"
-import { game } from "../../Game.js"
+import { game, reloadGameConfig } from "../../Game.js"
 const container = document.getElementById('container')
 
 const get = id => document.getElementById(id)
@@ -57,6 +57,7 @@ export default async function viewMusic() {
                 const { value } = event.target
                 if(value == "1"){
                     saveConfig()
+                    reloadGameConfig()
                     resolve(true)
                 }
                 container.removeChild(music_screen)

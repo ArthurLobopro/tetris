@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-require('./api')
+require('./Store')
 
 // Faz com que o programa não inicie várias vezes durante a instalação
 if (require('electron-squirrel-startup')) {
@@ -12,16 +12,14 @@ const createWindow = () => {
         width: 800,
         height: 600,
         autoHideMenuBar: true,
-        icon: path.resolve( app.getAppPath() , 'assets', 'icon.png'),
-        webPreferences:{
+        icon: path.resolve(app.getAppPath(), 'assets', 'icon.png'),
+        webPreferences: {
             nodeIntegration: true,
             preload: path.resolve(__dirname, 'preload.js')
         }
     });
 
-    mainWindow.loadFile(path.resolve( app.getAppPath(), 'public', 'index.html'));
-
-    //mainWindow.webContents.openDevTools();
+    mainWindow.loadFile(path.resolve(app.getAppPath(), 'public', 'index.html'));
 };
 
 const isUnicWindow = app.requestSingleInstanceLock() //Verifica se o app já foi iniciado
