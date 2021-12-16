@@ -30,7 +30,31 @@ const preferencesSchema = {
         default: 300,
         minimum: 150,
         maximum: 500
+    },
+    theme: {
+        type: "string",
+        enum: ["retro", "tetris", "custom"],
+        default: "retro"
     }
 }
 
-module.exports = { gameSchema, preferencesSchema }
+const themeSchema = {
+    retro: {
+        type: "object",
+        default: {
+            figures: {
+                square: "#ddd",
+                stick: "#ddd",
+                z: "#ddd",
+                "reverse-z": "#ddd",
+                "reverse-L": "#ddd",
+                L: "#ddd",
+                T: "#ddd"
+            },
+            background: "#1E1E1E",
+            lines: "#AAA"
+        }
+    }
+}
+
+module.exports = { gameSchema, preferencesSchema, themeSchema }

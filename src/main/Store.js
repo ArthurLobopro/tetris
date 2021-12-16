@@ -1,5 +1,5 @@
 const Store = require('electron-store')
-const { gameSchema, preferencesSchema } = require('./StoreSchemas')
+const { gameSchema, preferencesSchema, themeSchema } = require('./StoreSchemas')
 
 const dataPath = "gameData"
 
@@ -7,10 +7,15 @@ const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema, name: 
 
 const userPreferences = new Store({ cwd: `${dataPath}/userPreferences`, schema: preferencesSchema })
 
-const setUserPreferences = (configName, value) => userPreferences.set(configName, value)
-const setGameData = (configName, value) => gameData.set(configName, value)
+const themes = new Store({ cwd: `${dataPath}/themes`, schema: themeSchema, name: 'themes' })
 
-const getUserPreferences = () => userPreferences.store
-const getGameData = () => gameData.store
+const store = {
+    setUserPreferences(configName, value) { userPreferences.set(configName, value) },
+    setGameData(configName, value) { gameData.set(configName, value) },
+    getUserPreferences() { return userPreferences.store },
+    getGameData() { return gameData.store },
+    themes: themes.store
+}
 
-module.exports = { setUserPreferences, getUserPreferences, getGameData, setGameData }
+
+module.exports = store
