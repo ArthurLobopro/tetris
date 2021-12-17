@@ -11,7 +11,7 @@ const accelerate = () => {
 }
 
 const rotate = () => {
-    const { figure, x, y } = game.atualFigure
+    const { blocks: figure, x, y } = game.atualFigure
     const newFigure = []
 
     for (const block of range(0, figure[0].length)) {
@@ -71,7 +71,7 @@ const rotate = () => {
 
     if (!haveBlocksOnDown) {
         game.atualFigure.x = newX
-        game.atualFigure.figure = newFigure
+        game.atualFigure.blocks = newFigure
     }
 }
 

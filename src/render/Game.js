@@ -35,18 +35,18 @@ const game = {
         music: null
     },
     nextFigure: {
-        figure: null,
-        color: '#ddd'
+        blocks: null,
+        color: ''
     },
     nextCanvasSize: {
         height: 6,
         width: 6
     },
     atualFigure: {
-        figure: [[]],
+        blocks: [[]],
         x: 0,
         y: 0,
-        color: '#ddd'
+        color: ''
     },
     moveLock: false,
     move(direction) {
@@ -54,7 +54,7 @@ const game = {
 
         const { y, x } = this.atualFigure
 
-        const haveBlocksOnLeft = this.atualFigure.figure.some((line, indexY) => {
+        const haveBlocksOnLeft = this.atualFigure.blocks.some((line, indexY) => {
             if (line[0].type === "null") {
                 return false
             }
@@ -62,7 +62,7 @@ const game = {
             return this.state[y + indexY]?.[x - 1]?.type === "block"
         })
 
-        const haveBlocksOnRight = this.atualFigure.figure.some((line, indexY) => {
+        const haveBlocksOnRight = this.atualFigure.blocks.some((line, indexY) => {
             if (line[line.length - 1].type === "null") {
                 return false
             }
@@ -71,7 +71,7 @@ const game = {
         })
 
         if (direction === "right" && !haveBlocksOnRight) {
-            if (x + this.atualFigure.figure[0].length <= 14)
+            if (x + this.atualFigure.blocks[0].length <= 14)
                 this.atualFigure.x++
         }
 
@@ -93,7 +93,7 @@ const addLinePoints = () => {
 }
 
 const addFigurePoints = () => {
-    const { figure } = game.atualFigure
+    const { blocks: figure } = game.atualFigure
 
     let figureBlocks = 0
 
@@ -123,11 +123,20 @@ const getNewGameState = () => {
     return table
 }
 
+const spawnFirstFigure = () => {
+    game.atualFigure.y = 0
+    const {blocks, color} = figures.random()
+    game.atualFigure.blocks = blocks
+    game.atualFigure.color = color
+    game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.blocks[0].length / 2)
+}
+
 const spawnNewFigure = () => {
     game.atualFigure.y = 0
-    game.atualFigure.figure = game.nextFigure.figure
-    game.nextFigure.figure = figures.random()
-    game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.figure[0].length / 2)
+    game.atualFigure.blocks = game.nextFigure.blocks
+    game.atualFigure.color = game.nextFigure.color
+    game.nextFigure = figures.random()
+    game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.blocks[0].length / 2)
 }
 //#endregion
 
@@ -150,7 +159,7 @@ const removeCompleteLines = () => {
 }
 
 const addToState = () => {
-    const { x, y, figure, color } = game.atualFigure
+    const { x, y, blocks: figure, color } = game.atualFigure
 
     figure.forEach((line, indexY) => {
 
@@ -174,15 +183,15 @@ const addToState = () => {
 //#endregion
 
 const collision = () => {
-    const { x, y, figure } = game.atualFigure
+    const { x, y, blocks } = game.atualFigure
 
-    const bottomY = y + figure.length
+    const bottomY = y + blocks.length
 
     if (bottomY === game.height) {
         return true
     }
 
-    const colidBlock = figure.some((line, indexY) => {
+    const colidBlock = blocks.some((line, indexY) => {
         return line.some((block, indexX) => {
             if (block.type === "null") {
                 return false
@@ -271,13 +280,13 @@ const reloadGameConfig = () => {
     }
 }
 
-; (
-    () => {
-        window.addEventListener('game-over', () => {
-            game.gameplayVelocity = game.userPreferences.gameplayVelocity
-        })
-    }
-)()
+    ; (
+        () => {
+            window.addEventListener('game-over', () => {
+                game.gameplayVelocity = game.userPreferences.gameplayVelocity
+            })
+        }
+    )()
 
 const verifyRecords = () => {
     const { pontos, records } = game
@@ -319,10 +328,10 @@ window.onload = async () => {
     await viewInit()
     game.status = "active"
     game.state = getNewGameState()
-    game.nextFigure.figure = figures.random()
+    spawnFirstFigure()
+    game.nextFigure = figures.random()
     game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
     setInterval(renderAll, game.renderVelocity)
-    spawnNewFigure()
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress

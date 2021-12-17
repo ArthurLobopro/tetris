@@ -1,10 +1,14 @@
 import { randint } from "./Util.js"
+import { colors } from "./Colors.js"
 
 const figures = {
     types: [],
     random() {
         const max = this.types.length - 1
-        return this.types[randint(0, max)].blocks
+         
+        const { blocks, name } = this.types[randint(0, max)]
+        const color = colors.figures[name]
+        return { blocks, color }
     }
 }
 
