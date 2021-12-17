@@ -3,11 +3,11 @@ const { gameSchema, preferencesSchema, themeSchema } = require('./StoreSchemas')
 
 const dataPath = "gameData"
 
-const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema, name: 'data' })
+const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema, name: 'data', clearInvalidConfig: true })
 
-const userPreferences = new Store({ cwd: `${dataPath}/userPreferences`, schema: preferencesSchema })
+const userPreferences = new Store({ cwd: `${dataPath}/userPreferences`, schema: preferencesSchema, clearInvalidConfig: true })
 
-const themes = new Store({ cwd: `${dataPath}/themes`, schema: themeSchema, name: 'themes' })
+const themes = new Store({ cwd: `${dataPath}/themes`, schema: themeSchema, name: 'themes', clearInvalidConfig: true })
 
 const store = {
     setUserPreferences(configName, value) { userPreferences.set(configName, value) },
@@ -16,6 +16,5 @@ const store = {
     getGameData() { return gameData.store },
     themes: themes.store
 }
-
 
 module.exports = store
