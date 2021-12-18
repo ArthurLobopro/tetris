@@ -5,10 +5,16 @@ const figures = {
     types: [],
     random() {
         const max = this.types.length - 1
-         
+
         const { blocks, name } = this.types[randint(0, max)]
         const color = colors.figures[name]
         return { blocks, color }
+    },
+    getByName(name) {
+        return this.types.find((figure) => figure.name == name).blocks
+    },
+    getFigureNames() {
+        return this.types.map(figure => figure.name)
     }
 }
 
@@ -51,7 +57,7 @@ figures.types.push({
             { type: 'block' },
             { type: 'block' }
         ]
-    
+
     ]
 })
 
@@ -68,7 +74,7 @@ figures.types.push({
             { type: 'block' },
             { type: 'null' }
         ]
-    
+
     ]
 })
 
