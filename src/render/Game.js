@@ -36,7 +36,8 @@ const game = {
     },
     nextFigure: {
         blocks: null,
-        color: ''
+        color: '',
+        figureType: ''
     },
     nextCanvasSize: {
         height: 6,
@@ -46,7 +47,8 @@ const game = {
         blocks: [[]],
         x: 0,
         y: 0,
-        color: ''
+        color: '',
+        figureType: ''
     },
     moveLock: false,
     move(direction) {
@@ -123,20 +125,31 @@ const getNewGameState = () => {
     return table
 }
 
-const spawnFirstFigure = () => {
-    game.atualFigure.y = 0
-    const {blocks, color} = figures.random()
-    game.atualFigure.blocks = blocks
-    game.atualFigure.color = color
+const centerFigure = () => {
     game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.blocks[0].length / 2)
 }
 
+const spawnFirstFigure = () => {
+    game.atualFigure = {
+        y: 0,
+        ...figures.random()
+    }
+    centerFigure()
+}
+
+const spawnNextFigure = () => {
+    game.nextFigure = {
+        ...figures.random()
+    }
+}
+
 const spawnNewFigure = () => {
-    game.atualFigure.y = 0
-    game.atualFigure.blocks = game.nextFigure.blocks
-    game.atualFigure.color = game.nextFigure.color
-    game.nextFigure = figures.random()
-    game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.blocks[0].length / 2)
+    game.atualFigure = {
+        y: 0,
+        ...game.nextFigure
+    }
+    centerFigure()
+    spawnNextFigure()
 }
 //#endregion
 
@@ -159,16 +172,16 @@ const removeCompleteLines = () => {
 }
 
 const addToState = () => {
-    const { x, y, blocks: figure, color } = game.atualFigure
+    const { x, y, blocks, figureType } = game.atualFigure
 
-    figure.forEach((line, indexY) => {
+    blocks.forEach((line, indexY) => {
 
         line.forEach((block, indexX) => {
 
             game.state[y + indexY] = game.state[y + indexY].map((stateBlock, stateX) => {
                 if ([x + indexX] == stateX) {
                     if (block.type === 'block') {
-                        return { ...block, color }
+                        return { ...block, figureType }
                     }
                     return stateBlock
                 }
@@ -329,7 +342,7 @@ window.onload = async () => {
     game.status = "active"
     game.state = getNewGameState()
     spawnFirstFigure()
-    game.nextFigure = figures.random()
+    spawnNextFigure()
     game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
     setInterval(renderAll, game.renderVelocity)
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
@@ -342,5 +355,8 @@ window.onload = async () => {
         Audios.theme.loop = true
     }
 }
+
+// import viewThemeConfig from "./Telas/Config/Theme.js"
+// window.onload = viewThemeConfig
 
 export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints, reloadGameConfig }

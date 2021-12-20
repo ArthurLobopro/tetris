@@ -8,7 +8,7 @@ const figures = {
 
         const { blocks, name } = this.types[randint(0, max)]
         const color = colors.figures[name]
-        return { blocks, color }
+        return { blocks, color, figureType: name }
     },
     getByName(name) {
         return this.types.find((figure) => figure.name == name).blocks

@@ -1,6 +1,7 @@
 import { formatPoints, game } from './Game.js'
 import { loadImage, range } from './Util.js'
 import { colors } from "./Colors.js"
+import { figures } from './Figures.js'
 
 const gameCanvas = document.querySelector('canvas#game')
 const gameCtx = gameCanvas.getContext('2d')
@@ -13,15 +14,15 @@ const nextCtx = nextCanvas.getContext('2d')
 const drawNextFigure = () => {
     const { squareWidth } = game
     const { width, height } = game.nextCanvasSize
-    const { blocks: figure, color } = game.nextFigure
+    const { blocks, figureType } = game.nextFigure
 
-    const x = Math.trunc(width / 2 - figure[0].length / 2)
-    const y = Math.trunc(height / 2 - figure.length / 2)
+    const x = Math.trunc(width / 2 - blocks[0].length / 2)
+    const y = Math.trunc(height / 2 - blocks.length / 2)
 
-    figure.forEach((line, indexY) => {
+    blocks.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
             if (block.type === 'block') {
-                nextCtx.fillStyle = color
+                nextCtx.fillStyle = colors.figures[figureType]
                 nextCtx.fillRect(
                     (x + indexX) * squareWidth + (1 * x + indexX),
                     (y + indexY) * squareWidth + (1 * y + indexY),
@@ -77,7 +78,7 @@ const drawSquares = () => {
     const { state, squareWidth } = game
     state.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
-            const color = block.type === "null" ? colors.background : block.color
+            const color = block.type === "null" ? colors.background : colors.figures[block.figureType]
 
             gameCtx.fillStyle = color
             gameCtx.fillRect(indexX * squareWidth + (1 * indexX), indexY * squareWidth + (1 * indexY), squareWidth, squareWidth)
@@ -89,12 +90,12 @@ const drawSquares = () => {
 
 const drawAtualFigure = () => {
     const { squareWidth } = game
-    const { x, y, blocks, color } = game.atualFigure
+    const { x, y, blocks, figureType } = game.atualFigure
 
     blocks.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
             if (block.type === 'block') {
-                gameCtx.fillStyle = color
+                gameCtx.fillStyle = colors.figures[figureType]
                 gameCtx.fillRect(
                     (x + indexX) * squareWidth + (1 * x + indexX),
                     (y + indexY) * squareWidth + (1 * y + indexY),

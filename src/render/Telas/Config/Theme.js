@@ -1,14 +1,14 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
 import { game, reloadGameConfig } from "../../Game.js"
 import buildFiguresViewer from "./figuresViewer.js"
-import {} from "../../Colors.js"
+import { updateColors } from "../../Colors.js"
 
 const get = id => document.getElementById(id)
 const container = get('container')
 
 let tempTheme = ''
 
-export default function viewThemeConfig() {
+export default async function viewThemeConfig() {
     const themeScrenn = document.createElement('div')
     themeScrenn.className = "telas-wrapper"
     themeScrenn.innerHTML = `
@@ -20,7 +20,10 @@ export default function viewThemeConfig() {
             <div class="view-wrapper">
                 <div class="line">
                     <div>Retro</div>
-                <div class="radio" name="theme" data-check="${userPreferences.theme === "retro"}" data-value="retro"></div>
+                    <div 
+                        class="radio" name="theme" 
+                        data-check="${userPreferences.theme === "retro"}" data-value="retro"
+                    ></div>
                 </div>
                 <div class="line">
                     <div>Tetris</div>
@@ -49,12 +52,10 @@ export default function viewThemeConfig() {
     const viewWrapper = themeScrenn.querySelector(".view-wrapper")
     viewWrapper.appendChild(viewer)
     container.appendChild(themeScrenn)
-    
-
 
     const themeRadios = document.getElementsByName('theme')
 
-    themeRadios.forEach( radio => {
+    themeRadios.forEach(radio => {
         radio.onclick = event => {
             const clickedButton = event.currentTarget
             const checked = document.querySelector('[data-check="true"]')
@@ -66,7 +67,26 @@ export default function viewThemeConfig() {
         }
     })
 
-   
+    const saveConfig = () => {
+        userPreferences.theme = tempTheme
+        saveUserPreferences()
+    }
 
-    
+    const buttons = themeScrenn.querySelectorAll('button')
+
+    return new Promise(response => {
+        buttons.forEach(button => {
+            button.onclick = event => {
+                const target = event.currentTarget
+                if (target.value == 1) {
+                    container.removeChild(themeScrenn)
+                    saveConfig()
+                    updateColors()
+                }
+                response(true)
+            }
+        })
+    })
+
+
 }
