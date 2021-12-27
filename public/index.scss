@@ -49,9 +49,11 @@ canvas {
 
 .line{
     padding: 3px 0;
-    display: flex;
+    display: grid;
     justify-content: space-between;
     align-items: center;
+    grid-template-columns: max-content max-content;
+    grid-column-gap: 10px;
     background-color: #000;
     color: #ccc;
 }
