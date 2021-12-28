@@ -38,6 +38,23 @@ const preferencesSchema = {
     }
 }
 
+const tetrisTheme = {
+    type: "object",
+    default: {
+        figures: {
+            square: "#D0BE00",
+            stick: "#00CAE0",
+            z: "#DA0000",
+            "reverse-z": "#00C733",
+            "reverse-L": "#007CC6",
+            L: "#D08A00",
+            T: " #C500EA"
+        },
+        background: "#0e0d0d",
+        lines: "#2a2929"
+    }
+}
+
 const themeSchema = {
     retro: {
         type: "object",
@@ -55,22 +72,8 @@ const themeSchema = {
             lines: "#AAA"
         }
     },
-    tetris: {
-        type: "object",
-        default: {
-            figures: {
-                square: "#D0BE00",
-                stick: "#00CAE0",
-                z: "#DA0000",
-                "reverse-z": "#00C733",
-                "reverse-L": "#007CC6",
-                L: "#D08A00",
-                T: " #C500EA"
-            },
-            background: "#0e0d0d",
-            lines: "#2a2929"
-        }
-    }
+    tetris: tetrisTheme,
+    custom: tetrisTheme
 }
 
 module.exports = { gameSchema, preferencesSchema, themeSchema }
