@@ -1,10 +1,8 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
-import { game, reloadGameConfig } from "../../Game.js"
 import buildFiguresViewer from "./figuresViewer.js"
 import { updateColors } from "../../Colors.js"
 
-const get = id => document.getElementById(id)
-const container = get('container')
+const container = document.getElementById('container')
 
 let tempTheme = ''
 
@@ -79,10 +77,10 @@ export default async function viewThemeConfig() {
             button.onclick = event => {
                 const target = event.currentTarget
                 if (target.value == 1) {
-                    container.removeChild(themeScrenn)
                     saveConfig()
                     updateColors()
                 }
+                container.removeChild(themeScrenn)
                 response(true)
             }
         })
