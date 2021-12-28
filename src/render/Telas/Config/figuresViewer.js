@@ -2,7 +2,7 @@ import { game } from "../../Game.js"
 import { range } from "../../Util.js"
 import { figures } from "../../Figures.js"
 
-export default function buildFiguresViewer(colors) {
+export default function buildFiguresViewer(colors, changeFigureCallback) {
     const [width, height] = [8, 8]
 
     const viewerCanvas = document.createElement("canvas")
@@ -77,12 +77,18 @@ export default function buildFiguresViewer(colors) {
         const figureIndex = figuresNames.indexOf(atualFigure)
         atualFigure = figuresNames[figureIndex + 1 === figuresNames.length ? 0 : figureIndex + 1]
         renderFigure(atualFigure, colors)
+        if(typeof changeFigureCallback == 'function'){
+            changeFigureCallback()
+        }
     }
 
     function previousFigure() {
         const figureIndex = figuresNames.indexOf(atualFigure)
         atualFigure = figuresNames[figureIndex === 0 ? figuresNames.length - 1 : figureIndex - 1]
         renderFigure(atualFigure, colors)
+        if(typeof changeFigureCallback == 'function'){
+            changeFigureCallback()
+        }
     }
 
     rightButton.onclick = nextFigure
@@ -100,5 +106,9 @@ export default function buildFiguresViewer(colors) {
         renderFigure(atualFigure)
     }
 
-    return { viewer, setColors }
+    function getAtualFigureName(){
+        return atualFigure
+    }
+
+    return { viewer, setColors, getAtualFigureName }
 }
