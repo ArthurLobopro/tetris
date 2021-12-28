@@ -358,5 +358,7 @@ window.onload = async () => {
 
 // import viewThemeConfig from "./Telas/Config/Theme.js"
 // window.onload = viewThemeConfig
+// import viewCustomThemeConfig from "./Telas/Config/CustomTheme.js"
+// window.onload = viewCustomThemeConfig
 
 export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints, reloadGameConfig }

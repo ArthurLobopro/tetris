@@ -4,7 +4,7 @@ let userPreferences, gameData, themes
 window.addEventListener('load', () => {
     userPreferences = Store.getUserPreferences()
     gameData = Store.getGameData()
-    themes = Store.themes
+    themes = Store.getThemes()
 })
 
 
@@ -14,4 +14,6 @@ const saveLastPontuation = () => Store.setGameData('lastPontuation', game.pontos
 
 const saveRecords = () => Store.setGameData('records', game.records)
 
-export { userPreferences, saveUserPreferences, gameData, saveLastPontuation, saveRecords, themes }
+const saveCustomTheme = ()=> Store.setTheme(themes.custom)
+
+export { userPreferences, saveUserPreferences, gameData, saveLastPontuation, saveRecords, saveCustomTheme, themes }

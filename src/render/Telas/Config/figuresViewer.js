@@ -10,6 +10,7 @@ export default function buildFiguresViewer(colors, changeFigureCallback) {
     viewerCanvas.height = game.squareWidth * 8 + 7
 
     const viewer = document.createElement('div')
+    viewer.id = "theme-viewer"
     viewer.innerHTML = `
         <div id="arrows">
             <img src="../assets/arrow.png" width="20px" id="left">
@@ -110,5 +111,5 @@ export default function buildFiguresViewer(colors, changeFigureCallback) {
         return atualFigure
     }
 
-    return { viewer, setColors, getAtualFigureName }
+    return { viewer, setColors, getAtualFigureName, renderFigure }
 }

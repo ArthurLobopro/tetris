@@ -12,9 +12,10 @@ const themes = new Store({ cwd: `${dataPath}/themes`, schema: themeSchema, name:
 const store = {
     setUserPreferences(configName, value) { userPreferences.set(configName, value) },
     setGameData(configName, value) { gameData.set(configName, value) },
+    setTheme(customTheme){ themes.set('custom', customTheme)},
     getUserPreferences() { return userPreferences.store },
     getGameData() { return gameData.store },
-    themes: themes.store
+    getThemes(){ return themes.store}
 }
 
 module.exports = store

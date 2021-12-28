@@ -1,6 +1,7 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
 import buildFiguresViewer from "./figuresViewer.js"
 import { updateColors } from "../../Colors.js"
+import viewCustomThemeConfig from "./CustomTheme.js"
 
 const container = document.getElementById('container')
 
@@ -17,20 +18,32 @@ export default async function viewThemeConfig() {
 
             <div class="view-wrapper">
                 <div class="line">
-                    <div>Retro</div>
+                    Retro
                     <div 
                         class="radio" name="theme" 
                         data-check="${userPreferences.theme === "retro"}" data-value="retro"
                     ></div>
                 </div>
                 <div class="line">
-                    <div>Tetris</div>
+                    Tetris
                     <div 
                         class="radio" name="theme" 
                         data-check="${userPreferences.theme === "tetris"}" data-value="tetris"
                     ></div>
                 </div>
-                <div class="buttons">
+                <div class="line">
+                    Customizável
+                    <div 
+                        class="radio" name="theme" 
+                        data-check="${userPreferences.theme === "custom"}" data-value="custom"
+                    ></div>
+                </div>
+                <div class="flex-center">
+                    <button id="open-custom-screnn">
+                        Customizar
+                    </button>
+                </div>
+            <div class="buttons">
                 <button value="1">
                     OK
                 </button>
@@ -46,10 +59,16 @@ export default async function viewThemeConfig() {
     const getColors = () => themes[tempTheme]
 
     let colors = getColors()
-    const { viewer, setColors } = buildFiguresViewer(colors)
+    const { viewer, setColors, getAtualFigureName, renderFigure } = buildFiguresViewer(colors)
     const viewWrapper = themeScrenn.querySelector(".view-wrapper")
     viewWrapper.appendChild(viewer)
     container.appendChild(themeScrenn)
+
+    themeScrenn.querySelector("#open-custom-screnn").onclick = async () => {
+        await viewCustomThemeConfig()
+        setColors(getColors())
+        renderFigure(getAtualFigureName())
+    }
 
     const themeRadios = document.getElementsByName('theme')
 
@@ -70,7 +89,7 @@ export default async function viewThemeConfig() {
         saveUserPreferences()
     }
 
-    const buttons = themeScrenn.querySelectorAll('button')
+    const buttons = themeScrenn.querySelectorAll('.buttons > button')
 
     return new Promise(response => {
         buttons.forEach(button => {

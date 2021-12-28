@@ -29,7 +29,7 @@
     color: #ccc;
 }
 
-fieldset {
+fieldset{
     align-self: center;
     width: max-content;
     min-width: 400px;
@@ -85,10 +85,34 @@ fieldset {
             min-width: max-content;
         }
     }
-    & div.view-wrapper #arrows {
+    &#theme .buttons {
+        display: grid;
+        grid-template-columns: max-content max-content;
+        grid-column-gap: 15px;
+        justify-content: end;
+        & > button {
+            margin-bottom: 0;
+        }
+    }
+}
+
+#open-custom-screnn{
+    margin: 0 auto;
+}
+
+#theme-viewer{
+    height: 100%;
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    & #arrows {
         display: flex;
         justify-content: space-evenly;
+        align-items: center;
         margin-top: 3px;
+        & img{
+            width: 20px;
+            height: 20px;
+        }
     }
 }
 

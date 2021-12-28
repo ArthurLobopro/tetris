@@ -18,7 +18,7 @@ export default async function viewConfig() {
     config_screen.className = "telas-wrapper"
     config_screen.innerHTML = `
     <fieldset>
-        <legend>CONFIGURAÇÃO</legend>
+        <legend>CONFIGURAÇÕES</legend>
         <div class="button-wrapper">
             <button data-type="music" class="focus">Musica</button>
             <button data-type="velocity">Velocidade</button>
