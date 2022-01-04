@@ -1,13 +1,13 @@
 import { range } from "./Util.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
-import viewGameOver from "./Telas/GameOver.js"
+import viewGameOver from "./Screens/GameOver.js"
 import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
-import viewInit from "./Telas/Init.js"
+import viewInit from "./Screens/Init.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
-import viewPause from "./Telas/Pause.js"
+import viewPause from "./Screens/Pause.js"
 
 const gameCanvas = document.getElementById('game')
 const nextCanvas = document.getElementById('next')
