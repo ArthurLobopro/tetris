@@ -7,9 +7,8 @@ import viewInit from "./Screens/Init.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
 import viewPause from "./Screens/Pause.js"
+import { gameCanvas, nextCanvas } from "./ScreenManager.js"
 
-const gameCanvas = document.getElementById('game')
-const nextCanvas = document.getElementById('next')
 const pontosSpan = document.getElementById('pontos')
 const lastPointsDiv = document.getElementById('last-pontuation')
 
