@@ -6,16 +6,16 @@ const container = document.getElementById('container')
 let configTemp = {}
 
 const saveConfig = () => {
-    Object.entries(configTemp).forEach(([key,value]) => {
-        userPreferences[key]= value
+    Object.entries(configTemp).forEach(([key, value]) => {
+        userPreferences[key] = value
     })
-    game.userPreferences = {...userPreferences}
+    game.userPreferences = { ...userPreferences }
     saveUserPreferences()
 }
 
-export default function viewVelocity(){
+export default async function viewVelocity() {
     const { gameplayVelocity: velocidade } = userPreferences
-    configTemp = {...userPreferences}
+    configTemp = { ...userPreferences }
     const velocity_screen = document.createElement('div')
     velocity_screen.className = 'telas-wrapper'
     velocity_screen.innerHTML = `
@@ -44,27 +44,30 @@ export default function viewVelocity(){
             </button>
         </div>
     </fieldset>`
+
     const fieldset = velocity_screen.querySelector('fieldset')
     const checks = fieldset.querySelectorAll('.radio')
-    checks.forEach( e => {
+
+    checks.forEach(e => {
         e.onclick = event => {
             const target = event.target
-           
-            document.querySelectorAll('.radio').forEach( e => {
+
+            document.querySelectorAll('.radio').forEach(e => {
                 e.dataset.check = "false"
             })
-           
+
             target.dataset.check = "true"
             configTemp.gameplayVelocity = Number(target.dataset.value)
         }
     })
+    
     container.appendChild(velocity_screen)
 
     const buttons = velocity_screen.querySelectorAll('button')
-    buttons.forEach( button => {
+    buttons.forEach(button => {
         button.onclick = event => {
             const { value } = event.target
-            if(value == "1"){
+            if (value == "1") {
                 saveConfig()
             }
             container.removeChild(velocity_screen)

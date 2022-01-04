@@ -1,8 +1,8 @@
 import { saveUserPreferences, userPreferences } from "../../Data.js"
 import { game, reloadGameConfig } from "../../Game.js"
-const container = document.getElementById('container')
 
 const get = id => document.getElementById(id)
+const container = get('container')
 
 let configTemp = {}
 

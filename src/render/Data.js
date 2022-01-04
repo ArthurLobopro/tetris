@@ -1,16 +1,19 @@
 import { game } from "./Game.js"
-let userPreferences, gameData
+let userPreferences, gameData, themes
 
 window.addEventListener('load', () => {
-    userPreferences = api.getUserPreferences()
-    gameData = api.getGameData()
+    userPreferences = Store.getUserPreferences()
+    gameData = Store.getGameData()
+    themes = Store.getThemes()
 })
 
-const saveUserPreferences = () => api.setUserPreferences(userPreferences)
 
-const saveLastPontuation = () => api.setGameData('lastPontuation', game.pontos)
+const saveUserPreferences = () => Store.setUserPreferences(userPreferences)
 
-const saveRecords = () => api.setGameData('records', game.records)
+const saveLastPontuation = () => Store.setGameData('lastPontuation', game.pontos)
 
+const saveRecords = () => Store.setGameData('records', game.records)
 
-export { userPreferences, saveUserPreferences, gameData, saveLastPontuation, saveRecords }
+const saveCustomTheme = ()=> Store.setTheme(themes.custom)
+
+export { userPreferences, saveUserPreferences, gameData, saveLastPontuation, saveRecords, saveCustomTheme, themes }

@@ -1,10 +1,20 @@
 import { randint } from "./Util.js"
+import { colors } from "./Colors.js"
 
 const figures = {
     types: [],
     random() {
         const max = this.types.length - 1
-        return this.types[randint(0, max)].blocks
+
+        const { blocks, name } = this.types[randint(0, max)]
+        const color = colors.figures[name]
+        return { blocks, color, figureType: name }
+    },
+    getByName(name) {
+        return this.types.find((figure) => figure.name == name).blocks
+    },
+    getFigureNames() {
+        return this.types.map(figure => figure.name)
     }
 }
 
@@ -47,7 +57,7 @@ figures.types.push({
             { type: 'block' },
             { type: 'block' }
         ]
-    
+
     ]
 })
 
@@ -64,7 +74,7 @@ figures.types.push({
             { type: 'block' },
             { type: 'null' }
         ]
-    
+
     ]
 })
 
