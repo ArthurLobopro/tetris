@@ -37,15 +37,24 @@ export default async function viewCustomThemeConfig() {
 
                 <div class="line">
                     Fundo
-                    <input type="color" value="${colors.background}" data-name="background" id="color-background">
+                    <div>
+                        <input type="color" value="${colors.background}" data-name="background" id="color-background">
+                        <button value="background">Zerar</button>
+                    </div>
                 </div>
                 <div class="line">
                     Linhas
-                    <input type="color" value="${colors.lines}" data-name="lines" id="color-lines">
+                    <div>
+                        <input type="color" value="${colors.lines}" data-name="lines" id="color-lines">
+                        <button value="lines">Zerar</button>
+                    </div>
                 </div>
                 <div class="line">
                     Figura atual
-                    <input type="color" value="${colors.figures['square']}" data-name="figure" id="color-figure">
+                    <div>
+                        <input type="color" value="${colors.figures['square']}" data-name="figure" id="color-figure">
+                        <button value="figure">Zerar</button>
+                    </div>
                 </div>
 
             <div class="buttons">
@@ -100,6 +109,22 @@ export default async function viewCustomThemeConfig() {
         themes.custom = colors
         saveCustomTheme()
     }
+
+    const resetButtons = customThemeScreen.querySelectorAll('.line > div > button')
+    resetButtons.forEach( button => {
+        button.onclick = () => {
+            const functions = {
+                background: resetBackground,
+                line: resetLines,
+                figure: () => resetFigure(getAtualFigureName())
+            }
+            const type = button.value
+            functions?.[type]?.()
+            setColors(colors)
+            customThemeScreen.querySelector(`[data-name="${type}"]`).value = type === "figure" ? 
+                colors.figures[getAtualFigureName()] : colors[type]
+        }
+    })
 
     return new Promise( response => {
         const buttons = customThemeScreen.querySelectorAll('.buttons button')
