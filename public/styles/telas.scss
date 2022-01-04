@@ -52,12 +52,14 @@ fieldset{
         overflow: auto;
         height: 100%;
     }
+    & .buttons, .button-wrapper > button {
+        margin: 15px auto;
+    }
     & button {
         background-color: #000;
         color: #ccc;
         width: max-content;
         padding: 5px 10px;
-        margin: 15px auto;
         border: 2px solid;
         border-radius: 3px;
         user-select: none;
@@ -112,6 +114,32 @@ fieldset{
         & img{
             width: 20px;
             height: 20px;
+        }
+    }
+}
+
+#customTheme {
+    position: relative;
+    & .buttons{
+        display: flex;
+        justify-content: right;
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        & > button  {
+            margin: 0;
+            &:first-child{  
+                margin-right: 10px;
+            }
+        }
+    }
+    & .line > div {
+        width: max-content;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        & > input {
+            margin-right: 10px;
         }
     }
 }
