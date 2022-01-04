@@ -1,4 +1,3 @@
-import { range } from "./Util.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
 import viewGameOver from "./Screens/GameOver.js"

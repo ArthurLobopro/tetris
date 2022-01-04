@@ -1,7 +1,6 @@
 import { formatPoints, game } from './Game.js'
-import { loadImage, range } from './Util.js'
+import { range } from './Util.js'
 import { colors } from "./Colors.js"
-import { figures } from './Figures.js'
 
 const gameCanvas = document.querySelector('canvas#game')
 const gameCtx = gameCanvas.getContext('2d')

@@ -1,4 +1,4 @@
-import { saveUserPreferences, userPreferences, themes, saveCustomTheme } from "../../Data.js"
+import { themes, saveCustomTheme } from "../../Data.js"
 import buildFiguresViewer from "./figuresViewer.js"
 import { figures } from "../../Figures.js"
 

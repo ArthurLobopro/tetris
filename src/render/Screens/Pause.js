@@ -1,4 +1,4 @@
-import { playGame, newGame, game } from "../Game.js"
+import { newGame, game } from "../Game.js"
 import { mainKeyDown } from "../Controllers.js"
 import viewConfig from "./Config.js"
 import viewInit from "./Init.js"
