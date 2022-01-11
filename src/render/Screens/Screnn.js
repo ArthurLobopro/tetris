@@ -14,6 +14,7 @@ export class Screen {
 
     show() {
         container.appendChild(this.screen)
+        this.addNavigation()
     }
 
     hide() {
