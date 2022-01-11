@@ -7,7 +7,7 @@ import viewInit from "./Screens/Init.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
 import viewPause from "./Screens/Pause.js"
-import { gameCanvas, nextCanvas } from "./ScreenManager.js"
+import { gameCanvas, nextCanvas, screens } from "./ScreenManager.js"
 
 const pontosSpan = document.getElementById('pontos')
 const lastPointsDiv = document.getElementById('last-pontuation')
@@ -19,7 +19,8 @@ const game = {
     width: 15,
     squareWidth: 16,
     state: [],
-    interval: null,
+    fallInterval: null,
+    renderInterval: null,
     pointsPerBlock: 10,
     lastPontuation: 0,
     pontos: 0,
@@ -217,16 +218,17 @@ const collision = () => {
 
 //#region Gameplay
 const pause = async () => {
-    clearInterval(game.interval)
+    clearInterval(game.fallInterval)
     game.status = "paused"
     if (await viewPause()) {
         game.status = "active"
-        game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity);
+        game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
     }
 }
 
 const gameOver = async () => {
-    clearInterval(game.interval)
+    clearInterval(game.fallInterval)
+    clearInterval(game.renderInterval)
     verifyRecords()
     saveLastPontuation()
     await viewGameOver()
@@ -238,15 +240,28 @@ const gameOver = async () => {
 const newGame = () => {
     game.status = "active"
     game.state = getNewGameState()
+    spawnFirstFigure()
+    spawnNextFigure()
+    
     game.lastPontuation = game.pontos
     game.pontos = 0
     pontosSpan.innerText = formatPoints(game.pontos)
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
-    spawnNewFigure()
+    
     renderAll()
+    
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress
-    game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
+
+    game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity)
+    game.renderInterval = setInterval(renderAll, game.renderVelocity)
+
+    if (userPreferences.music) {
+        game.isMusicOn = true
+        Audios.theme.volume = userPreferences.musicVolume
+        Audios.theme.play()
+        Audios.theme.loop = true
+    }
 }
 
 const playGame = () => {
@@ -336,22 +351,7 @@ nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextC
 
 window.onload = async () => {
     loadGameData()
-    await viewInit()
-    game.status = "active"
-    game.state = getNewGameState()
-    spawnFirstFigure()
-    spawnNextFigure()
-    game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
-    setInterval(renderAll, game.renderVelocity)
-    lastPointsDiv.innerText = formatPoints(game.lastPontuation)
-    window.onkeydown = mainKeyDown
-    window.onkeypress = mainKeyPress
-    if (userPreferences.music) {
-        game.isMusicOn = true
-        Audios.theme.volume = userPreferences.musicVolume
-        Audios.theme.play()
-        Audios.theme.loop = true
-    }
+    screens.init.show()
 }
 
 export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints, reloadGameConfig }
