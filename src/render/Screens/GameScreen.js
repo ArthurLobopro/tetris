@@ -23,9 +23,9 @@ function viewGameScreen() {
     const gameCanvas = gameScreen.querySelector('canvas#game')
     const gameCtx = gameCanvas.getContext('2d')
     const nextCanvas = gameScreen.querySelector('canvas#next')
-    const nextContext = nextCanvas.getContext('2d')
+    const nextCtx = nextCanvas.getContext('2d')
 
-    return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextContext }
+    return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx }
 }
 
 export { viewGameScreen }

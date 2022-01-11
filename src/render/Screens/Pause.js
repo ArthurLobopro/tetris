@@ -1,52 +1,58 @@
-import { newGame, game } from "../Game.js"
-import { mainKeyDown } from "../Controllers.js"
-import viewConfig from "./Config.js"
-import viewInit from "./Init.js"
-import navigation from "./navigation.js"
+import { newGame, game, continueGame } from "../Game.js"
+import { screens } from "../ScreenManager.js"
+import { Screen } from "./Screnn.js"
 
-const get = id => document.getElementById(id)
-const tela = get('tela')
-const container = document.getElementById('container')
+export default class PauseScreen extends Screen {
+    constructor() {
+        super()
 
-export default async function viewPause() {
-    const pause_wrapper = document.createElement('div')
-    pause_wrapper.id = "pause-wrapper"
-    pause_wrapper.innerHTML = `
-    <fieldset id="pause">
-        <legend>Pause</legend>
-        <div class="button-wrapper">
-            <button id="continue" class="focus">CONTINUAR</button>
-            <button id="config">CONFIGURAÇÕES</button>
-            <button id="new-game">NOVO JOGO</button>
-            <button id="go-to-init">IR PARA O INICIO</button>
-        </div>
-    </fieldset>`
+        this.buildFunction = function () {
+            const pauseScreen = document.createElement('div')
+            pauseScreen.id = "pause-wrapper"
+            pauseScreen.innerHTML = `
+            <fieldset id="pause">
+                <legend>Pause</legend>
+                <div class="button-wrapper">
+                    <button data-type="continue" class="focus">CONTINUAR</button>
+                    <button data-type="config">CONFIGURAÇÕES</button>
+                    <button data-type="new-game">NOVO JOGO</button>
+                    <button data-type="go-to-init">IR PARA O INICIO</button>
+                </div>
+            </fieldset>`
 
-    container.appendChild(pause_wrapper)
-    window.onkeydown = event => navigation[event.key]?.(pause_wrapper)
-    return new Promise( resolve => {
-        get('continue').onclick = () => {
-            container.removeChild(pause_wrapper)
-            window.onkeydown = mainKeyDown
-            resolve(true)
-        }
-        get('new-game').onclick = () => {
-            container.removeChild(pause_wrapper)
-            window.onkeydown = mainKeyDown
-            resolve(false)
-            newGame()
-        }
-        get('config').onclick = async () => {
-            await viewConfig()
-            window.onkeydown = event => navigation[event.key]?.(pause_wrapper)
-        }
-        get('go-to-init').onclick = async () => {
-            container.removeChild(pause_wrapper)
-            game.status = "inactive"
-            if(await viewInit()){
-                newGame()
-                window.onkeydown = mainKeyDown
+            const functions = {}
+
+            functions.continue = () => {
+                this.close()
+                continueGame()
             }
+
+            functions["new-game"] = () => {
+                this.close()
+                newGame()
+            }
+
+            functions.config = () => {
+                screens.config.show(screens.pause)
+            }
+
+            functions["go-to-init"] = () => {
+                this.close()
+                game.status = "inactive"
+                screens.init.show()
+            }
+
+            const buttons = pauseScreen.querySelectorAll('button')
+            buttons.forEach(button => {
+                button.onclick = () => {
+                    const { type } = button.dataset
+                    functions[type]()
+                }
+            })
+
+            return pauseScreen
         }
-    })   
+
+        this.reset()
+    }
 }

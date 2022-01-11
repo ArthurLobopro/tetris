@@ -1,35 +1,38 @@
-import { game } from '../Game.js'
-import navigation from "./navigation.js"
+import { game, newGame } from '../Game.js'
+import { Screen } from './Screnn.js'
 
-const canvasGame = document.getElementById('game')
-const tela = document.getElementById('tela')
-const container = document.getElementById('container')
+export default class GameOverScrenn extends Screen {
+    constructor() {
+        super()
 
-export default async function viewGameOver() {
-    const image = canvasGame.toDataURL('image/png')
-    const telaGameOver = document.createElement('div')
-    telaGameOver.className = 'telas-wrapper'
-    telaGameOver.innerHTML = `
-    <fieldset style="height: 90%">
-        <legend>GAME OVER</legend>
-        <div class="table">
-            <div class="line">
-                <div>Pontuação:</div>
-                <div>${game.pontos}</div>
-            </div>
-        </div>
-        <img src="${image}" style="border: 1px solid #aaa;max-height:73%" id="game-over-print">
-        <button class="focus">NEW GAME</button>
-    </fieldset>`
-    container.appendChild(telaGameOver)
-    tela.style.display = 'none'
-    const button = telaGameOver.querySelector('button')
-    window.onkeydown = event => navigation[event.key]?.(telaGameOver)
-    return new Promise(resolve => {
-        button.onclick = () => {
-            container.removeChild(telaGameOver)
-            tela.style.display = ''
-            resolve(true)
+        this.buildFunction = function () {
+            const canvasGame = document.getElementById('game')
+            const image = canvasGame.toDataURL('image/png')
+
+            const gameOverScrenn = document.createElement('div')
+            gameOverScrenn.className = 'telas-wrapper'
+            gameOverScrenn.innerHTML = `
+            <fieldset style="height: 90%">
+                <legend>GAME OVER</legend>
+                <div class="table">
+                    <div class="line">
+                        <div>Pontuação:</div>
+                        <div>${game.pontos}</div>
+                    </div>
+                </div>
+                <img src="${image}" style="border: 1px solid #aaa;max-height:73%" id="game-over-print">
+                <button class="focus">NEW GAME</button>
+            </fieldset>`
+
+
+            const button = gameOverScrenn.querySelector('button')
+
+            button.onclick = () => {
+                this.close()
+                newGame()
+            }
+
+            return gameOverScrenn
         }
-    })
+    }
 }

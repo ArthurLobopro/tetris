@@ -53,4 +53,14 @@ export default class ConfigScreen extends Screen {
 
         this.reset()
     }
+
+    close(){
+        super.close()
+        this.afterScreen.addNavigation()
+    }
+
+    show(afterScreen){
+        super.show()
+        this.afterScreen = afterScreen
+    }
 }

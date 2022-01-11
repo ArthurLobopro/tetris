@@ -28,7 +28,7 @@ export default class InitScreen extends Screen {
                             newGame()
                             break
                         case "config":
-                            screens.config.show()
+                            screens.config.show(screens.init)
                             break
                         case "exit":
                             ipcRenderer.send('close')
