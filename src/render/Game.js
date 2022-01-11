@@ -1,13 +1,11 @@
+import { gameCanvas, nextCanvas, screens } from "./ScreenManager.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
-import viewGameOver from "./Screens/GameOver.js"
 import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
-import viewInit from "./Screens/Init.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
 import viewPause from "./Screens/Pause.js"
-import { gameCanvas, nextCanvas, screens } from "./ScreenManager.js"
 
 const pontosSpan = document.getElementById('pontos')
 const lastPointsDiv = document.getElementById('last-pontuation')
@@ -217,13 +215,16 @@ const collision = () => {
 }
 
 //#region Gameplay
-const pause = async () => {
+const pause = () => {
     clearInterval(game.fallInterval)
     game.status = "paused"
-    if (await viewPause()) {
-        game.status = "active"
-        game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
-    }
+    screens.pause.show()
+}
+
+const continueGame = () => {
+    game.status = "active"
+    game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
+    window.onkeydown = mainKeyDown
 }
 
 const gameOver = async () => {
@@ -231,10 +232,9 @@ const gameOver = async () => {
     clearInterval(game.renderInterval)
     verifyRecords()
     saveLastPontuation()
-    await viewGameOver()
-    const newGameEvent = new Event('game-over')
-    window.dispatchEvent(newGameEvent)
-    newGame()
+    
+    screens.gameOver.reset()
+    screens.gameOver.show()
 }
 
 const newGame = () => {
@@ -354,4 +354,4 @@ window.onload = async () => {
     screens.init.show()
 }
 
-export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints, reloadGameConfig }
+export { game, playGame, collision, addFigurePoints, newGame, pause, continueGame, formatPoints, reloadGameConfig }
