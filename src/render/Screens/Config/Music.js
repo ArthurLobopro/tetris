@@ -68,7 +68,10 @@ export default class MusicConfigScreen extends Screen {
 
             return music_screen
         }
+    }
 
+    show(){
         this.reset()
+        super.show()
     }
 }

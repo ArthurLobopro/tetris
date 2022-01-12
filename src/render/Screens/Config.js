@@ -1,5 +1,4 @@
 import { game, reloadGameConfig } from "../Game.js"
-import viewVelocity from "./Config/Velocity.js"
 import viewThemeConfig from "./Config/Theme.js"
 
 import { Screen } from "./Screnn.js"
@@ -7,10 +6,11 @@ import { screens } from "../ScreenManager.js"
 
 const configs = {
     music: () => {
-        screens.configScrenns.music.reset()
         screens.configScrenns.music.show(false)
     },
-    velocity: viewVelocity,
+    velocity: () => {
+        screens.configScrenns.velocity.show(false)
+    },
     theme: viewThemeConfig
 }
 

@@ -4,6 +4,7 @@ import GameOverScrenn from "./Screens/GameOver.js";
 import PauseScreen from "./Screens/Pause.js";
 import { viewGameScreen } from "./Screens/GameScreen.js";
 import MusicConfigScreen from "./Screens/Config/Music.js";
+import VelocityConfigScreen from "./Screens/Config/Velocity.js";
 
 const container = document.getElementById("container")
 
@@ -17,6 +18,7 @@ const screens = {
     pause: new PauseScreen(),
     configScrenns: {
         music: new MusicConfigScreen(),
+        velocity: new VelocityConfigScreen()
     }
 }
 
