@@ -8,13 +8,19 @@ export class Screen {
         window.onkeydown = event => navigation[event.key]?.(this.screen)
     }
 
+    removeNavigation(){
+        window.onkeydown = null
+    }
+
     reset() {
         this.screen = this.buildFunction()
     }
 
-    show() {
+    show(navigation = true) {
         container.appendChild(this.screen)
-        this.addNavigation()
+        if(navigation){
+            this.addNavigation()
+        }
     }
 
     hide() {

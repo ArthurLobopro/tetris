@@ -1,16 +1,15 @@
 import { game, reloadGameConfig } from "../Game.js"
-import viewMusic from "./Config/Music.js"
 import viewVelocity from "./Config/Velocity.js"
 import viewThemeConfig from "./Config/Theme.js"
-import navigation from "./navigation.js"
 
 import { Screen } from "./Screnn.js"
-
-const container = document.getElementById('container')
-const get = id => document.getElementById(id)
+import { screens } from "../ScreenManager.js"
 
 const configs = {
-    music: viewMusic,
+    music: () => {
+        screens.configScrenns.music.reset()
+        screens.configScrenns.music.show(false)
+    },
     velocity: viewVelocity,
     theme: viewThemeConfig
 }
@@ -42,6 +41,7 @@ export default class ConfigScreen extends Screen {
                         reloadGameConfig()
                         this.close()
                     } else {
+                        this.removeNavigation()
                         await configs[type]?.(game)
                         this.addNavigation()
                     }
