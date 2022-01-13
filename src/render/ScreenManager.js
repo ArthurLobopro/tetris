@@ -5,6 +5,8 @@ import PauseScreen from "./Screens/Pause.js";
 import { viewGameScreen } from "./Screens/GameScreen.js";
 import MusicConfigScreen from "./Screens/Config/Music.js";
 import VelocityConfigScreen from "./Screens/Config/Velocity.js";
+import ThemeConfigScreen from "./Screens/Config/Theme.js";
+import CustomThemeConfigScreen from "./Screens/Config/CustomTheme.js"
 
 const container = document.getElementById("container")
 
@@ -18,7 +20,9 @@ const screens = {
     pause: new PauseScreen(),
     configScrenns: {
         music: new MusicConfigScreen(),
-        velocity: new VelocityConfigScreen()
+        velocity: new VelocityConfigScreen(),
+        theme: new ThemeConfigScreen(),
+        customTheme: new CustomThemeConfigScreen()
     }
 }
 

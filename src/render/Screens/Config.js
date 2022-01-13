@@ -1,17 +1,11 @@
 import { game, reloadGameConfig } from "../Game.js"
-import viewThemeConfig from "./Config/Theme.js"
-
 import { Screen } from "./Screnn.js"
 import { screens } from "../ScreenManager.js"
 
 const configs = {
-    music: () => {
-        screens.configScrenns.music.show(false)
-    },
-    velocity: () => {
-        screens.configScrenns.velocity.show(false)
-    },
-    theme: viewThemeConfig
+    music: () => screens.configScrenns.music.show(false),
+    velocity: () => screens.configScrenns.velocity.show(false),
+    theme: () => screens.configScrenns.theme.show(false)
 }
 
 export default class ConfigScreen extends Screen {
