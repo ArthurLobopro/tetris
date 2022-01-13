@@ -1,5 +1,5 @@
 import { themes, saveCustomTheme } from "../../Data.js"
-import buildFiguresViewer from "./figuresViewer.js"
+import FiguresViewer from "./figuresViewer.js"
 import { figures } from "../../Figures.js"
 import { Screen } from "../Screnn.js"
 import { screens } from "../../ScreenManager.js"
@@ -9,11 +9,8 @@ export default class CustomThemeConfigScreen extends Screen {
         super()
 
         this.buildFunction = function () {
-            const colors = {
-                background: '',
-                lines: '',
-                figures: {}
-            }
+            const colors = {...themes.custom}
+            console.log(colors);
 
             const resetBackground = () => colors.background = themes.custom.background
             const resetLines = () => colors.lines = themes.custom.lines
@@ -76,16 +73,16 @@ export default class CustomThemeConfigScreen extends Screen {
             const colorInputFuctions = {
                 background(event) {
                     colors.background = event.target.value
-                    setColors(colors)
+                    figuresViewer.setColors(colors)
                 },
                 lines(event) {
                     colors.lines = event.target.value
-                    setColors(colors)
+                    figuresViewer.setColors(colors)
                 },
                 figure(event) {
-                    const atualFigure = getAtualFigureName()
+                    const atualFigure = figuresViewer.getAtualFigureName()
                     colors.figures[atualFigure] = event.target.value
-                    setColors(colors)
+                    figuresViewer.setColors(colors)
                 }
             }
 
@@ -99,14 +96,15 @@ export default class CustomThemeConfigScreen extends Screen {
             })
 
             const onChangeFigure = () => {
-                const atualFigure = getAtualFigureName()
+                const atualFigure = figuresViewer.getAtualFigureName()
+                console.log(colors.figures["T"]);
                 const figureInput = document.getElementById('color-figure')
                 figureInput.value = colors.figures[atualFigure]
             }
 
-            const { viewer, setColors, getAtualFigureName } = buildFiguresViewer(colors, onChangeFigure)
+            const figuresViewer = new FiguresViewer(colors, onChangeFigure)
             const viewWrapper = customThemeScreen.querySelector(".view-wrapper")
-            viewWrapper.appendChild(viewer)
+            viewWrapper.appendChild(figuresViewer.viewer)
 
             const saveConfig = () => {
                 themes.custom = colors
@@ -119,13 +117,13 @@ export default class CustomThemeConfigScreen extends Screen {
                     const functions = {
                         background: resetBackground,
                         line: resetLines,
-                        figure: () => resetFigure(getAtualFigureName())
+                        figure: () => resetFigure(figuresViewer.getAtualFigureName())
                     }
                     const type = button.value
                     functions?.[type]?.()
-                    setColors(colors)
+                    figuresViewer.setColors(colors)
                     customThemeScreen.querySelector(`[data-name="${type}"]`).value = type === "figure" ?
-                        colors.figures[getAtualFigureName()] : colors[type]
+                        colors.figures[figuresViewer.getAtualFigureName()] : colors[type]
                 }
             })
 

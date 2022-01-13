@@ -2,61 +2,89 @@ import { game } from "../../Game.js"
 import { range } from "../../Util.js"
 import { figures } from "../../Figures.js"
 
-export default function buildFiguresViewer(colors, changeFigureCallback) {
-    const [width, height] = [8, 8]
+export default class FiguresViewer {
+    constructor(colors, changeFigureCallback) {
+        this.colors = colors
+        this.changeFigureCallback = changeFigureCallback ?? function () { }
+        this.build()
 
-    const viewerCanvas = document.createElement("canvas")
-    viewerCanvas.width = game.squareWidth * 8 + 7
-    viewerCanvas.height = game.squareWidth * 8 + 7
+        this.atualFigure = "square"
+        this.renderFigure(this.atualFigure)
 
-    const viewer = document.createElement('div')
-    viewer.id = "theme-viewer"
-    viewer.innerHTML = `
-        <div id="arrows">
-            <img src="../assets/arrow.png" width="20px" id="left">
-            <img src="../assets/arrow.png" width="20px" style="transform: rotate(180deg)" id="right">
-        </div>
-    `
+        this.figuresNames = figures.getFigureNames()
+    }
 
-    viewer.insertBefore(viewerCanvas, viewer.querySelector('div'))
+    build() {
+        const viewerCanvas = document.createElement("canvas")
+        viewerCanvas.width = game.squareWidth * 8 + 7
+        viewerCanvas.height = game.squareWidth * 8 + 7
 
+        const viewer = document.createElement('div')
+        viewer.id = "theme-viewer"
+        viewer.innerHTML = `
+            <div id="arrows">
+                <img src="../assets/arrow.png" width="20px" id="left">
+                <img src="../assets/arrow.png" width="20px" style="transform: rotate(180deg)" id="right">
+            </div>
+        `
 
-    const ctx = viewerCanvas.getContext('2d')
+        viewer.insertBefore(viewerCanvas, viewer.querySelector('div'))
 
-    function renderBasic() {
+        const keyBoardFunctions = {
+            "ArrowLeft": () => this.previousFigure(),
+            "ArrowRight": () => this.nextFigure()
+        }
+
+        window.onkeydown = event => keyBoardFunctions[event.key]?.()
+
+        const rightButton = viewer.querySelector("#right")
+        const leftButton = viewer.querySelector("#left")
+
+        rightButton.onclick = keyBoardFunctions.ArrowRight
+        leftButton.onclick = keyBoardFunctions.ArrowLeft
+
+        this.ctx = viewerCanvas.getContext('2d')
+        this.viewer = viewer
+        this.viewerCanvas = viewerCanvas
+    }
+
+    renderBasic() {
+        const [width, height] = [8, 8]
         const { squareWidth } = game
 
         //Background
-        ctx.fillStyle = colors.background
-        ctx.fillRect(0, 0, viewerCanvas.width, viewerCanvas.height)
+        this.ctx.fillStyle = this.colors.background
+        this.ctx.fillRect(0, 0, this.viewerCanvas.width, this.viewerCanvas.height)
 
         //Lines
-        ctx.fillStyle = colors.lines
+        this.ctx.fillStyle = this.colors.lines
 
         for (let i of range(1, width)) {
-            ctx.fillRect(i * squareWidth + (i - 1), 0, 1, viewerCanvas.height)
+            this.ctx.fillRect(i * squareWidth + (i - 1), 0, 1, this.viewerCanvas.height)
         }
 
         for (let i of range(1, height)) {
-            ctx.fillRect(0, i * squareWidth + (i - 1), viewerCanvas.width, 1)
+            this.ctx.fillRect(0, i * squareWidth + (i - 1), this.viewerCanvas.width, 1)
         }
     }
 
-    function renderFigure(figureName) {
-        renderBasic()
+    renderFigure(figureName) {
+        const [width, height] = [8, 8]
+
+        this.renderBasic()
 
         const blocks = figures.getByName(figureName)
 
         const x = Math.trunc(width / 2 - blocks[0].length / 2)
         const y = Math.trunc(height / 2 - blocks.length / 2)
 
-        const color = colors.figures[figureName]
+        const color = this.colors.figures[figureName]
 
         blocks.forEach((line, indexY) => {
             line.forEach((block, indexX) => {
                 if (block.type === 'block') {
-                    ctx.fillStyle = color
-                    ctx.fillRect(
+                    this.ctx.fillStyle = color
+                    this.ctx.fillRect(
                         (x + indexX) * game.squareWidth + (1 * x + indexX),
                         (y + indexY) * game.squareWidth + (1 * y + indexY),
                         game.squareWidth, game.squareWidth
@@ -66,50 +94,27 @@ export default function buildFiguresViewer(colors, changeFigureCallback) {
         })
     }
 
-    let atualFigure = "square"
-    renderFigure(atualFigure, colors)
+    nextFigure() {
+        const figureIndex = this.figuresNames.indexOf(this.atualFigure)
+        this.atualFigure = this.figuresNames[figureIndex + 1 === this.figuresNames.length ? 0 : figureIndex + 1]
+        this.renderFigure(this.atualFigure)
 
-    const rightButton = viewer.querySelector("#right")
-    const leftButton = viewer.querySelector("#left")
-
-    const figuresNames = figures.getFigureNames()
-
-    function nextFigure() {
-        const figureIndex = figuresNames.indexOf(atualFigure)
-        atualFigure = figuresNames[figureIndex + 1 === figuresNames.length ? 0 : figureIndex + 1]
-        renderFigure(atualFigure, colors)
-        if(typeof changeFigureCallback == 'function'){
-            changeFigureCallback()
-        }
+        this.changeFigureCallback()
     }
 
-    function previousFigure() {
-        const figureIndex = figuresNames.indexOf(atualFigure)
-        atualFigure = figuresNames[figureIndex === 0 ? figuresNames.length - 1 : figureIndex - 1]
-        renderFigure(atualFigure, colors)
-        if(typeof changeFigureCallback == 'function'){
-            changeFigureCallback()
-        }
+    previousFigure() {
+        const figureIndex = this.figuresNames.indexOf(this.atualFigure)
+        this.atualFigure = this.figuresNames[figureIndex === 0 ? this.figuresNames.length - 1 : figureIndex - 1]
+        this.renderFigure(this.atualFigure)
+        this.changeFigureCallback()
     }
 
-    rightButton.onclick = nextFigure
-    leftButton.onclick = previousFigure
-
-    const keyBoardFunctions = {
-        "ArrowLeft": previousFigure,
-        "ArrowRight": nextFigure
+    setColors(newColors) {
+        this.colors = newColors
+        this.renderFigure(this.atualFigure)
     }
 
-    window.onkeydown = event => keyBoardFunctions[event.key]?.()
-
-    function setColors(newColors) {
-        colors = newColors
-        renderFigure(atualFigure)
+    getAtualFigureName() {
+        return this.atualFigure
     }
-
-    function getAtualFigureName(){
-        return atualFigure
-    }
-
-    return { viewer, setColors, getAtualFigureName, renderFigure }
 }

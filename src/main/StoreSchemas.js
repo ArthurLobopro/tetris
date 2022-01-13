@@ -48,7 +48,7 @@ const tetrisTheme = {
             "reverse-z": "#00C733",
             "reverse-L": "#007CC6",
             L: "#D08A00",
-            T: " #C500EA"
+            T: "#C500EA"
         },
         background: "#0e0d0d",
         lines: "#2a2929"

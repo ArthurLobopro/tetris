@@ -1,5 +1,5 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
-import buildFiguresViewer from "./figuresViewer.js"
+import FiguresViewer from "./figuresViewer.js"
 import { updateColors } from "../../Colors.js"
 import { Screen } from "../Screnn.js"
 import { screens } from "../../ScreenManager.js"
@@ -62,15 +62,15 @@ export default class ThemeConfigScreen extends Screen {
 
             const getColors = () => themes[tempTheme]
 
-            const { viewer, setColors, getAtualFigureName, renderFigure } = buildFiguresViewer(getColors())
+            const figuresViewer = new FiguresViewer(getColors())
             const viewWrapper = themeScrenn.querySelector(".view-wrapper")
-            viewWrapper.appendChild(viewer)
+            viewWrapper.appendChild(figuresViewer.viewer)
 
             themeScrenn.querySelector("#open-custom-screnn").onclick = () => screens.configScrenns.customTheme.show()
 
             this.updateColors = () => {
-                setColors(getColors())
-                renderFigure(getAtualFigureName())
+                figuresViewer.setColors(getColors())
+                figuresViewer.renderFigure(figuresViewer.getAtualFigureName())
             }
 
             const themeRadios = themeScrenn.querySelectorAll('.radio')
@@ -81,7 +81,7 @@ export default class ThemeConfigScreen extends Screen {
                     checked.dataset.check = false
                     radio.dataset.check = true
                     tempTheme = radio.dataset.value
-                    setColors(getColors())
+                    figuresViewer.setColors(getColors())
                 }
             })
 
