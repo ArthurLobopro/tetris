@@ -16,7 +16,7 @@ export default class GameOverScrenn extends Screen {
                 <legend>GAME OVER</legend>
                 <div class="line">
                     <div>Pontuação:</div>
-                    <div>${game.pontos}</div>
+                    <div>${game.points}</div>
                 </div>
                 <img src="${image}" style="border: 1px solid #aaa;max-height:73%" id="game-over-print">
                 <button class="focus" style="align-self: center;margin-bottom: 10px;">NEW GAME</button>

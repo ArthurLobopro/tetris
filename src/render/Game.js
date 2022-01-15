@@ -21,7 +21,7 @@ const game = {
     renderInterval: null,
     pointsPerBlock: 10,
     lastPontuation: 0,
-    pontos: 0,
+    points: 0,
     records: [],
     renderVelocity: 1000 / 60,
     gameplayVelocity: 0,
@@ -88,7 +88,7 @@ const game = {
 //#region Pontuação
 
 const addLinePoints = () => {
-    game.pontos += game.pointsPerBlock * game.width * 2
+    game.points += game.pointsPerBlock * game.width * 2
 }
 
 const addFigurePoints = () => {
@@ -104,7 +104,7 @@ const addFigurePoints = () => {
         })
     })
 
-    game.pontos += figureBlocks * game.pointsPerBlock
+    game.points += figureBlocks * game.pointsPerBlock
 }
 
 //#endregion
@@ -243,9 +243,9 @@ const newGame = () => {
     spawnFirstFigure()
     spawnNextFigure()
     
-    game.lastPontuation = game.pontos
-    game.pontos = 0
-    pontosSpan.innerText = formatPoints(game.pontos)
+    game.lastPontuation = game.points
+    game.points = 0
+    pontosSpan.innerText = formatPoints(game.points)
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
     
     renderAll()
@@ -276,7 +276,7 @@ const playGame = () => {
         spawnNewFigure()
     }
 
-    pontosSpan.innerText = formatPoints(game.pontos)
+    pontosSpan.innerText = formatPoints(game.points)
 }
 //#endregion
 
@@ -315,7 +315,7 @@ const reloadGameConfig = () => {
     )()
 
 const verifyRecords = () => {
-    const { pontos, records } = game
+    const { points: pontos, records } = game
     console.log(records);
     const atualPointsIsNewRecord = records.some(record => {
         return record.points < pontos
