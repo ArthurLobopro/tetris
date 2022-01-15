@@ -11,18 +11,18 @@ const accelerate = () => {
 }
 
 const rotate = () => {
-    const { blocks: figure, x, y } = game.atualFigure
+    const { blocks, x, y } = game.atualFigure
     const newFigure = []
 
-    for (const block of range(0, figure[0].length)) {
+    for (const block of range(0, blocks[0].length)) {
         const newLine = []
-        for (const line of range(0, figure.length)) {
-            newLine.unshift(figure[line][block])
+        for (const line of range(0, blocks.length)) {
+            newLine.unshift(blocks[line][block])
         }
         newFigure.push(newLine)
     }
 
-    const widthDifference = figure.length - newFigure.length
+    const widthDifference = blocks.length - newFigure.length
 
     const haveBlocksOnRight = x + newFigure[0].length > game.width || newFigure.some((line, indexY) => {
         if (line[line.length - 1].type == "null") {
