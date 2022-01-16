@@ -219,12 +219,18 @@ const pause = () => {
     clearInterval(game.fallInterval)
     game.status = "paused"
     screens.pause.show()
+    if(game.isMusicOn){
+        Audios.theme.pause()
+    }
 }
 
 const continueGame = () => {
     game.status = "active"
     game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
     window.onkeydown = mainKeyDown
+    if(game.isMusicOn){
+        Audios.theme.play()
+    }
 }
 
 const gameOver = async () => {
@@ -258,6 +264,7 @@ const newGame = () => {
 
     if (userPreferences.music) {
         game.isMusicOn = true
+        Audios.theme.currentTime = 0
         Audios.theme.volume = userPreferences.musicVolume
         Audios.theme.play()
         Audios.theme.loop = true
@@ -294,14 +301,8 @@ const loadGameData = () => {
 const reloadGameConfig = () => {
     if (game.isMusicOn !== game.userPreferences.music) {
         game.isMusicOn = game.userPreferences.music
-    }
-
-    if (game.isMusicOn) {
         Audios.theme.volume = userPreferences.musicVolume
-        Audios.theme.play()
         Audios.theme.loop = true
-    } else {
-        Audios.theme.pause()
         Audios.theme.currentTime = 0
     }
 }
