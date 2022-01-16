@@ -1,16 +1,12 @@
-import { range } from "./Util.js"
+import { gameCanvas, nextCanvas, screens } from "./ScreenManager.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
-import viewGameOver from "./Telas/GameOver.js"
 import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
-import viewInit from "./Telas/Init.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
-import viewPause from "./Telas/Pause.js"
+import viewPause from "./Screens/Pause.js"
 
-const gameCanvas = document.getElementById('game')
-const nextCanvas = document.getElementById('next')
 const pontosSpan = document.getElementById('pontos')
 const lastPointsDiv = document.getElementById('last-pontuation')
 
@@ -21,10 +17,11 @@ const game = {
     width: 15,
     squareWidth: 16,
     state: [],
-    interval: null,
+    fallInterval: null,
+    renderInterval: null,
     pointsPerBlock: 10,
     lastPontuation: 0,
-    pontos: 0,
+    points: 0,
     records: [],
     renderVelocity: 1000 / 60,
     gameplayVelocity: 0,
@@ -91,7 +88,7 @@ const game = {
 //#region Pontuação
 
 const addLinePoints = () => {
-    game.pontos += game.pointsPerBlock * game.width * 2
+    game.points += game.pointsPerBlock * game.width * 2
 }
 
 const addFigurePoints = () => {
@@ -107,7 +104,7 @@ const addFigurePoints = () => {
         })
     })
 
-    game.pontos += figureBlocks * game.pointsPerBlock
+    game.points += figureBlocks * game.pointsPerBlock
 }
 
 //#endregion
@@ -218,37 +215,60 @@ const collision = () => {
 }
 
 //#region Gameplay
-const pause = async () => {
-    clearInterval(game.interval)
+const pause = () => {
+    clearInterval(game.fallInterval)
     game.status = "paused"
-    if (await viewPause()) {
-        game.status = "active"
-        game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity);
+    screens.pause.show()
+    if(game.isMusicOn){
+        Audios.theme.pause()
+    }
+}
+
+const continueGame = () => {
+    game.status = "active"
+    game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
+    window.onkeydown = mainKeyDown
+    if(game.isMusicOn){
+        Audios.theme.play()
     }
 }
 
 const gameOver = async () => {
-    clearInterval(game.interval)
+    clearInterval(game.fallInterval)
+    clearInterval(game.renderInterval)
     verifyRecords()
     saveLastPontuation()
-    await viewGameOver()
-    const newGameEvent = new Event('game-over')
-    window.dispatchEvent(newGameEvent)
-    newGame()
+    
+    screens.gameOver.reset()
+    screens.gameOver.show()
 }
 
 const newGame = () => {
     game.status = "active"
     game.state = getNewGameState()
-    game.lastPontuation = game.pontos
-    game.pontos = 0
-    pontosSpan.innerText = formatPoints(game.pontos)
+    spawnFirstFigure()
+    spawnNextFigure()
+    
+    game.lastPontuation = game.points
+    game.points = 0
+    pontosSpan.innerText = formatPoints(game.points)
     lastPointsDiv.innerText = formatPoints(game.lastPontuation)
-    spawnNewFigure()
+    
     renderAll()
+    
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress
-    game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
+
+    game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity)
+    game.renderInterval = setInterval(renderAll, game.renderVelocity)
+
+    if (userPreferences.music) {
+        game.isMusicOn = true
+        Audios.theme.currentTime = 0
+        Audios.theme.volume = userPreferences.musicVolume
+        Audios.theme.play()
+        Audios.theme.loop = true
+    }
 }
 
 const playGame = () => {
@@ -263,7 +283,7 @@ const playGame = () => {
         spawnNewFigure()
     }
 
-    pontosSpan.innerText = formatPoints(game.pontos)
+    pontosSpan.innerText = formatPoints(game.points)
 }
 //#endregion
 
@@ -281,14 +301,8 @@ const loadGameData = () => {
 const reloadGameConfig = () => {
     if (game.isMusicOn !== game.userPreferences.music) {
         game.isMusicOn = game.userPreferences.music
-    }
-
-    if (game.isMusicOn) {
         Audios.theme.volume = userPreferences.musicVolume
-        Audios.theme.play()
         Audios.theme.loop = true
-    } else {
-        Audios.theme.pause()
         Audios.theme.currentTime = 0
     }
 }
@@ -302,7 +316,7 @@ const reloadGameConfig = () => {
     )()
 
 const verifyRecords = () => {
-    const { pontos, records } = game
+    const { points: pontos, records } = game
     console.log(records);
     const atualPointsIsNewRecord = records.some(record => {
         return record.points < pontos
@@ -338,22 +352,7 @@ nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextC
 
 window.onload = async () => {
     loadGameData()
-    await viewInit()
-    game.status = "active"
-    game.state = getNewGameState()
-    spawnFirstFigure()
-    spawnNextFigure()
-    game.interval = setInterval(playGame, game.userPreferences.gameplayVelocity)
-    setInterval(renderAll, game.renderVelocity)
-    lastPointsDiv.innerText = formatPoints(game.lastPontuation)
-    window.onkeydown = mainKeyDown
-    window.onkeypress = mainKeyPress
-    if (userPreferences.music) {
-        game.isMusicOn = true
-        Audios.theme.volume = userPreferences.musicVolume
-        Audios.theme.play()
-        Audios.theme.loop = true
-    }
+    screens.init.show()
 }
 
-export { game, playGame, collision, addFigurePoints, newGame, pause, formatPoints, reloadGameConfig }
+export { game, playGame, collision, addFigurePoints, newGame, pause, continueGame, formatPoints, reloadGameConfig }

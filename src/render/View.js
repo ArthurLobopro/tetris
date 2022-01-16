@@ -1,14 +1,7 @@
 import { formatPoints, game } from './Game.js'
-import { loadImage, range } from './Util.js'
+import { range } from './Util.js'
 import { colors } from "./Colors.js"
-import { figures } from './Figures.js'
-
-const gameCanvas = document.querySelector('canvas#game')
-const gameCtx = gameCanvas.getContext('2d')
-
-const nextCanvas = document.getElementById('next')
-const nextCtx = nextCanvas.getContext('2d')
-
+import { gameCanvas, gameCtx, nextCanvas, nextCtx } from './ScreenManager.js'
 
 //#region Next Figure Draw
 const drawNextFigure = () => {

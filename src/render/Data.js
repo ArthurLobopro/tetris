@@ -10,7 +10,7 @@ window.addEventListener('load', () => {
 
 const saveUserPreferences = () => Store.setUserPreferences(userPreferences)
 
-const saveLastPontuation = () => Store.setGameData('lastPontuation', game.pontos)
+const saveLastPontuation = () => Store.setGameData('lastPontuation', game.points)
 
 const saveRecords = () => Store.setGameData('records', game.records)
 
