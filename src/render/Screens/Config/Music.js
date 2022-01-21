@@ -27,7 +27,7 @@ export default class MusicConfigScreen extends Screen {
             <fieldset>
                 <legend>Música</legend>
                     <div class="line">
-                        Música: <div class="check" id="music" data-value="${userPreferences?.music}"></div>
+                        Música: <div class="check" id="music" data-check="${userPreferences?.music}"></div>
                     </div>
                     <div class="line">
                         Volume: <input type="range" id="volume"  min="0" max="100" value="${userPreferences?.musicVolume * 100}">
@@ -43,8 +43,8 @@ export default class MusicConfigScreen extends Screen {
             </fieldset>`
 
             music_screen.querySelector('#music').onclick = event => {
-                const value = event.target.dataset.value === "true"
-                event.target.dataset.value = !value
+                const value = event.target.dataset.check === "true"
+                event.target.dataset.check = !value
                 configTemp.music = !value
             }
 
