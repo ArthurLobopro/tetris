@@ -23,7 +23,6 @@ const screens = {
     }
 }
 
-const { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx } = screens.game.getComponents()
-screens.game.show(false)
+const { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, last_points_span, points_span } = screens.game.getComponents()
 
-export { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, screens }
+export { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, screens, last_points_span,points_span }

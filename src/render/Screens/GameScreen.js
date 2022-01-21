@@ -38,7 +38,9 @@ export class GameScreen extends Screen {
         const gameCtx = gameCanvas.getContext('2d')
         const nextCanvas = gameScreen.querySelector('canvas#next')
         const nextCtx = nextCanvas.getContext('2d')
+        const points_span = gameScreen.querySelector('#pontos')
+        const last_points_span = gameScreen.querySelector('#last-pontuation')
 
-        return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx }
+        return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, points_span, last_points_span }
     }
 }
