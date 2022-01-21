@@ -7,6 +7,7 @@ import MusicConfigScreen from "./Screens/Config/Music.js";
 import VelocityConfigScreen from "./Screens/Config/Velocity.js";
 import ThemeConfigScreen from "./Screens/Config/Theme.js";
 import CustomThemeConfigScreen from "./Screens/Config/CustomTheme.js"
+import AboutScreen from "./Screens/About.js";
 
 const screens = {
     config: new ConfigScreen(),
@@ -14,7 +15,8 @@ const screens = {
     gameOver: new GameOverScrenn(),
     pause: new PauseScreen(),
     game: new GameScreen(),
-    
+    about: new AboutScreen(),
+
     configScrenns: {
         music: new MusicConfigScreen(),
         velocity: new VelocityConfigScreen(),

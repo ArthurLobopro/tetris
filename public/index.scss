@@ -58,3 +58,13 @@ canvas {
     color: #ccc;
     height: max-content;
 }
+
+.center-line{
+    padding: 3px 0;
+    background-color: #000;
+    color: #ccc;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}

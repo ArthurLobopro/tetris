@@ -3,6 +3,7 @@ import navigation from "./navigation.js"
 const container = document.getElementById("container")
 
 export class Screen {
+    buildFunction(){}
     
     addNavigation() {
         window.onkeydown = event => navigation[event.key]?.(this.screen)

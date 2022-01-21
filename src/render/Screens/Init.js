@@ -15,6 +15,7 @@ export default class InitScreen extends Screen {
                 <div class="button-wrapper">
                     <button id="start" class="focus">START</button>
                     <button id="config">CONFIGURAÇÕES</button>
+                    <button id="about">SOBRE</button>
                     <button id="exit">SAIR</button>
                 </div>
             </fieldset>`
@@ -29,6 +30,9 @@ export default class InitScreen extends Screen {
                             break
                         case "config":
                             screens.config.show(screens.init)
+                            break
+                        case "about":
+                            screens.about.show()
                             break
                         case "exit":
                             ipcRenderer.send('close')
