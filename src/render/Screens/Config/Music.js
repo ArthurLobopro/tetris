@@ -1,7 +1,7 @@
 import { saveUserPreferences, userPreferences } from "../../Data.js"
 import { game, reloadGameConfig } from "../../Game.js"
 import { screens } from "../../ScreenManager.js"
-import { Screen } from "../Screnn.js"
+import { Screen } from "../Screen.js"
 
 const get = id => document.getElementById(id)
 const container = get('container')

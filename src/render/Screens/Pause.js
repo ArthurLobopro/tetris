@@ -1,6 +1,6 @@
 import { newGame, game, continueGame } from "../Game.js"
 import { screens } from "../ScreenManager.js"
-import { Screen } from "./Screnn.js"
+import { Screen } from "./Screen.js"
 
 export default class PauseScreen extends Screen {
     constructor() {

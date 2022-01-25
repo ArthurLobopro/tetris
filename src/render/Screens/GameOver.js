@@ -1,7 +1,7 @@
 import { game, newGame } from '../Game.js'
-import { Screen } from './Screnn.js'
+import { Screen } from './Screen.js'
 
-export default class GameOverScrenn extends Screen {
+export default class GameOverScreen extends Screen {
     constructor() {
         super()
 
@@ -9,9 +9,9 @@ export default class GameOverScrenn extends Screen {
             const canvasGame = document.getElementById('game')
             const image = canvasGame.toDataURL('image/png')
 
-            const gameOverScrenn = document.createElement('div')
-            gameOverScrenn.className = 'telas-wrapper'
-            gameOverScrenn.innerHTML = `
+            const gameOverScreen = document.createElement('div')
+            gameOverScreen.className = 'telas-wrapper'
+            gameOverScreen.innerHTML = `
             <fieldset id="game-over">
                 <legend>GAME OVER</legend>
                 <div class="line">
@@ -23,14 +23,14 @@ export default class GameOverScrenn extends Screen {
             </fieldset>`
 
 
-            const button = gameOverScrenn.querySelector('button')
+            const button = gameOverScreen.querySelector('button')
 
             button.onclick = () => {
                 this.close()
                 newGame()
             }
 
-            return gameOverScrenn
+            return gameOverScreen
         }
     }
 }

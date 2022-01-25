@@ -1,6 +1,6 @@
 import ConfigScreen from "./Screens/Config.js";
 import InitScreen from "./Screens/Init.js";
-import GameOverScrenn from "./Screens/GameOver.js";
+import GameOverScreen from "./Screens/GameOver.js";
 import PauseScreen from "./Screens/Pause.js";
 import { GameScreen } from "./Screens/GameScreen.js";
 import MusicConfigScreen from "./Screens/Config/Music.js";
@@ -12,12 +12,12 @@ import AboutScreen from "./Screens/About.js";
 const screens = {
     config: new ConfigScreen(),
     init: new InitScreen(),
-    gameOver: new GameOverScrenn(),
+    gameOver: new GameOverScreen(),
     pause: new PauseScreen(),
     game: new GameScreen(),
     about: new AboutScreen(),
 
-    configScrenns: {
+    configScreens: {
         music: new MusicConfigScreen(),
         velocity: new VelocityConfigScreen(),
         theme: new ThemeConfigScreen(),

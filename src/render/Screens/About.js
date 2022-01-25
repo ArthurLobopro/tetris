@@ -1,14 +1,14 @@
 import { screens } from "../ScreenManager.js";
-import { Screen } from "./Screnn.js";
+import { Screen } from "./Screen.js";
 
 export default class AboutScreen extends Screen {
     constructor() {
         super()
 
         this.buildFunction = function () {
-            const aboutScrenn = document.createElement('div')
-            aboutScrenn.className = "telas-wrapper"
-            aboutScrenn.innerHTML = `
+            const aboutScreen = document.createElement('div')
+            aboutScreen.className = "telas-wrapper"
+            aboutScreen.innerHTML = `
             <fieldset id="about">
                 <legend>Sobre</legend>
                 <div>
@@ -34,22 +34,22 @@ export default class AboutScreen extends Screen {
 
             const repository_link = "https://github.com/ArthurLobopro/tetris"
 
-            aboutScrenn.querySelector("#github-repo").onclick = () => {
+            aboutScreen.querySelector("#github-repo").onclick = () => {
                 openExternal(repository_link)
             }
 
-            aboutScrenn.querySelectorAll('.link').forEach(span => {
+            aboutScreen.querySelectorAll('.link').forEach(span => {
                 span.onclick = () => {
                     openExternal(span.innerText)
                 }
             })
 
-            aboutScrenn.querySelector("#return").onclick = () => {
+            aboutScreen.querySelector("#return").onclick = () => {
                 this.close()
                 screens.init.show()
             }
 
-            return aboutScrenn
+            return aboutScreen
         }
 
         this.reset()

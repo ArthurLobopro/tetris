@@ -1,7 +1,7 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
 import FiguresViewer from "./figuresViewer.js"
 import { updateColors } from "../../Colors.js"
-import { Screen } from "../Screnn.js"
+import { Screen } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
 export default class ThemeConfigScreen extends Screen {
@@ -11,9 +11,9 @@ export default class ThemeConfigScreen extends Screen {
         this.buildFunction = function () {
             let tempTheme = userPreferences.theme
 
-            const themeScrenn = document.createElement('div')
-            themeScrenn.className = "telas-wrapper"
-            themeScrenn.innerHTML = `
+            const themeScreen = document.createElement('div')
+            themeScreen.className = "telas-wrapper"
+            themeScreen.innerHTML = `
             <fieldset id="theme">
                 <legend>Tema</legend>
                 <div class="divided">
@@ -63,17 +63,17 @@ export default class ThemeConfigScreen extends Screen {
             const getColors = () => themes[tempTheme]
 
             const figuresViewer = new FiguresViewer(getColors())
-            const viewWrapper = themeScrenn.querySelector(".view-wrapper")
+            const viewWrapper = themeScreen.querySelector(".view-wrapper")
             viewWrapper.appendChild(figuresViewer.viewer)
 
-            themeScrenn.querySelector("#open-custom-screnn").onclick = () => screens.configScrenns.customTheme.show()
+            themeScreen.querySelector("#open-custom-screnn").onclick = () => screens.configScreens.customTheme.show()
 
             this.updateColors = () => {
                 figuresViewer.setColors(getColors())
                 figuresViewer.renderFigure(figuresViewer.getAtualFigureName())
             }
 
-            const themeRadios = themeScrenn.querySelectorAll('.radio')
+            const themeRadios = themeScreen.querySelectorAll('.radio')
 
             themeRadios.forEach(radio => {
                 radio.onclick = () => {
@@ -90,7 +90,7 @@ export default class ThemeConfigScreen extends Screen {
                 saveUserPreferences()
             }
 
-            const buttons = themeScrenn.querySelectorAll('.buttons > button')
+            const buttons = themeScreen.querySelectorAll('.buttons > button')
 
             buttons.forEach(button => {
                 button.onclick = event => {
@@ -103,7 +103,7 @@ export default class ThemeConfigScreen extends Screen {
                 }
             })
 
-            return themeScrenn
+            return themeScreen
         }
     }
 

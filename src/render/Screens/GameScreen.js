@@ -1,4 +1,4 @@
-import { Screen } from "./Screnn.js"
+import { Screen } from "./Screen.js"
 
 export class GameScreen extends Screen {
     constructor() {

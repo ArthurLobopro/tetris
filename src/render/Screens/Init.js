@@ -1,4 +1,4 @@
-import { Screen } from "./Screnn.js"
+import { Screen } from "./Screen.js"
 import { newGame } from "../Game.js"
 import { screens } from "../ScreenManager.js"
 
