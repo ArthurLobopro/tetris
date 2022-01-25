@@ -114,6 +114,17 @@ fieldset {
         & .center-line{
             margin: 15px auto;
         }
+        & button , #github-repo{
+            cursor: pointer;
+        }
+    }
+    &#controls{
+        & .flex-center > span {
+            margin: auto 5px;
+        }
+        & > .center-line{
+            margin: 10px auto;
+        }
     }
 }
 
