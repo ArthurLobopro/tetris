@@ -279,7 +279,7 @@ const playGame = () => {
         spawnNewFigure()
     }
 
-    pontosSpan.innerText = formatPoints(game.points)
+    points_span.innerText = formatPoints(game.points)
 }
 //#endregion
 
