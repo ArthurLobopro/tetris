@@ -33,3 +33,14 @@ export class Screen {
         this.reset()
     }
 }
+
+export class ConfigScreenBase extends Screen {
+    constructor(){
+        super()
+    }
+
+    show() {
+        this.reset()
+        super.show()
+    }
+}
