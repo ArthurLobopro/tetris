@@ -54,7 +54,6 @@ export default class ControlsScreen extends Screen {
             </div>`
 
             constrols_screen.querySelector('button').onclick = () => {
-                console.log(this);
                 this.close()
             }
 
@@ -66,7 +65,7 @@ export default class ControlsScreen extends Screen {
 
     close(){
         super.close()
-        this.afterScreen.addNavigation()
+        this.afterScreen.show()
     }
 
     show(afterScreen){
