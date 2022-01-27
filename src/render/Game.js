@@ -1,14 +1,10 @@
-import { gameCanvas, nextCanvas, screens } from "./ScreenManager.js"
+import { gameCanvas, last_points_span, nextCanvas, points_span, screens } from "./ScreenManager.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
 import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
-import viewPause from "./Screens/Pause.js"
-
-const pontosSpan = document.getElementById('pontos')
-const lastPointsDiv = document.getElementById('last-pontuation')
 
 const formatPoints = points => String(points).padStart(4, '0')
 
@@ -219,7 +215,7 @@ const pause = () => {
     clearInterval(game.fallInterval)
     game.status = "paused"
     screens.pause.show()
-    if(game.isMusicOn){
+    if (game.isMusicOn) {
         Audios.theme.pause()
     }
 }
@@ -228,7 +224,7 @@ const continueGame = () => {
     game.status = "active"
     game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
     window.onkeydown = mainKeyDown
-    if(game.isMusicOn){
+    if (game.isMusicOn) {
         Audios.theme.play()
     }
 }
@@ -238,7 +234,7 @@ const gameOver = async () => {
     clearInterval(game.renderInterval)
     verifyRecords()
     saveLastPontuation()
-    
+
     screens.gameOver.reset()
     screens.gameOver.show()
 }
@@ -248,14 +244,14 @@ const newGame = () => {
     game.state = getNewGameState()
     spawnFirstFigure()
     spawnNextFigure()
-    
+
     game.lastPontuation = game.points
     game.points = 0
-    pontosSpan.innerText = formatPoints(game.points)
-    lastPointsDiv.innerText = formatPoints(game.lastPontuation)
-    
+    points_span.innerText = formatPoints(game.points)
+    last_points_span.innerText = formatPoints(game.lastPontuation)
+
     renderAll()
-    
+
     window.onkeydown = mainKeyDown
     window.onkeypress = mainKeyPress
 
@@ -283,7 +279,7 @@ const playGame = () => {
         spawnNewFigure()
     }
 
-    pontosSpan.innerText = formatPoints(game.points)
+    points_span.innerText = formatPoints(game.points)
 }
 //#endregion
 
@@ -352,6 +348,7 @@ nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextC
 
 window.onload = async () => {
     loadGameData()
+    screens.game.show(false)
     screens.init.show()
 }
 

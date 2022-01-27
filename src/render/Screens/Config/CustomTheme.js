@@ -1,10 +1,10 @@
 import { themes, saveCustomTheme } from "../../Data.js"
 import FiguresViewer from "./figuresViewer.js"
 import { figures } from "../../Figures.js"
-import { Screen } from "../Screnn.js"
+import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
-export default class CustomThemeConfigScreen extends Screen {
+export default class CustomThemeConfigScreen extends ConfigScreenBase {
     constructor() {
         super()
 
@@ -135,16 +135,11 @@ export default class CustomThemeConfigScreen extends Screen {
                         saveConfig()
                     }
                     this.close()
-                    screens.configScrenns.theme.updateColors()
+                    screens.configScreens.theme.updateColors()
                 }
             })
 
             return customThemeScreen
         }
-    }
-
-    show() {
-        this.reset()
-        super.show()
     }
 }

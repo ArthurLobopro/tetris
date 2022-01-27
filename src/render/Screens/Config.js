@@ -1,11 +1,11 @@
 import { game, reloadGameConfig } from "../Game.js"
-import { Screen } from "./Screnn.js"
+import { Screen } from "./Screen.js"
 import { screens } from "../ScreenManager.js"
 
 const configs = {
-    music: () => screens.configScrenns.music.show(false),
-    velocity: () => screens.configScrenns.velocity.show(false),
-    theme: () => screens.configScrenns.theme.show(false)
+    music: () => screens.configScreens.music.show(false),
+    velocity: () => screens.configScreens.velocity.show(false),
+    theme: () => screens.configScreens.theme.show(false)
 }
 
 export default class ConfigScreen extends Screen {
@@ -50,7 +50,7 @@ export default class ConfigScreen extends Screen {
 
     close(){
         super.close()
-        this.afterScreen.addNavigation()
+        this.afterScreen.show()
     }
 
     show(afterScreen){

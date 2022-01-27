@@ -1,8 +1,8 @@
 import { game } from "../../Game.js"
 import { userPreferences, saveUserPreferences } from "../../Data.js"
-import { Screen } from "../Screnn.js"
+import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
-export default class VelocityConfigScreen extends Screen {
+export default class VelocityConfigScreen extends ConfigScreenBase {
     constructor() {
         super()
 
@@ -77,10 +77,5 @@ export default class VelocityConfigScreen extends Screen {
 
             return velocity_screen
         }
-    }
-
-    show(){
-        this.reset()
-        super.show()
     }
 }

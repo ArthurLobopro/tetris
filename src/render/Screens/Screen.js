@@ -3,6 +3,7 @@ import navigation from "./navigation.js"
 const container = document.getElementById("container")
 
 export class Screen {
+    buildFunction(){}
     
     addNavigation() {
         window.onkeydown = event => navigation[event.key]?.(this.screen)
@@ -30,5 +31,16 @@ export class Screen {
     close() {
         this.hide()
         this.reset()
+    }
+}
+
+export class ConfigScreenBase extends Screen {
+    constructor(){
+        super()
+    }
+
+    show() {
+        this.reset()
+        super.show()
     }
 }
