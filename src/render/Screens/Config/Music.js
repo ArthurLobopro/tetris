@@ -1,12 +1,9 @@
 import { saveUserPreferences, userPreferences } from "../../Data.js"
 import { game, reloadGameConfig } from "../../Game.js"
 import { screens } from "../../ScreenManager.js"
-import { Screen } from "../Screen.js"
+import { ConfigScreenBase } from "../Screen.js"
 
-const get = id => document.getElementById(id)
-const container = get('container')
-
-export default class MusicConfigScreen extends Screen {
+export default class MusicConfigScreen extends ConfigScreenBase {
     constructor() {
         super()
 
@@ -68,10 +65,5 @@ export default class MusicConfigScreen extends Screen {
 
             return music_screen
         }
-    }
-
-    show(){
-        this.reset()
-        super.show()
     }
 }

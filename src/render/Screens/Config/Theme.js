@@ -1,10 +1,10 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
 import FiguresViewer from "./figuresViewer.js"
 import { updateColors } from "../../Colors.js"
-import { Screen } from "../Screen.js"
+import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
-export default class ThemeConfigScreen extends Screen {
+export default class ThemeConfigScreen extends ConfigScreenBase {
     constructor() {
         super()
 
@@ -93,22 +93,17 @@ export default class ThemeConfigScreen extends Screen {
             const buttons = themeScreen.querySelectorAll('.buttons > button')
 
             buttons.forEach(button => {
-                button.onclick = event => {
-                    const target = event.currentTarget
-                    if (target.value == 1) {
+                button.onclick = () => {
+                    if (button.value == 1) {
                         saveConfig()
                         updateColors()
                     }
                     this.close()
+                    screens.config.show()
                 }
             })
 
             return themeScreen
         }
-    }
-
-    show() {
-        this.reset()
-        super.show()
     }
 }
