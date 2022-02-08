@@ -18,62 +18,37 @@ const figures = {
     }
 }
 
+const null_block = { type: 'null' }
+const block = { type: 'block' }
+
 figures.types.push({
     name: "square",
     blocks: [
-        [
-            { type: 'block' },
-            { type: 'block' }
-        ],
-        [
-            { type: 'block' },
-            { type: 'block' }
-        ]
+        [block, block],
+        [block, block]
     ]
 })
 
 figures.types.push({
     name: "stick",
     blocks: [
-        [
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'block' }
-        ]
+        [block, block, block, block]
     ]
 })
 
 figures.types.push({
     name: "z",
     blocks: [
-        [
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'null' }
-        ],
-        [
-            { type: 'null' },
-            { type: 'block' },
-            { type: 'block' }
-        ]
-
+        [block, block, null_block],
+        [null_block, block, block]
     ]
 })
 
 figures.types.push({
     name: "reverse-z",
     blocks: [
-        [
-            { type: 'null' },
-            { type: 'block' },
-            { type: 'block' }
-        ],
-        [
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'null' }
-        ]
+        [null_block, block, block],
+        [block, block, null_block]
 
     ]
 })
@@ -81,48 +56,24 @@ figures.types.push({
 figures.types.push({
     name: "reverse-L",
     blocks: [
-        [
-            { type: 'block' },
-            { type: 'null' },
-            { type: 'null' }
-        ],
-        [
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'block' }
-        ]
+        [block, null_block, null_block],
+        [block, block, block]
     ]
 })
 
 figures.types.push({
     name: "L",
     blocks: [
-        [
-            { type: 'null' },
-            { type: 'null' },
-            { type: 'block' }
-        ],
-        [
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'block' }
-        ]
+        [null_block, null_block, block],
+        [block, block, block]
     ]
 })
 
 figures.types.push({
     name: "T",
     blocks: [
-        [
-            { type: 'null' },
-            { type: 'block' },
-            { type: 'null' }
-        ],
-        [
-            { type: 'block' },
-            { type: 'block' },
-            { type: 'block' }
-        ]
+        [null_block, block, null_block],
+        [block, block, block]
     ]
 })
 
