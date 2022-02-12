@@ -3,7 +3,7 @@ import { range } from "./Util.js"
 
 //#region Move Blocks
 const accelerate = () => {
-    if (!game.moveLock && !collision()) {
+    if (!game.moveLock && !collision() && game.status === "active") {
         playGame()
         game.moveLock = true
         setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)
