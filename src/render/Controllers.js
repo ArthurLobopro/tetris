@@ -1,9 +1,9 @@
-import { game, collision, playGame } from "./Game.js"
+import { game, playGame } from "./Game.js"
 import { range } from "./Util.js"
 
 //#region Move Blocks
 const accelerate = () => {
-    if (!game.moveLock && !collision() && game.status === "active") {
+    if (!game.moveLock && !game.collision() && game.status === "active") {
         playGame()
         game.moveLock = true
         setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)

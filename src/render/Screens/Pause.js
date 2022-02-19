@@ -1,4 +1,4 @@
-import { game, continueGame } from "../Game.js"
+import { game } from "../Game.js"
 import { screens } from "../ScreenManager.js"
 import { Screen } from "./Screen.js"
 
@@ -24,7 +24,7 @@ export default class PauseScreen extends Screen {
             const functions = {
                 continue() {
                     this.close()
-                    continueGame()
+                    game.continueGame()
                 },
                 "new-game": () => {
                     this.close()
