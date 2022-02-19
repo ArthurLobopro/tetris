@@ -59,7 +59,7 @@ export default class MusicConfigScreen extends ConfigScreenBase {
                         reloadGameConfig()
                     }
                     this.close()
-                    screens.config.show()
+                    screens.config.addNavigation()
                 }
             })
 

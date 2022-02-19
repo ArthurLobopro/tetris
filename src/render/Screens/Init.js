@@ -27,7 +27,7 @@ export default class InitScreen extends Screen {
                     game.newGame()
                 },
                 config() {
-                    screens.config.show(screens.init)
+                    screens.config.show(this)
                 },
                 controls() {
                     screens.controls.show(screens.init)

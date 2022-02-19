@@ -99,7 +99,7 @@ export default class ThemeConfigScreen extends ConfigScreenBase {
                         updateColors()
                     }
                     this.close()
-                    screens.config.show()
+                    screens.config.addNavigation()
                 }
             })
 

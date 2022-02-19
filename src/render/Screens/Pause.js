@@ -36,7 +36,7 @@ export default class PauseScreen extends Screen {
                 },
                 config() {
                     this.removeNavigation()
-                    screens.config.show(screens.pause)
+                    screens.config.show(this)
                 },
                 "go-to-init": () => {
                     this.close()

@@ -36,8 +36,7 @@ export default class ConfigScreen extends Screen {
                         this.close()
                     } else {
                         this.removeNavigation()
-                        await configs[type]?.(game)
-                        this.addNavigation()
+                        configs[type]?.(game)
                     }
                 }
             })
@@ -49,8 +48,8 @@ export default class ConfigScreen extends Screen {
     }
 
     close(){
-        super.close()
         this.afterScreen.show()
+        super.close()
     }
 
     show(afterScreen){
