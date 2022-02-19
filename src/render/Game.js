@@ -34,8 +34,6 @@ class Game {
         music: null
     }
 
-
-
     //Contructor methods
     constructor() {
         this.reset()
@@ -61,7 +59,7 @@ class Game {
         this.spawnNextFigure()
     }
 
-    //Figure methods
+    //#region Figure methods
     makeNullBlock() { return { type: "null" } }
 
     makeALine() {
@@ -100,8 +98,10 @@ class Game {
         this.centerFigure()
         this.spawnNextFigure()
     }
+    //#endregion
 
-    //Game State
+    //#region Game State
+
     addFigurePoints() {
         const { blocks } = this.atualFigure
 
@@ -156,6 +156,57 @@ class Game {
             this.state.unshift(voidLine)
         }
     }
+    //#endregion
+
+    //#region Collision
+
+    collision() {
+        const { x, y, blocks } = this.atualFigure
+
+        const bottomY = y + blocks.length
+
+        if (bottomY === this.height) {
+            return true
+        }
+
+        const colidBlock = blocks.some((line, indexY) => {
+            return line.some((block, indexX) => {
+                if (block.type === "null") {
+                    return false
+                }
+
+                return this.state[y + indexY + 1][x + indexX].type === 'block'
+            })
+        })
+
+        return colidBlock
+    }
+
+    getHaveBlocksOnRight(figure = this.atualFigure) {
+        const { y, x } = figure
+
+        return figure.blocks.some((line, indexY) => {
+            if (line[line.length - 1].type === "null") {
+                return false
+            }
+
+            return this.state[y + indexY]?.[x + line.length]?.type === "block"
+        })
+    }
+
+    getHaveBlocksOnLeft(figure = this.atualFigure) {
+        const { y, x } = figure
+
+        return figure.blocks.some((line, indexY) => {
+            if (line[0].type === "null") {
+                return false
+            }
+
+            return this.state[y + indexY]?.[x - 1]?.type === "block"
+        })
+    }
+
+    //#endregion
 
     //Game methods
     newGame() {
@@ -195,26 +246,23 @@ class Game {
         }
     }
 
+    continueGame() {
+        this.status = "active"
+        this.fallInterval = setInterval(playGame, this.userPreferences.gameplayVelocity);
+        window.onkeydown = mainKeyDown
+        if (this.isMusicOn) {
+            Audios.theme.play()
+        }
+    }
+
     move(direction) {
         if (this.moveLock) return
 
         const { y, x } = this.atualFigure
 
-        const haveBlocksOnLeft = this.atualFigure.blocks.some((line, indexY) => {
-            if (line[0].type === "null") {
-                return false
-            }
+        const haveBlocksOnLeft = this.getHaveBlocksOnLeft()
 
-            return this.state[y + indexY]?.[x - 1]?.type === "block"
-        })
-
-        const haveBlocksOnRight = this.atualFigure.blocks.some((line, indexY) => {
-            if (line[line.length - 1].type === "null") {
-                return false
-            }
-
-            return this.state[y + indexY]?.[x + line.length]?.type === "block"
-        })
+        const haveBlocksOnRight = this.getHaveBlocksOnRight()
 
         if (
             direction === "right" && !haveBlocksOnRight && x + this.atualFigure.blocks[0].length <= 14
@@ -235,42 +283,7 @@ class Game {
 
 const game = new Game()
 
-//#region Update game.state
-
-//#endregion
-
-const collision = () => {
-    const { x, y, blocks } = game.atualFigure
-
-    const bottomY = y + blocks.length
-
-    if (bottomY === game.height) {
-        return true
-    }
-
-    const colidBlock = blocks.some((line, indexY) => {
-        return line.some((block, indexX) => {
-            if (block.type === "null") {
-                return false
-            }
-
-            return game.state[y + indexY + 1][x + indexX].type === 'block'
-        })
-    })
-
-    return colidBlock
-}
-
 //#region Gameplay
-
-const continueGame = () => {
-    game.status = "active"
-    game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity);
-    window.onkeydown = mainKeyDown
-    if (game.isMusicOn) {
-        Audios.theme.play()
-    }
-}
 
 const gameOver = async () => {
     clearInterval(game.fallInterval)
@@ -283,7 +296,7 @@ const gameOver = async () => {
 }
 
 const playGame = () => {
-    if (!collision() && game.status == "active") {
+    if (!game.collision() && game.status == "active") {
         game.atualFigure.y++
     } else {
         if (game.atualFigure.y == 0) {
@@ -347,4 +360,4 @@ window.onload = async () => {
     screens.init.show()
 }
 
-export { game, playGame, collision, continueGame, formatPoints, reloadGameConfig }
+export { game, playGame, formatPoints, reloadGameConfig }
