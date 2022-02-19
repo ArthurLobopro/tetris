@@ -1,4 +1,4 @@
-import { newGame, game, continueGame } from "../Game.js"
+import { game, continueGame } from "../Game.js"
 import { screens } from "../ScreenManager.js"
 import { Screen } from "./Screen.js"
 
@@ -28,7 +28,7 @@ export default class PauseScreen extends Screen {
                 },
                 "new-game": () => {
                     this.close()
-                    newGame()
+                    game.newGame()
                 },
                 controls() {
                     this.removeNavigation()

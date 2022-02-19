@@ -1,4 +1,4 @@
-import { game, collision, playGame, pause } from "./Game.js"
+import { game, collision, playGame } from "./Game.js"
 import { range } from "./Util.js"
 
 //#region Move Blocks
@@ -90,7 +90,7 @@ const keyDownFunctions = {
     "d": () => game.move("right"),
     'r': rotate,
     ' ': downFigure,
-    'Escape': async () => await pause()
+    'Escape': () => game.pause()
 }
 
 const keyPressFunctions = {
