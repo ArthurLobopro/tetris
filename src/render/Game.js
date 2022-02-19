@@ -1,4 +1,5 @@
-import { gameCanvas, last_points_span, nextCanvas, points_span, screens } from "./ScreenManager.js"
+import { screens } from "./ScreenManager.js"
+import { gameScreenComponents } from "./Screens/GameScreen.js"
 import { figures } from "./Figures.js"
 import "./Controllers.js"
 import { renderAll } from "./View.js"
@@ -6,44 +7,176 @@ import { Audios } from "./Audio.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
 
+const { gameCanvas, last_points_span, nextCanvas, points_span } = gameScreenComponents
+
 const formatPoints = points => String(points).padStart(4, '0')
 
-const game = {
-    height: 30,
-    width: 15,
-    squareWidth: 16,
-    state: [],
-    fallInterval: null,
-    renderInterval: null,
-    pointsPerBlock: 10,
-    lastPontuation: 0,
-    points: 0,
-    records: [],
-    renderVelocity: 1000 / 60,
-    gameplayVelocity: 0,
-    status: "inactive",
-    isMusicOn: false,
-    userPreferences: {
-        gameplayVelocity: null,
-        music: null
-    },
-    nextFigure: {
-        blocks: null,
-        color: '',
-        figureType: ''
-    },
-    nextCanvasSize: {
+class Game {
+    height = 30
+    width = 15
+    squareWidth = 16
+    pointsPerBlock = 10
+    renderVelocity = 1000 / 60
+    fallInterval = null
+    renderInterval = null
+    lastPontuation = 0
+    points = 0
+    gameplayVelocity = 0
+    records = []
+
+    nextCanvasSize = {
         height: 6,
         width: 6
-    },
-    atualFigure: {
-        blocks: [[]],
-        x: 0,
-        y: 0,
-        color: '',
-        figureType: ''
-    },
-    moveLock: false,
+    }
+
+    userPreferences = {
+        gameplayVelocity: null,
+        music: null
+    }
+
+
+
+    //Contructor methods
+    constructor() {
+        this.reset()
+        this.loadUserPreferences()
+    }
+
+    loadUserPreferences() {
+        gameData.records.forEach(record => {
+            this.records.push(record)
+        })
+        Object.entries(userPreferences).forEach(([key, value]) => {
+            this.userPreferences[key] = value
+        })
+        this.lastPontuation = gameData.lastPontuation
+    }
+
+    reset() {
+        this.status = "inactive"
+        this.moveLock = false
+        this.isMusicOn = false
+        this.state = this.getNewState()
+        this.spawnFirstFigure()
+        this.spawnNextFigure()
+    }
+
+    //Figure methods
+    makeNullBlock() { return { type: "null" } }
+
+    makeALine() {
+        return Array.from({ length: this.width }, this.makeNullBlock)
+    }
+
+    getNewState() {
+        return Array.from({ length: this.height }, this.makeALine.bind(this))
+    }
+
+    centerFigure() {
+        this.atualFigure.x = Math.trunc(this.width / 2 - this.atualFigure.blocks[0].length / 2)
+    }
+
+    spawnFirstFigure() {
+        this.atualFigure = {
+            y: 0,
+            x: 0,
+            ...figures.random()
+        }
+        this.centerFigure()
+    }
+
+    spawnNextFigure() {
+        this.nextFigure = {
+            ...figures.random()
+        }
+    }
+
+    spawnNewFigure() {
+        game.atualFigure = {
+            y: 0,
+            x: 0,
+            ...game.nextFigure
+        }
+        this.centerFigure()
+        this.spawnNextFigure()
+    }
+
+    //Game State
+    addFigurePoints() {
+        const { blocks } = this.atualFigure
+
+        let figureBlocks = 0
+
+        blocks.forEach(line => {
+            line.forEach(block => {
+                if (block.type === 'block') {
+                    figureBlocks++
+                }
+            })
+        })
+
+        this.points += figureBlocks * this.pointsPerBlock
+    }
+
+    addLinePoints() {
+        this.points += this.pointsPerBlock * this.width * 2
+    }
+
+    removeCompleteLines() {
+        const voidLine = this.makeALine()
+
+        this.state = this.state.filter(line => {
+
+            return line.some(block => {
+                return block.type === 'null'
+            })
+
+        })
+
+        while (this.state.length < this.height) {
+            this.addLinePoints()
+            this.state.unshift(voidLine)
+        }
+    }
+
+    //Game methods
+    newGame() {
+        this.lastPontuation = this.points
+        this.points = 0
+        points_span.innerText = formatPoints(this.points)
+        last_points_span.innerText = formatPoints(this.lastPontuation)
+
+        this.reset()
+        this.status = "active"
+
+        renderAll()
+
+        window.onkeydown = mainKeyDown
+        window.onkeypress = mainKeyPress
+
+        this.fallInterval = setInterval(playGame, this.userPreferences.gameplayVelocity)
+        this.renderInterval = setInterval(renderAll, this.renderVelocity)
+
+        if (userPreferences.music) {
+            this.isMusicOn = true
+            Audios.theme.currentTime = 0
+            Audios.theme.volume = userPreferences.musicVolume
+            Audios.theme.play()
+            Audios.theme.loop = true
+        }
+    }
+
+    pause() {
+        window.onkeydown = mainKeyDown
+        window.onkeypress = mainKeyPress
+        clearInterval(this.fallInterval)
+        this.status = "paused"
+        screens.pause.show()
+        if (this.isMusicOn) {
+            Audios.theme.pause()
+        }
+    }
+
     move(direction) {
         if (this.moveLock) return
 
@@ -65,9 +198,10 @@ const game = {
             return this.state[y + indexY]?.[x + line.length]?.type === "block"
         })
 
-        if (direction === "right" && !haveBlocksOnRight) {
-            if (x + this.atualFigure.blocks[0].length <= 14)
-                this.atualFigure.x++
+        if (
+            direction === "right" && !haveBlocksOnRight && x + this.atualFigure.blocks[0].length <= 14
+        ) {
+            this.atualFigure.x++
         }
 
         if (direction === "left" && !haveBlocksOnLeft && x > 0) {
@@ -81,88 +215,16 @@ const game = {
 
 }
 
+const game = new Game()
+
 //#region Pontuação
 
-const addLinePoints = () => {
-    game.points += game.pointsPerBlock * game.width * 2
-}
 
-const addFigurePoints = () => {
-    const { blocks: figure } = game.atualFigure
 
-    let figureBlocks = 0
-
-    figure.forEach(line => {
-        line.forEach(block => {
-            if (block.type === 'block') {
-                figureBlocks++
-            }
-        })
-    })
-
-    game.points += figureBlocks * game.pointsPerBlock
-}
-
-//#endregion
-
-//#region New atributes from game
-const makeNullBlock = () => { return { type: "null" } }
-
-const makeALine = () => {
-    const line = Array.from({ length: game.width }, makeNullBlock)
-    return line
-}
-
-const getNewGameState = () => {
-    const table = Array.from({ length: game.height }, makeALine)
-    return table
-}
-
-const centerFigure = () => {
-    game.atualFigure.x = Math.trunc(game.width / 2 - game.atualFigure.blocks[0].length / 2)
-}
-
-const spawnFirstFigure = () => {
-    game.atualFigure = {
-        y: 0,
-        ...figures.random()
-    }
-    centerFigure()
-}
-
-const spawnNextFigure = () => {
-    game.nextFigure = {
-        ...figures.random()
-    }
-}
-
-const spawnNewFigure = () => {
-    game.atualFigure = {
-        y: 0,
-        ...game.nextFigure
-    }
-    centerFigure()
-    spawnNextFigure()
-}
 //#endregion
 
 //#region Update game.state
-const removeCompleteLines = () => {
-    const voidLine = makeALine()
 
-    game.state = game.state.filter(line => {
-
-        return line.some(block => {
-            return block.type === 'null'
-        })
-
-    })
-
-    while (game.state.length < game.height) {
-        addLinePoints()
-        game.state.unshift(voidLine)
-    }
-}
 
 const addToState = () => {
     const { x, y, blocks, figureType } = game.atualFigure
@@ -184,7 +246,7 @@ const addToState = () => {
         })
     })
 
-    removeCompleteLines()
+    game.removeCompleteLines()
 }
 //#endregion
 
@@ -211,14 +273,6 @@ const collision = () => {
 }
 
 //#region Gameplay
-const pause = () => {
-    clearInterval(game.fallInterval)
-    game.status = "paused"
-    screens.pause.show()
-    if (game.isMusicOn) {
-        Audios.theme.pause()
-    }
-}
 
 const continueGame = () => {
     game.status = "active"
@@ -239,34 +293,6 @@ const gameOver = async () => {
     screens.gameOver.show()
 }
 
-const newGame = () => {
-    game.status = "active"
-    game.state = getNewGameState()
-    spawnFirstFigure()
-    spawnNextFigure()
-
-    game.lastPontuation = game.points
-    game.points = 0
-    points_span.innerText = formatPoints(game.points)
-    last_points_span.innerText = formatPoints(game.lastPontuation)
-
-    renderAll()
-
-    window.onkeydown = mainKeyDown
-    window.onkeypress = mainKeyPress
-
-    game.fallInterval = setInterval(playGame, game.userPreferences.gameplayVelocity)
-    game.renderInterval = setInterval(renderAll, game.renderVelocity)
-
-    if (userPreferences.music) {
-        game.isMusicOn = true
-        Audios.theme.currentTime = 0
-        Audios.theme.volume = userPreferences.musicVolume
-        Audios.theme.play()
-        Audios.theme.loop = true
-    }
-}
-
 const playGame = () => {
     if (!collision() && game.status == "active") {
         game.atualFigure.y++
@@ -274,25 +300,14 @@ const playGame = () => {
         if (game.atualFigure.y == 0) {
             return gameOver()
         }
-        addFigurePoints()
+        game.addFigurePoints()
         addToState()
-        spawnNewFigure()
+        game.spawnNewFigure()
     }
 
     points_span.innerText = formatPoints(game.points)
 }
 //#endregion
-
-const loadGameData = () => {
-    gameData.records.forEach(record => {
-        game.records.push(record)
-    })
-    Object.entries(userPreferences).forEach(([key, value]) => {
-        game.userPreferences[key] = value
-    })
-    console.log(game.userPreferences);
-    game.lastPontuation = gameData.lastPontuation
-}
 
 const reloadGameConfig = () => {
     if (game.isMusicOn !== game.userPreferences.music) {
@@ -302,14 +317,6 @@ const reloadGameConfig = () => {
         Audios.theme.currentTime = 0
     }
 }
-
-    ; (
-        () => {
-            window.addEventListener('game-over', () => {
-                game.gameplayVelocity = game.userPreferences.gameplayVelocity
-            })
-        }
-    )()
 
 const verifyRecords = () => {
     const { points: pontos, records } = game
@@ -347,9 +354,8 @@ nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCan
 nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
 
 window.onload = async () => {
-    loadGameData()
     screens.game.show(false)
     screens.init.show()
 }
 
-export { game, playGame, collision, addFigurePoints, newGame, pause, continueGame, formatPoints, reloadGameConfig }
+export { game, playGame, collision, continueGame, formatPoints, reloadGameConfig }
