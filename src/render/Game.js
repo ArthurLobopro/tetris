@@ -122,6 +122,24 @@ class Game {
         this.points += this.pointsPerBlock * this.width * 2
     }
 
+    addToState() {
+        const { x, y, blocks, figureType } = this.atualFigure
+
+        blocks.forEach((line, indexY) => {
+
+            line.forEach((block, indexX) => {
+                this.state[y + indexY] = this.state[y + indexY].map((stateBlock, stateX) => {
+                    if ([x + indexX] == stateX && block.type === 'block') {
+                        return { ...block, figureType }
+                    }
+                    return stateBlock
+                })
+            })
+        })
+
+        this.removeCompleteLines()
+    }
+
     removeCompleteLines() {
         const voidLine = this.makeALine()
 
@@ -217,37 +235,8 @@ class Game {
 
 const game = new Game()
 
-//#region Pontuação
-
-
-
-//#endregion
-
 //#region Update game.state
 
-
-const addToState = () => {
-    const { x, y, blocks, figureType } = game.atualFigure
-
-    blocks.forEach((line, indexY) => {
-
-        line.forEach((block, indexX) => {
-
-            game.state[y + indexY] = game.state[y + indexY].map((stateBlock, stateX) => {
-                if ([x + indexX] == stateX) {
-                    if (block.type === 'block') {
-                        return { ...block, figureType }
-                    }
-                    return stateBlock
-                }
-
-                return stateBlock
-            })
-        })
-    })
-
-    game.removeCompleteLines()
-}
 //#endregion
 
 const collision = () => {
@@ -301,7 +290,7 @@ const playGame = () => {
             return gameOver()
         }
         game.addFigurePoints()
-        addToState()
+        game.addToState()
         game.spawnNewFigure()
     }
 
