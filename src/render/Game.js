@@ -254,6 +254,16 @@ class Game {
         }
     }
 
+    gameOver() {
+        clearInterval(this.fallInterval)
+        clearInterval(this.renderInterval)
+        verifyRecords()
+        saveLastPontuation()
+    
+        screens.gameOver.reset()
+        screens.gameOver.show()
+    }
+
     move(direction) {
         if (this.moveLock) return
 
@@ -283,23 +293,12 @@ class Game {
 const game = new Game()
 
 //#region Gameplay
-
-const gameOver = async () => {
-    clearInterval(game.fallInterval)
-    clearInterval(game.renderInterval)
-    verifyRecords()
-    saveLastPontuation()
-
-    screens.gameOver.reset()
-    screens.gameOver.show()
-}
-
 const playGame = () => {
     if (!game.collision() && game.status == "active") {
         game.atualFigure.y++
     } else {
         if (game.atualFigure.y == 0) {
-            return gameOver()
+            return game.gameOver()
         }
         game.addFigurePoints()
         game.addToState()
