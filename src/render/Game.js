@@ -34,7 +34,7 @@ class Game {
         music: null
     }
 
-    //Contructor methods
+    //#region Contructor methods
     constructor() {
         this.reset()
         this.loadUserPreferences()
@@ -58,6 +58,7 @@ class Game {
         this.spawnFirstFigure()
         this.spawnNextFigure()
     }
+    //#endregion
 
     //#region Figure methods
     makeNullBlock() { return { type: "null" } }
@@ -101,7 +102,6 @@ class Game {
     //#endregion
 
     //#region Game State
-
     addFigurePoints() {
         const { blocks } = this.atualFigure
 
@@ -159,7 +159,6 @@ class Game {
     //#endregion
 
     //#region Collision
-
     collision() {
         const { x, y, blocks } = this.atualFigure
 
@@ -208,7 +207,7 @@ class Game {
 
     //#endregion
 
-    //Game methods
+    //#region Game methods
     newGame() {
         this.lastPontuation = this.points
         this.points = 0
@@ -278,7 +277,7 @@ class Game {
 
         setTimeout(() => this.moveLock = false, 100);
     }
-
+    //#endregion
 }
 
 const game = new Game()
@@ -321,30 +320,14 @@ const reloadGameConfig = () => {
 }
 
 const verifyRecords = () => {
-    const { points: pontos, records } = game
+    const { points, records } = game
     console.log(records);
-    const atualPointsIsNewRecord = records.some(record => {
-        return record.points < pontos
-    })
+    const atualPointsIsNewRecord = records.some(record => record.points < points)
     if (atualPointsIsNewRecord) {
         game.records.pop()
-        game.records.push({ points: pontos })
-        while (
-            game.records[0].points < game.records[1].points ||
-            game.records[1].points < game.records[2].points
-        ) {
-            game.records.forEach((record, index) => {
-                if (record.points < game.records[index + 1]?.points) {
-                    [
-                        game.records[index],
-                        game.records[index + 1]
-                    ] = [
-                            game.records[index + 1],
-                            game.records[index]
-                        ]
-                }
-            })
-        }
+        const newRecordIndex = records.findIndex(record => record.points < points)
+        console.log(newRecordIndex);
+        game.records.splice(newRecordIndex, 0, { points })
         saveRecords()
     }
 }
@@ -359,5 +342,11 @@ window.onload = async () => {
     screens.game.show(false)
     screens.init.show()
 }
+
+// window.debug = {
+//     setGamePoints: points => {
+//         game.points = points
+//     }
+// }
 
 export { game, playGame, formatPoints, reloadGameConfig }
