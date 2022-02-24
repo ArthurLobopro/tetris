@@ -76,7 +76,7 @@ const rotate = () => {
 }
 
 const downFigure = () => {
-    while (!collision()) {
+    while (!game.collision()) {
         playGame()
     }
 }
