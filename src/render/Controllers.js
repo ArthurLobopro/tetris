@@ -1,10 +1,10 @@
-import { game, playGame } from "./Game.js"
+import { game } from "./Game.js"
 import { range } from "./Util.js"
 
 //#region Move Blocks
 const accelerate = () => {
     if (!game.moveLock && !game.collision() && game.status === "active") {
-        playGame()
+        game.loadTurn()
         game.moveLock = true
         setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)
     }
@@ -77,7 +77,7 @@ const rotate = () => {
 
 const downFigure = () => {
     while (!game.collision()) {
-        playGame()
+        game.loadTurn()
     }
 }
 //#endregion

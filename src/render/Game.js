@@ -222,7 +222,7 @@ class Game {
         window.onkeydown = mainKeyDown
         window.onkeypress = mainKeyPress
 
-        this.fallInterval = setInterval(playGame, this.userPreferences.gameplayVelocity)
+        this.fallInterval = setInterval(() => this.loadTurn(), this.userPreferences.gameplayVelocity)
         this.renderInterval = setInterval(renderAll, this.renderVelocity)
 
         if (userPreferences.music) {
@@ -247,7 +247,7 @@ class Game {
 
     continueGame() {
         this.status = "active"
-        this.fallInterval = setInterval(playGame, this.userPreferences.gameplayVelocity);
+        this.fallInterval = setInterval(() => this.loadTurn(), this.userPreferences.gameplayVelocity);
         window.onkeydown = mainKeyDown
         if (this.isMusicOn) {
             Audios.theme.play()
@@ -259,9 +259,23 @@ class Game {
         clearInterval(this.renderInterval)
         verifyRecords()
         saveLastPontuation()
-    
+
         screens.gameOver.reset()
         screens.gameOver.show()
+    }
+
+    loadTurn ()  {
+        if (!this.collision() && this.status == "active") {
+            this.atualFigure.y++
+        } else if (this.atualFigure.y == 0) {
+            this.gameOver()
+        } else {
+            this.addFigurePoints()
+            this.addToState()
+            this.spawnNewFigure()
+        }
+    
+        points_span.innerText = formatPoints(this.points)
     }
 
     move(direction) {
@@ -293,20 +307,6 @@ class Game {
 const game = new Game()
 
 //#region Gameplay
-const playGame = () => {
-    if (!game.collision() && game.status == "active") {
-        game.atualFigure.y++
-    } else {
-        if (game.atualFigure.y == 0) {
-            return game.gameOver()
-        }
-        game.addFigurePoints()
-        game.addToState()
-        game.spawnNewFigure()
-    }
-
-    points_span.innerText = formatPoints(game.points)
-}
 //#endregion
 
 const reloadGameConfig = () => {
@@ -320,12 +320,10 @@ const reloadGameConfig = () => {
 
 const verifyRecords = () => {
     const { points, records } = game
-    console.log(records);
     const atualPointsIsNewRecord = records.some(record => record.points < points)
     if (atualPointsIsNewRecord) {
         game.records.pop()
         const newRecordIndex = records.findIndex(record => record.points < points)
-        console.log(newRecordIndex);
         game.records.splice(newRecordIndex, 0, { points })
         saveRecords()
     }
@@ -348,4 +346,4 @@ window.onload = async () => {
 //     }
 // }
 
-export { game, playGame, formatPoints, reloadGameConfig }
+export { game, formatPoints, reloadGameConfig }
