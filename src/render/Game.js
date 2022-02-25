@@ -257,7 +257,7 @@ class Game {
     gameOver() {
         clearInterval(this.fallInterval)
         clearInterval(this.renderInterval)
-        verifyRecords()
+        this.verifyRecords()
         saveLastPontuation()
 
         screens.gameOver.reset()
@@ -281,10 +281,9 @@ class Game {
     move(direction) {
         if (this.moveLock) return
 
-        const { y, x } = this.atualFigure
+        const { x } = this.atualFigure
 
         const haveBlocksOnLeft = this.getHaveBlocksOnLeft()
-
         const haveBlocksOnRight = this.getHaveBlocksOnRight()
 
         if (
@@ -301,13 +300,21 @@ class Game {
 
         setTimeout(() => this.moveLock = false, 100);
     }
+
+    verifyRecords () {
+        const { points, records } = this
+        const atualPointsIsNewRecord = records.some(record => record.points < points)
+        if (atualPointsIsNewRecord) {
+            this.records.pop()
+            const newRecordIndex = records.findIndex(record => record.points < points)
+            this.records.splice(newRecordIndex, 0, { points })
+            saveRecords()
+        }
+    }
     //#endregion
 }
 
 const game = new Game()
-
-//#region Gameplay
-//#endregion
 
 const reloadGameConfig = () => {
     if (game.isMusicOn !== game.userPreferences.music) {
@@ -318,32 +325,15 @@ const reloadGameConfig = () => {
     }
 }
 
-const verifyRecords = () => {
-    const { points, records } = game
-    const atualPointsIsNewRecord = records.some(record => record.points < points)
-    if (atualPointsIsNewRecord) {
-        game.records.pop()
-        const newRecordIndex = records.findIndex(record => record.points < points)
-        game.records.splice(newRecordIndex, 0, { points })
-        saveRecords()
-    }
-}
-
 gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
 gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
 
 nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCanvasSize.width - 1
 nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
 
-window.onload = async () => {
+window.onload = () => {
     screens.game.show(false)
     screens.init.show()
 }
-
-// window.debug = {
-//     setGamePoints: points => {
-//         game.points = points
-//     }
-// }
 
 export { game, formatPoints, reloadGameConfig }
