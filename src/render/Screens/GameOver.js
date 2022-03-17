@@ -1,4 +1,4 @@
-import { game, newGame } from '../Game.js'
+import { game } from '../Game.js'
 import { Screen } from './Screen.js'
 
 export default class GameOverScreen extends Screen {
@@ -27,7 +27,7 @@ export default class GameOverScreen extends Screen {
 
             button.onclick = () => {
                 this.close()
-                newGame()
+                game.newGame()
             }
 
             return gameOverScreen

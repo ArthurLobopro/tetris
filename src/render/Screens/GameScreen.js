@@ -1,6 +1,6 @@
 import { Screen } from "./Screen.js"
 
-export class GameScreen extends Screen {
+class GameScreen extends Screen {
     constructor() {
         super()
 
@@ -44,3 +44,6 @@ export class GameScreen extends Screen {
         return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, points_span, last_points_span }
     }
 }
+
+export const gameScreen = new GameScreen()
+export const gameScreenComponents = gameScreen.getComponents()

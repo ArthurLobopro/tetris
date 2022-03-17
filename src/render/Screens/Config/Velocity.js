@@ -71,7 +71,7 @@ export default class VelocityConfigScreen extends ConfigScreenBase {
                         saveConfig()
                     }
                     this.close()
-                    screens.config.show()
+                    screens.config.addNavigation()
                 }
             })
 

@@ -3,8 +3,5 @@ const Store = require("./Store")
 
 contextBridge.exposeInMainWorld("require", require)
 contextBridge.exposeInMainWorld('openExternal', shell.openExternal)
-
-document.addEventListener('DOMContentLoaded', () => {
-    contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer)
-    contextBridge.exposeInMainWorld('Store', Store)
-})
+contextBridge.exposeInMainWorld('Store', Store)
+contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer)

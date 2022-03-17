@@ -1,7 +1,8 @@
 import { formatPoints, game } from './Game.js'
 import { range } from './Util.js'
 import { colors } from "./Colors.js"
-import { gameCanvas, gameCtx, nextCanvas, nextCtx } from './ScreenManager.js'
+import { gameScreenComponents } from './Screens/GameScreen.js'
+const { gameCanvas, nextCanvas, nextCtx, gameCtx } = gameScreenComponents
 
 //#region Next Figure Draw
 const drawNextFigure = () => {

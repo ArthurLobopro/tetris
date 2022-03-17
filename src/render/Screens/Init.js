@@ -1,5 +1,5 @@
 import { Screen } from "./Screen.js"
-import { newGame } from "../Game.js"
+import { game } from "../Game.js"
 import { screens } from "../ScreenManager.js"
 
 export default class InitScreen extends Screen {
@@ -24,10 +24,10 @@ export default class InitScreen extends Screen {
             const functions = {
                 start() {
                     this.close()
-                    newGame()
+                    game.newGame()
                 },
                 config() {
-                    screens.config.show(screens.init)
+                    screens.config.show(this)
                 },
                 controls() {
                     screens.controls.show(screens.init)

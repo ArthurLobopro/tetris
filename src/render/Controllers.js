@@ -1,10 +1,10 @@
-import { game, collision, playGame, pause } from "./Game.js"
+import { game } from "./Game.js"
 import { range } from "./Util.js"
 
 //#region Move Blocks
 const accelerate = () => {
-    if (!game.moveLock && !collision()) {
-        playGame()
+    if (!game.moveLock && !game.collision() && game.status === "active") {
+        game.loadTurn()
         game.moveLock = true
         setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)
     }
@@ -76,8 +76,8 @@ const rotate = () => {
 }
 
 const downFigure = () => {
-    while (!collision()) {
-        playGame()
+    while (!game.collision()) {
+        game.loadTurn()
     }
 }
 //#endregion
@@ -90,7 +90,7 @@ const keyDownFunctions = {
     "d": () => game.move("right"),
     'r': rotate,
     ' ': downFigure,
-    'Escape': async () => await pause()
+    'Escape': () => game.pause()
 }
 
 const keyPressFunctions = {
