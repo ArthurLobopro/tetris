@@ -7,14 +7,15 @@ export default class VelocityConfigScreen extends ConfigScreenBase {
         super()
 
         this.buildFunction = function(){
-            const { gameplayVelocity: velocity } = userPreferences
+            const { velocity } = userPreferences
             const configTemp = { ...userPreferences }
 
             const saveConfig = () => {
                 Object.entries(configTemp).forEach(([key, value]) => {
                     userPreferences[key] = value
                 })
-                game.userPreferences = { ...userPreferences }
+                game.userPreferences.velocity = userPreferences.velocity
+                game.velocity = userPreferences.velocity
                 saveUserPreferences()
             }
 
@@ -26,15 +27,15 @@ export default class VelocityConfigScreen extends ConfigScreenBase {
                 <div class="text">
                     <div class="line">
                         <div>Lento</div>
-                        <div class="radio" data-check="${velocity === 500}" data-value="500"></div>
+                        <div class="radio" data-check="${velocity === "slow"}" data-value="slow"></div>
                     </div>
                     <div class="line">
                         <div>Médio</div>
-                        <div class="radio" data-check="${velocity === 300}" data-value="300"></div>
+                        <div class="radio" data-check="${velocity === "normal"}" data-value="normal"></div>
                     </div>
                     <div class="line">
                         <div>Rápido</div>
-                        <div class="radio" data-check="${velocity === 150}" data-value="150"></div>
+                        <div class="radio" data-check="${velocity === "fast"}" data-value="fast"></div>
                     </div>
                 </div>
                 <div class="buttons">
@@ -58,7 +59,7 @@ export default class VelocityConfigScreen extends ConfigScreenBase {
                     })
 
                     target.dataset.check = "true"
-                    configTemp.gameplayVelocity = Number(target.dataset.value)
+                    configTemp.velocity = target.dataset.value
                 }
             })
 
