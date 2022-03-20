@@ -222,7 +222,7 @@ class Game {
         window.onkeydown = mainKeyDown
         window.onkeypress = mainKeyPress
 
-        this.fallInterval = setInterval(() => this.loadTurn(), this.userPreferences.gameplayVelocity)
+        this.fallInterval = setInterval(() => this.tick(), this.userPreferences.gameplayVelocity)
         this.renderInterval = setInterval(renderAll, this.renderVelocity)
 
         if (userPreferences.music) {
@@ -247,7 +247,7 @@ class Game {
 
     continueGame() {
         this.status = "active"
-        this.fallInterval = setInterval(() => this.loadTurn(), this.userPreferences.gameplayVelocity);
+        this.fallInterval = setInterval(() => this.tick(), this.userPreferences.gameplayVelocity);
         window.onkeydown = mainKeyDown
         if (this.isMusicOn) {
             Audios.theme.play()
@@ -264,7 +264,7 @@ class Game {
         screens.gameOver.show()
     }
 
-    loadTurn ()  {
+    tick ()  {
         if (!this.collision() && this.status == "active") {
             this.atualFigure.y++
         } else if (this.atualFigure.y == 0) {
