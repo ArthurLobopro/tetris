@@ -1,11 +1,11 @@
 const gameSchema = {
     lastPontuation: {
-        type: 'number',
+        type: "number",
         minimum: 0,
         default: 0
     },
     records: {
-        type: 'array',
+        type: "array",
         minItems: 3,
         maxItems: 3,
         default: [
@@ -16,20 +16,19 @@ const gameSchema = {
 
 const preferencesSchema = {
     music: {
-        type: 'boolean',
+        type: "boolean",
         default: true
     },
     musicVolume: {
-        type: 'number',
+        type: "number",
         minimum: 0,
         maximum: 1,
         default: 1
     },
-    gameplayVelocity: {
-        type: 'number',
-        default: 300,
-        minimum: 150,
-        maximum: 500
+    velocity: {
+        type: "string",
+        default: "normal",
+        enum: ["slow", "normal", "fast"]
     },
     theme: {
         type: "string",

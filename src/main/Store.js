@@ -1,11 +1,16 @@
 const Store = require('electron-store')
+const { userPreferencesMigrations } = require('./Migrations')
 const { gameSchema, preferencesSchema, themeSchema } = require('./StoreSchemas')
 
 const dataPath = "gameData"
 
 const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema, name: 'data', clearInvalidConfig: true })
 
-const userPreferences = new Store({ cwd: `${dataPath}/userPreferences`, schema: preferencesSchema, clearInvalidConfig: true })
+const userPreferences = new Store({ 
+    cwd: `${dataPath}/userPreferences`, 
+    schema: preferencesSchema, 
+    migrations: userPreferencesMigrations
+ })
 
 const themes = new Store({ cwd: `${dataPath}/themes`, schema: themeSchema, name: 'themes', clearInvalidConfig: true })
 

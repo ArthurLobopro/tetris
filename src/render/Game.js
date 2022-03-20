@@ -21,8 +21,13 @@ class Game {
     renderInterval = null
     lastPontuation = 0
     points = 0
-    gameplayVelocity = 0
     records = []
+    
+    velocities = {
+        slow: 500,
+        normal: 300,
+        fast: 150
+    }
 
     nextCanvasSize = {
         height: 6,
@@ -30,7 +35,7 @@ class Game {
     }
 
     userPreferences = {
-        gameplayVelocity: null,
+        velocity: null,
         music: null
     }
 
@@ -55,6 +60,7 @@ class Game {
         this.moveLock = false
         this.isMusicOn = false
         this.state = this.getNewState()
+        this.velocity = userPreferences.velocity
         this.spawnFirstFigure()
         this.spawnNextFigure()
     }
@@ -222,7 +228,7 @@ class Game {
         window.onkeydown = mainKeyDown
         window.onkeypress = mainKeyPress
 
-        this.fallInterval = setInterval(() => this.loadTurn(), this.userPreferences.gameplayVelocity)
+        this.fallInterval = setInterval(this.tick.bind(this), this.velocities[this.velocity])
         this.renderInterval = setInterval(renderAll, this.renderVelocity)
 
         if (userPreferences.music) {
@@ -247,7 +253,7 @@ class Game {
 
     continueGame() {
         this.status = "active"
-        this.fallInterval = setInterval(() => this.loadTurn(), this.userPreferences.gameplayVelocity);
+        this.fallInterval = setInterval(this.tick.bind(this), this.velocities[this.velocity]);
         window.onkeydown = mainKeyDown
         if (this.isMusicOn) {
             Audios.theme.play()
@@ -264,7 +270,7 @@ class Game {
         screens.gameOver.show()
     }
 
-    loadTurn ()  {
+    tick() {
         if (!this.collision() && this.status == "active") {
             this.atualFigure.y++
         } else if (this.atualFigure.y == 0) {
@@ -274,7 +280,6 @@ class Game {
             this.addToState()
             this.spawnNewFigure()
         }
-    
         points_span.innerText = formatPoints(this.points)
     }
 
@@ -301,7 +306,7 @@ class Game {
         setTimeout(() => this.moveLock = false, 100);
     }
 
-    verifyRecords () {
+    verifyRecords() {
         const { points, records } = this
         const atualPointsIsNewRecord = records.some(record => record.points < points)
         if (atualPointsIsNewRecord) {

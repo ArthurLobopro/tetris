@@ -7,7 +7,7 @@ const getButtons = element => {
 const functions = {
     up(element) {
         const { buttons, focused } = getButtons(element)
-        let previus = focused.previousElementSibling
+        let previus = focused.previousElementSibling|| null
         if (previus?.tagName !== "BUTTON") {
             previus = buttons[buttons.length - 1]
         }
@@ -16,7 +16,7 @@ const functions = {
     },
     down(element) {
         const { buttons, focused } = getButtons(element)
-        let next = focused.nextElementSibling
+        let next = focused.nextElementSibling || null
         if (!next || next?.tagName !== "BUTTON" || next == focused) {
             console.log('hey');
             next = buttons[0]
