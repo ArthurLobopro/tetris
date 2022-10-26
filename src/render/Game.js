@@ -6,10 +6,9 @@ import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
 import { mainKeyDown, mainKeyPress } from "./Controllers.js"
 import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
+import { formatPoints } from "./Util.js"
 
 const { gameCanvas, last_points_span, nextCanvas, points_span } = gameScreenComponents
-
-const formatPoints = points => String(points).padStart(4, '0')
 
 class Game {
     height = 30
@@ -338,4 +337,4 @@ window.onload = () => {
     screens.init.show()
 }
 
-export { game, formatPoints }
+export { game }

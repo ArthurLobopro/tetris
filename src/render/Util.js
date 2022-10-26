@@ -22,4 +22,6 @@ const range = (min, max, pass = 1) => {
 
 const randint = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 
-export { range, randint, loadAudio, loadImage }
+const formatPoints = points => String(points).padStart(4, '0')
+
+export { range, randint, loadAudio, loadImage, formatPoints }
