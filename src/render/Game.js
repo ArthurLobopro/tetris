@@ -22,7 +22,7 @@ class Game {
     lastPontuation = 0
     points = 0
     records = []
-    
+
     velocities = {
         slow: 500,
         normal: 300,
@@ -96,7 +96,7 @@ class Game {
         }
     }
 
-    spawnNewFigure() {
+    spawnFigure() {
         game.atualFigure = {
             y: 0,
             x: 0,
@@ -143,10 +143,10 @@ class Game {
             })
         })
 
-        this.removeCompleteLines()
+        this.removeLines()
     }
 
-    removeCompleteLines() {
+    removeLines() {
         const voidLine = this.makeALine()
 
         this.state = this.state.filter(line => {
@@ -187,10 +187,10 @@ class Game {
         return colidBlock
     }
 
-    getHaveBlocksOnRight(figure = this.atualFigure) {
-        const { y, x } = figure
+    get haveBlocksOnRight() {
+        const { y, x, blocks } = this.atualFigure
 
-        return figure.blocks.some((line, indexY) => {
+        return blocks.some((line, indexY) => {
             if (line[line.length - 1].type === "null") {
                 return false
             }
@@ -199,16 +199,36 @@ class Game {
         })
     }
 
-    getHaveBlocksOnLeft(figure = this.atualFigure) {
-        const { y, x } = figure
+    get haveBlocksOnLeft() {
+        const { y, x, blocks } = this.atualFigure
 
-        return figure.blocks.some((line, indexY) => {
+        return blocks.some((line, indexY) => {
             if (line[0].type === "null") {
                 return false
             }
 
             return this.state[y + indexY]?.[x - 1]?.type === "block"
         })
+    }
+
+    move(direction) {
+        if (this.moveLock) return
+
+        const { x } = this.atualFigure
+
+        if (
+            direction === "right" && !this.haveBlocksOnRight && x + this.atualFigure.blocks[0].length <= 14
+        ) {
+            this.atualFigure.x++
+        }
+
+        if (direction === "left" && !this.haveBlocksOnLeft && x > 0) {
+            this.atualFigure.x--
+        }
+
+        this.moveLock = true
+
+        setTimeout(() => this.moveLock = false, 100)
     }
 
     //#endregion
@@ -253,7 +273,7 @@ class Game {
 
     continueGame() {
         this.status = "active"
-        this.fallInterval = setInterval(this.tick.bind(this), this.velocities[this.velocity]);
+        this.fallInterval = setInterval(this.tick.bind(this), this.velocities[this.velocity])
         window.onkeydown = mainKeyDown
         if (this.isMusicOn) {
             Audios.theme.play()
@@ -278,32 +298,9 @@ class Game {
         } else {
             this.addFigurePoints()
             this.addToState()
-            this.spawnNewFigure()
+            this.spawnFigure()
         }
         points_span.innerText = formatPoints(this.points)
-    }
-
-    move(direction) {
-        if (this.moveLock) return
-
-        const { x } = this.atualFigure
-
-        const haveBlocksOnLeft = this.getHaveBlocksOnLeft()
-        const haveBlocksOnRight = this.getHaveBlocksOnRight()
-
-        if (
-            direction === "right" && !haveBlocksOnRight && x + this.atualFigure.blocks[0].length <= 14
-        ) {
-            this.atualFigure.x++
-        }
-
-        if (direction === "left" && !haveBlocksOnLeft && x > 0) {
-            this.atualFigure.x--
-        }
-
-        this.moveLock = true
-
-        setTimeout(() => this.moveLock = false, 100);
     }
 
     verifyRecords() {
