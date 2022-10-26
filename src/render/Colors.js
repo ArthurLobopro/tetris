@@ -1,7 +1,7 @@
 import { themes, userPreferences } from "./Data.js"
 
-const colors = {
-    figures: {
+class Colors {
+    figures = {
         square: "",
         stick: "",
         z: "",
@@ -9,23 +9,18 @@ const colors = {
         "reverse-L": "",
         L: "",
         T: ""
-    },
-    background: "",
-    lines: ""
-}
+    }
+    background = ""
+    lines = ""
 
-const updateColors = () => {
-    const theme = themes[userPreferences.theme]
-    colors.background = theme.background
-    colors.lines = theme.lines
-
-    for (const figure in theme.figures) {
-        colors.figures[figure] = theme.figures[figure]
+    update() {
+        const theme = themes[userPreferences.theme]
+        for (const key in theme) {
+            this[key] = theme[key]
+        }
     }
 }
 
-window.addEventListener('load', () => {
-    updateColors()
-})
+export const colors = new Colors()
 
-export { colors , updateColors }
+window.addEventListener('load', colors.update.bind(colors))

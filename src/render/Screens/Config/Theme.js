@@ -1,6 +1,6 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
 import FiguresViewer from "./figuresViewer.js"
-import { updateColors } from "../../Colors.js"
+import { colors } from "../../Colors.js"
 import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
@@ -96,7 +96,7 @@ export default class ThemeConfigScreen extends ConfigScreenBase {
                 button.onclick = () => {
                     if (button.value == 1) {
                         saveConfig()
-                        updateColors()
+                        colors.update()
                     }
                     this.close()
                     screens.config.addNavigation()
