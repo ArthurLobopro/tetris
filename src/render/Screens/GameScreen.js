@@ -3,33 +3,32 @@ import { Screen } from "./Screen.js"
 class GameScreen extends Screen {
     constructor() {
         super()
-
-        this.buildFunction = function () {
-            const gameScreen = document.createElement('div')
-            gameScreen.id = "tela"
-            gameScreen.innerHTML = `
-            <canvas id="game"></canvas>
-            <div id="data">
-                <div id="next-wrapper">
-                    <div>Próximo</div>
-                    <canvas id="next" width="0" height="0"></canvas>
-                </div>
-                <div>
-                    <div>Pontos: <span id="pontos">0000</span></div>
-                    <br>
-                    <div>Ultima Pontuação: <div id="last-pontuation">0000</div></div>
-                    <br>
-                    <div>
-                        Recordes:
-                        <div id="recordes"></div>
-                    </div>
-                </div>
-            </div>`
-
-            return gameScreen
-        }
-
         this.reset()
+    }
+
+    buildFunction() {
+        const gameScreen = document.createElement('div')
+        gameScreen.id = "tela"
+        gameScreen.innerHTML = `
+        <canvas id="game"></canvas>
+        <div id="data">
+            <div id="next-wrapper">
+                <div>Próximo</div>
+                <canvas id="next" width="0" height="0"></canvas>
+            </div>
+            <div>
+                <div>Pontos: <span id="pontos">0000</span></div>
+                <br>
+                <div>Ultima Pontuação: <div id="last-pontuation">0000</div></div>
+                <br>
+                <div>
+                    Recordes:
+                    <div id="recordes"></div>
+                </div>
+            </div>
+        </div>`
+
+        return gameScreen
     }
 
     getComponents() {

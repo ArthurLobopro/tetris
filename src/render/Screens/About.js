@@ -1,14 +1,16 @@
-import { screens } from "../ScreenManager.js";
-import { Screen } from "./Screen.js";
+import { screens } from "../ScreenManager.js"
+import { Screen } from "./Screen.js"
 
 export default class AboutScreen extends Screen {
     constructor() {
         super()
+        this.reset()
+    }
 
-        this.buildFunction = function () {
-            const aboutScreen = document.createElement('div')
-            aboutScreen.className = "telas-wrapper"
-            aboutScreen.innerHTML = `
+    buildFunction() {
+        const aboutScreen = document.createElement('div')
+        aboutScreen.className = "telas-wrapper"
+        aboutScreen.innerHTML = `
             <fieldset id="about">
                 <legend>Sobre</legend>
                 <div>
@@ -32,26 +34,23 @@ export default class AboutScreen extends Screen {
                 </div>
             </fieldset>`
 
-            const repository_link = "https://github.com/ArthurLobopro/tetris"
+        const repository_link = "https://github.com/ArthurLobopro/tetris"
 
-            aboutScreen.querySelector("#github-repo").onclick = () => {
-                openExternal(repository_link)
-            }
-
-            aboutScreen.querySelectorAll('.link').forEach(span => {
-                span.onclick = () => {
-                    openExternal(span.innerText)
-                }
-            })
-
-            aboutScreen.querySelector("#return").onclick = () => {
-                this.close()
-                screens.init.show()
-            }
-
-            return aboutScreen
+        aboutScreen.querySelector("#github-repo").onclick = () => {
+            openExternal(repository_link)
         }
 
-        this.reset()
+        aboutScreen.querySelectorAll('.link').forEach(span => {
+            span.onclick = () => {
+                openExternal(span.innerText)
+            }
+        })
+
+        aboutScreen.querySelector("#return").onclick = () => {
+            this.close()
+            screens.init.show()
+        }
+
+        return aboutScreen
     }
 }
