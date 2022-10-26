@@ -1,4 +1,4 @@
-import { game, reloadGameConfig } from "../Game.js"
+import { game } from "../Game.js"
 import { Screen } from "./Screen.js"
 import { screens } from "../ScreenManager.js"
 
@@ -34,7 +34,7 @@ export default class ConfigScreen extends Screen {
             button.onclick = async event => {
                 const { type } = event.target.dataset
                 if (type === "voltar") {
-                    reloadGameConfig()
+                    game.reloadConfig()
                     this.close()
                 } else {
                     this.removeNavigation()

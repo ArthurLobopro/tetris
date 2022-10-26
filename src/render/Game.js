@@ -55,6 +55,15 @@ class Game {
         this.lastPontuation = gameData.lastPontuation
     }
 
+    reloadConfig() {
+        if (this.isMusicOn !== this.userPreferences.music) {
+            this.isMusicOn = this.userPreferences.music
+            Audios.theme.volume = userPreferences.musicVolume
+            Audios.theme.loop = true
+            Audios.theme.currentTime = 0
+        }
+    }
+
     reset() {
         this.status = "inactive"
         this.moveLock = false
@@ -318,15 +327,6 @@ class Game {
 
 const game = new Game()
 
-const reloadGameConfig = () => {
-    if (game.isMusicOn !== game.userPreferences.music) {
-        game.isMusicOn = game.userPreferences.music
-        Audios.theme.volume = userPreferences.musicVolume
-        Audios.theme.loop = true
-        Audios.theme.currentTime = 0
-    }
-}
-
 gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
 gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
 
@@ -338,4 +338,4 @@ window.onload = () => {
     screens.init.show()
 }
 
-export { game, formatPoints, reloadGameConfig }
+export { game, formatPoints }

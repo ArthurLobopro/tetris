@@ -1,5 +1,5 @@
 import { saveUserPreferences, userPreferences } from "../../Data.js"
-import { game, reloadGameConfig } from "../../Game.js"
+import { game } from "../../Game.js"
 import { screens } from "../../ScreenManager.js"
 import { ConfigScreenBase } from "../Screen.js"
 
@@ -57,7 +57,7 @@ export default class MusicConfigScreen extends ConfigScreenBase {
                 const { value } = event.target
                 if (value == "1") {
                     saveConfig()
-                    reloadGameConfig()
+                    game.reloadConfig()
                 }
                 this.close()
                 screens.config.addNavigation()
