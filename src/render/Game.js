@@ -57,10 +57,10 @@ class Game {
     reloadConfig() {
         if (this.isMusicOn !== this.userPreferences.music) {
             this.isMusicOn = this.userPreferences.music
-            Audios.theme.volume = userPreferences.musicVolume
-            Audios.theme.loop = true
             Audios.theme.currentTime = 0
+            Audios.theme.loop = true
         }
+        Audios.theme.volume = userPreferences.musicVolume
     }
 
     reset() {
