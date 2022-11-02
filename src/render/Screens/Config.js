@@ -1,4 +1,4 @@
-import { game, reloadGameConfig } from "../Game.js"
+import { game } from "../Game.js"
 import { Screen } from "./Screen.js"
 import { screens } from "../ScreenManager.js"
 
@@ -11,11 +11,13 @@ const configs = {
 export default class ConfigScreen extends Screen {
     constructor() {
         super()
+        this.reset()
+    }
 
-        this.buildFunction = function () {
-            const configScreen = document.createElement('div')
-            configScreen.className = "telas-wrapper"
-            configScreen.innerHTML = `
+    buildFunction() {
+        const configScreen = document.createElement('div')
+        configScreen.className = "telas-wrapper"
+        configScreen.innerHTML = `
             <fieldset>
                 <legend>CONFIGURAÇÕES</legend>
                 <div class="button-wrapper">
@@ -26,33 +28,30 @@ export default class ConfigScreen extends Screen {
                 </div>
             </fieldset>`
 
+        const buttons = configScreen.querySelectorAll('button')
 
-            const buttons = configScreen.querySelectorAll('button')
-            buttons.forEach(button => {
-                button.onclick = async event => {
-                    const { type } = event.target.dataset
-                    if (type === "voltar") {
-                        reloadGameConfig()
-                        this.close()
-                    } else {
-                        this.removeNavigation()
-                        configs[type]?.(game)
-                    }
+        buttons.forEach(button => {
+            button.onclick = async event => {
+                const { type } = event.target.dataset
+                if (type === "voltar") {
+                    game.reloadConfig()
+                    this.close()
+                } else {
+                    this.removeNavigation()
+                    configs[type]?.(game)
                 }
-            })
+            }
+        })
 
-            return configScreen
-        }
-
-        this.reset()
+        return configScreen
     }
 
-    close(){
+    close() {
         this.afterScreen.show()
         super.close()
     }
 
-    show(afterScreen){
+    show(afterScreen) {
         super.show()
         this.afterScreen = afterScreen
     }

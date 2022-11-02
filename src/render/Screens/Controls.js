@@ -3,11 +3,13 @@ import { Screen } from "./Screen.js"
 export default class ControlsScreen extends Screen {
     constructor() {
         super()
+        this.reset()
+    }
 
-        this.buildFunction = function () {
-            const constrols_screen = document.createElement("div")
-            constrols_screen.className = "telas-wrapper"
-            constrols_screen.innerHTML = `
+    buildFunction() {
+        const constrols_screen = document.createElement("div")
+        constrols_screen.className = "telas-wrapper"
+        constrols_screen.innerHTML = `
             <div class="telas-wrapper">
                 <fieldset id="controls">
                     <legend>CONTROLES</legend>
@@ -53,22 +55,19 @@ export default class ControlsScreen extends Screen {
                 </fieldset>
             </div>`
 
-            constrols_screen.querySelector('button').onclick = () => {
-                this.close()
-            }
-
-            return constrols_screen
+        constrols_screen.querySelector('button').onclick = () => {
+            this.close()
         }
 
-        this.reset()
+        return constrols_screen
     }
 
-    close(){
+    close() {
         super.close()
         this.afterScreen.show()
     }
 
-    show(afterScreen){
+    show(afterScreen) {
         super.show(true)
         this.afterScreen = afterScreen
     }

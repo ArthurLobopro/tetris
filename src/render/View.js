@@ -1,5 +1,5 @@
-import { formatPoints, game } from './Game.js'
-import { range } from './Util.js'
+import { game } from './Game.js'
+import { formatPoints, range } from './Util.js'
 import { colors } from "./Colors.js"
 import { gameScreenComponents } from './Screens/GameScreen.js'
 const { gameCanvas, nextCanvas, nextCtx, gameCtx } = gameScreenComponents

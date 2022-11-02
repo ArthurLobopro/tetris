@@ -5,57 +5,56 @@ import { Screen } from "./Screen.js"
 export default class PauseScreen extends Screen {
     constructor() {
         super()
+        this.reset()
+    }
 
-        this.buildFunction = function () {
-            const pauseScreen = document.createElement('div')
-            pauseScreen.id = "pause-wrapper"
-            pauseScreen.innerHTML = `
-            <fieldset id="pause">
-                <legend>Pause</legend>
-                <div class="button-wrapper">
-                    <button data-type="continue" class="focus">CONTINUAR</button>
-                    <button data-type="config">CONFIGURAÇÕES</button>
-                    <button data-type="controls">CONTROLES</button>
-                    <button data-type="new-game">NOVO JOGO</button>
-                    <button data-type="go-to-init">IR PARA O INICIO</button>
-                </div>
-            </fieldset>`
+    buildFunction() {
+        const pauseScreen = document.createElement('div')
+        pauseScreen.id = "pause-wrapper"
+        pauseScreen.innerHTML = `
+        <fieldset id="pause">
+            <legend>Pause</legend>
+            <div class="button-wrapper">
+                <button data-type="continue" class="focus">CONTINUAR</button>
+                <button data-type="config">CONFIGURAÇÕES</button>
+                <button data-type="controls">CONTROLES</button>
+                <button data-type="new-game">NOVO JOGO</button>
+                <button data-type="go-to-init">IR PARA O INICIO</button>
+            </div>
+        </fieldset>`
 
-            const functions = {
-                continue() {
-                    this.close()
-                    game.continueGame()
-                },
-                "new-game": () => {
-                    this.close()
-                    game.newGame()
-                },
-                controls() {
-                    this.removeNavigation()
-                    screens.controls.show(screens.pause)
-                },
-                config() {
-                    this.removeNavigation()
-                    screens.config.show(this)
-                },
-                "go-to-init": () => {
-                    this.close()
-                    game.status = "inactive"
-                    screens.init.show()
-                }
+        const functions = {
+            continue() {
+                this.close()
+                game.continueGame()
+            },
+            "new-game": () => {
+                this.close()
+                game.newGame()
+            },
+            controls() {
+                this.removeNavigation()
+                screens.controls.show(screens.pause)
+            },
+            config() {
+                this.removeNavigation()
+                screens.config.show(this)
+            },
+            "go-to-init": () => {
+                this.close()
+                game.status = "inactive"
+                screens.init.show()
             }
-
-            const buttons = pauseScreen.querySelectorAll('button')
-            buttons.forEach(button => {
-                button.onclick = () => {
-                    const { type } = button.dataset
-                    functions[type].call(this)
-                }
-            })
-
-            return pauseScreen
         }
 
-        this.reset()
+        const buttons = pauseScreen.querySelectorAll('button')
+        buttons.forEach(button => {
+            button.onclick = () => {
+                const { type } = button.dataset
+                functions[type].call(this)
+            }
+        })
+
+        return pauseScreen
     }
 }
