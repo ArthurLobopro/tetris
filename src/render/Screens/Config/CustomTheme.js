@@ -10,12 +10,16 @@ export default class CustomThemeConfigScreen extends ConfigScreenBase {
     }
 
     buildFunction() {
-        const colors = { ...themes.custom }
+        const colors = { ...themes.custom, figures: { ...themes.custom.figures } }
         console.log(colors)
 
         const resetBackground = () => colors.background = themes.custom.background
         const resetLines = () => colors.lines = themes.custom.lines
-        const resetFigure = figureName => colors.figures[figureName] = themes.custom.figures[figureName]
+        const resetFigure = figureName => {
+            console.log(figureName)
+            console.log(themes)
+            colors.figures[figureName] = themes.custom.figures[figureName]
+        }
 
         const copyCustomTheme = () => {
             resetBackground()
@@ -117,7 +121,7 @@ export default class CustomThemeConfigScreen extends ConfigScreenBase {
             button.onclick = () => {
                 const functions = {
                     background: resetBackground,
-                    line: resetLines,
+                    lines: resetLines,
                     figure: () => resetFigure(figuresViewer.getAtualFigureName())
                 }
                 const type = button.value
@@ -132,7 +136,7 @@ export default class CustomThemeConfigScreen extends ConfigScreenBase {
         buttons.forEach(button => {
             button.onclick = event => {
                 const target = event.currentTarget
-                if (target.value == 1) {
+                if (target.value === "1") {
                     saveConfig()
                 }
                 this.close()
