@@ -2,7 +2,7 @@ import { game } from "../../Game.js"
 import { range } from "../../Util.js"
 import { figures } from "../../Figures.js"
 
-export default class FiguresViewer {
+export class FiguresViewer {
     constructor(colors, changeFigureCallback) {
         this.colors = colors
         this.changeFigureCallback = changeFigureCallback ?? function () { }

@@ -1,7 +1,7 @@
 import { game } from '../Game.js'
 import { Screen } from './Screen.js'
 
-export default class GameOverScreen extends Screen {
+export class GameOverScreen extends Screen {
     constructor() {
         super()
     }

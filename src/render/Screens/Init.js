@@ -2,7 +2,7 @@ import { Screen } from "./Screen.js"
 import { game } from "../Game.js"
 import { screens } from "../ScreenManager.js"
 
-export default class InitScreen extends Screen {
+export class InitScreen extends Screen {
     constructor() {
         super()
         this.reset()

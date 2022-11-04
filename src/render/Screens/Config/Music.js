@@ -3,7 +3,7 @@ import { game } from "../../Game.js"
 import { screens } from "../../ScreenManager.js"
 import { ConfigScreenBase } from "../Screen.js"
 
-export default class MusicConfigScreen extends ConfigScreenBase {
+export class MusicConfigScreen extends ConfigScreenBase {
     constructor() {
         super()
     }

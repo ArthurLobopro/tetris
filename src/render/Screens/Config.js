@@ -8,7 +8,7 @@ const configs = {
     theme: () => screens.configScreens.theme.show(false)
 }
 
-export default class ConfigScreen extends Screen {
+export class ConfigScreen extends Screen {
     constructor() {
         super()
         this.reset()

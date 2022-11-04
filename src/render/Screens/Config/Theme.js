@@ -1,10 +1,10 @@
 import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
-import FiguresViewer from "./figuresViewer.js"
+import { FiguresViewer } from "./FiguresViewer.js"
 import { colors } from "../../Colors.js"
 import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
-export default class ThemeConfigScreen extends ConfigScreenBase {
+export class ThemeConfigScreen extends ConfigScreenBase {
     constructor() {
         super()
     }
