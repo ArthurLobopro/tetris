@@ -1,7 +1,5 @@
-import { loadAudio } from "./Util.js";
+import { loadAudio } from "./Util.js"
 
-const Audios = {
+export const Audios = {
     theme: await loadAudio('../assets/audios/tetris-theme.mp3')
 }
-
-export { Audios }
