@@ -59,7 +59,6 @@
         {
           "name": "@electron-forge/publisher-github",
           "config": {
-            "draft": true,
             "repository": {
               "owner": "ArthurLobopro",
               "name": "tetris.js"
