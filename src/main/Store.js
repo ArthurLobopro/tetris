@@ -1,26 +1,32 @@
 const Store = require('electron-store')
-const { userPreferencesMigrations } = require('./Migrations')
+const { userPreferencesMigrations, themeMigrations } = require('./Migrations')
 const { gameSchema, preferencesSchema, themeSchema } = require('./StoreSchemas')
 
 const dataPath = "gameData"
 
 const gameData = new Store({ cwd: `${dataPath}/data`, schema: gameSchema, name: 'data', clearInvalidConfig: true })
 
-const userPreferences = new Store({ 
-    cwd: `${dataPath}/userPreferences`, 
-    schema: preferencesSchema, 
+const userPreferences = new Store({
+    cwd: `${dataPath}/userPreferences`,
+    schema: preferencesSchema,
     migrations: userPreferencesMigrations
- })
+})
 
-const themes = new Store({ cwd: `${dataPath}/themes`, schema: themeSchema, name: 'themes', clearInvalidConfig: true })
+const themes = new Store({
+    cwd: `${dataPath}/themes`,
+    schema: themeSchema,
+    name: 'themes',
+    clearInvalidConfig: true,
+    migrations: themeMigrations
+})
 
 const store = {
     setUserPreferences(configName, value) { userPreferences.set(configName, value) },
     setGameData(configName, value) { gameData.set(configName, value) },
-    setTheme(customTheme){ themes.set('custom', customTheme)},
+    setTheme(customTheme) { themes.set('custom', customTheme) },
     getUserPreferences() { return userPreferences.store },
     getGameData() { return gameData.store },
-    getThemes(){ return themes.store}
+    getThemes() { return themes.store }
 }
 
 module.exports = store

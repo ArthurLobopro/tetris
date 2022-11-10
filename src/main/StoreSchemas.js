@@ -67,8 +67,8 @@ const themeSchema = {
                 L: "#ddd",
                 T: "#ddd"
             },
-            background: "#1E1E1E",
-            lines: "#AAA"
+            background: "#1a1818",
+            lines: "#555"
         }
     },
     tetris: tetrisTheme,
