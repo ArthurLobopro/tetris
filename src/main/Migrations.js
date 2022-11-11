@@ -15,6 +15,13 @@ const userPreferencesMigrations = {
     }
 }
 
+const themeMigrations = {
+    "1.2.1": store => {
+        store.reset("retro")
+    }
+}
+
 module.exports = Object.freeze({
-    userPreferencesMigrations
+    userPreferencesMigrations,
+    themeMigrations
 })

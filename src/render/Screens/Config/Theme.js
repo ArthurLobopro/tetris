@@ -42,13 +42,16 @@ export class ThemeConfigScreen extends ConfigScreenBase {
                             data-check="${userPreferences.theme === "custom"}" data-value="custom"
                         ></div>
                     </div>
-                    <div class="flex-center">
+                    <div 
+                    id="custom-wrapper" class="flex-center" 
+                    style="display: ${userPreferences.theme === "custom" ? "" : "none"};"
+                    >
                         <button id="open-custom-screnn">
                             Customizar
                         </button>
                     </div>
 
-                    <div class="buttons">
+                    <div class="line-buttons">
                         <button value="1">
                             OK
                         </button>
@@ -82,6 +85,7 @@ export class ThemeConfigScreen extends ConfigScreenBase {
                 checked.dataset.check = false
                 radio.dataset.check = true
                 tempTheme = radio.dataset.value
+                themeScreen.querySelector("#custom-wrapper").style.display = tempTheme === "custom" ? "" : "none"
                 figuresViewer.setColors(getColors())
             }
         })
@@ -91,7 +95,7 @@ export class ThemeConfigScreen extends ConfigScreenBase {
             saveUserPreferences()
         }
 
-        const buttons = themeScreen.querySelectorAll('.buttons > button')
+        const buttons = themeScreen.querySelectorAll('.line-buttons > button')
 
         buttons.forEach(button => {
             button.onclick = () => {
