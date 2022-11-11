@@ -89,13 +89,15 @@ fieldset {
             min-width: max-content;
         }
     }
-    &#theme .buttons {
-        display: grid;
-        grid-template-columns: max-content max-content;
-        grid-column-gap: 15px;
-        justify-content: end;
-        & > button {
-            margin-bottom: 0;
+    &#theme {
+        & .view-wrapper:last-of-type{
+            display: grid;
+            & #custom-wrapper{
+                margin: 4px 0
+            }
+            & .line-buttons{
+                @extend .line;
+            }
         }
     }
     &#game-over {
@@ -179,7 +181,7 @@ fieldset {
 input[type="range"],
 input[type="range"]::-webkit-slider-runnable-track,
 input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 input[type="range"] {
