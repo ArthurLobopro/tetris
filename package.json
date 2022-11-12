@@ -3,7 +3,7 @@
   "productName": "tetris",
   "version": "1.2.1",
   "description": "A simple tetris game",
-  "main": "src/main/main.js",
+  "main": "./src/main/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -20,55 +20,6 @@
     "email": "64273139+ArthurLobopro@users.noreply.github.com"
   },
   "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "./build/icon.ico",
-        "ignore": [
-          "\\.git",
-          "\\.scss",
-          "/build"
-        ]
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "tetris",
-            "setupExe": "${name}-${version}-setup.exe",
-            "setupIcon": "./build/icon.ico",
-            "iconUrl": "https://raw.githubusercontent.com/ArthurLobopro/tetris/master/build/icon.ico"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "publishers": [
-        {
-          "name": "@electron-forge/publisher-github",
-          "config": {
-            "repository": {
-              "owner": "ArthurLobopro",
-              "name": "tetris.js"
-            },
-            "prerelease": true
-          }
-        }
-      ]
-    }
-  },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
