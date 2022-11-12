@@ -43,16 +43,17 @@ module.exports = {
             config: {}
         }
     ],
-    // publishers: [
-    //     {
-    //         name: "@electron-forge/publisher-github",
-    //         config: {
-    //             repository: {
-    //                 owner: "ArthurLobopro",
-    //                 name: "tetris.js"
-    //             },
-    //             prerelease: true
-    //         }
-    //     }
-    // ]
+    publishers: [
+        {
+            name: "@electron-forge/publisher-github",
+            config: {
+                repository: {
+                    owner: "ArthurLobopro",
+                    name: "tetris.js"
+                },
+                prerelease: false,
+                draft: true
+            }
+        }
+    ]
 }
