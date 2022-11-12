@@ -55,3 +55,7 @@ ipcMain.on('close', () => {
     const win = BrowserWindow.getFocusedWindow()
     win.close()
 })
+
+ipcMain.on('app-version', event => {
+    event.returnValue = app.getVersion()
+})
