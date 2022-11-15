@@ -6,7 +6,7 @@ const { version } = package
 module.exports = {
     packagerConfig: {
         name: 'tetris',
-        icon: path.resolve(__dirname, 'build'),
+        icon: path.resolve(__dirname, './build/icon'),
         ignore: [
             "\\.git",
             "\\.scss",
