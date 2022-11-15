@@ -1,7 +1,7 @@
 {
   "name": "tetris",
   "productName": "tetris",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A simple tetris game",
   "main": "./src/main/main.js",
   "scripts": {
