@@ -110,6 +110,7 @@ class Game {
             x: 0,
             ...game.nextFigure
         }
+        game.atualFigure.y = -game.atualFigure.blocks.length + 1
         this.centerFigure()
         this.spawnNextFigure()
     }
