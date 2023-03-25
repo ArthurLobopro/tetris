@@ -1,5 +1,5 @@
 import { themes, saveCustomTheme } from "../../Data.js"
-import { FiguresViewer } from "./FiguresViewer.js"
+import { FiguresViewer } from "./figuresViewer.js"
 import { figures } from "../../Figures.js"
 import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
