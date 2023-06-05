@@ -21,6 +21,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@electron-fonts/nunito": "^1.1.0",
+    "@electron-fonts/press-start-2p": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
     "update-electron-app": "^2.0.1"

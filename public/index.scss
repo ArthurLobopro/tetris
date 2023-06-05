@@ -1,43 +1,46 @@
-@import url(fontes/css-import/PressStart2P.css);
 @import url(./styles/telas.css);
-*{
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.flex-center{
+.flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-body{
+body {
     height: 100vh;
     background: #000;
-    & #container{
+
+    & #container {
         height: 100%;
         @extend .flex-center;
     }
 }
 
-#tela{
+#tela {
     display: flex;
 }
 
-#data{
+#data {
     color: #ddd;
-    margin: 0  0 0 100px;
-    display: grid;  
+    margin: 0 0 0 100px;
+    display: grid;
     grid-template-rows: 50% 50%;
     // justify-content: space-evenly;
     font-family: 'Press Start 2P';
     font-size: 14px;
-    & > #next-wrapper{
+
+    &>#next-wrapper {
         @extend .flex-center;
         flex-direction: column;
     }
-    & #last-pontuation{
+
+    & #last-pontuation {
         margin-top: 5px;
     }
 }
@@ -47,7 +50,7 @@ canvas {
     border: 1px solid #bbb;
 }
 
-.line{
+.line {
     padding: 3px 0;
     display: grid;
     justify-content: space-between;
@@ -59,7 +62,7 @@ canvas {
     height: max-content;
 }
 
-.center-line{
+.center-line {
     padding: 3px 0;
     background-color: #000;
     color: #ccc;
@@ -69,7 +72,7 @@ canvas {
     width: 100%;
 }
 
-.key{
+.key {
     border: 1px solid #ddd;
     border-radius: 3px;
     padding: 5px;
