@@ -1,5 +1,5 @@
 const { ipcRenderer, contextBridge, shell } = require('electron')
-const Store = require("./Store")
+const Store = require("../storage/Store")
 
 contextBridge.exposeInMainWorld("require", require)
 contextBridge.exposeInMainWorld('openExternal', shell.openExternal)
