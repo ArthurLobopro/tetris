@@ -105,12 +105,13 @@ class Game {
     }
 
     spawnFigure() {
-        game.atualFigure = {
+        const nextFigure = this.nextFigure
+        this.atualFigure = {
             y: 0,
             x: 0,
-            ...game.nextFigure
+            ...nextFigure
         }
-        game.atualFigure.y = -game.atualFigure.blocks.length + 1
+        this.atualFigure.y = -this.atualFigure.blocks.length + 1
         this.centerFigure()
         this.spawnNextFigure()
     }

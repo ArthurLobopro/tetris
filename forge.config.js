@@ -36,11 +36,24 @@ module.exports = {
         },
         {
             name: "@electron-forge/maker-deb",
-            config: {}
+            config: {
+                name: "tetris",
+                productName: "Tetris.js",
+                genericName: "Tetris.js",
+                description: "A simple tetris game",
+                icon: path.join(__dirname, "./assets/icon.png"),
+                categories: ["Game"],
+                options: {
+                    maintainer: "Arthur Lobo",
+                    homepage: "https://github.com/ArthurLobopro/tetris.js"
+                }
+            },
+            platforms: ["linux"]
         },
         {
             name: "@electron-forge/maker-rpm",
-            config: {}
+            config: {},
+            platforms: []
         }
     ],
     publishers: [

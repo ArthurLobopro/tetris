@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
-require('./Store')
-
+require('../storage/Store')
+require("electron-css-injector/main")
 require('update-electron-app')()
 
 // Faz com que o programa não inicie várias vezes durante a instalação
