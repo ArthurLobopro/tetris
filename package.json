@@ -25,7 +25,8 @@
     "@electron-fonts/press-start-2p": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
-    "update-electron-app": "^2.0.1"
+    "update-electron-app": "^2.0.1",
+    "zod-electron-store": "^1.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.2.1",
