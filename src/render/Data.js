@@ -1,4 +1,5 @@
-import { game } from "./Game.js"
+import { game } from "./Game"
+import Store from "../storage/Store"
 
 export let userPreferences = Store.getUserPreferences()
 export let gameData = Store.getGameData()

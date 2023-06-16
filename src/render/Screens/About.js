@@ -1,5 +1,6 @@
-import { screens } from "../ScreenManager.js"
-import { Screen } from "./Screen.js"
+import { ipcRenderer, shell } from "electron"
+import { screens } from "../ScreenManager"
+import { Screen } from "./Screen"
 
 export class AboutScreen extends Screen {
     constructor() {
@@ -38,12 +39,12 @@ export class AboutScreen extends Screen {
         const repository_link = "https://github.com/ArthurLobopro/tetris.js"
 
         aboutScreen.querySelector("#github-repo").onclick = () => {
-            openExternal(repository_link)
+            shell.openExternal(repository_link)
         }
 
         aboutScreen.querySelectorAll('.link').forEach(span => {
             span.onclick = () => {
-                openExternal(span.innerText)
+                shell.openExternal(span.innerText)
             }
         })
 

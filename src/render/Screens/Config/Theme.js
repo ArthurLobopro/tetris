@@ -101,7 +101,6 @@ export class ThemeConfigScreen extends ConfigScreenBase {
             button.onclick = () => {
                 if (button.value == 1) {
                     saveConfig()
-                    colors.update()
                 }
                 this.close()
                 screens.config.addNavigation()
