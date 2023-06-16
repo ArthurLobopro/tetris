@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
-const path = require('path')
+import { app, BrowserWindow, ipcMain } from 'electron'
+import path from 'path'
+
 require('../storage/Store')
 require("electron-css-injector/main")
 require('update-electron-app')()
@@ -52,7 +53,7 @@ app.on('activate', () => {
 })
 
 ipcMain.on('close', () => {
-    const win = BrowserWindow.getFocusedWindow()
+    const win = BrowserWindow.getFocusedWindow() as BrowserWindow
     win.close()
 })
 
