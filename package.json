@@ -3,7 +3,7 @@
   "productName": "tetris",
   "version": "1.3.0",
   "description": "A simple tetris game",
-  "main": "./src/main/main.js",
+  "main": "./dist/main/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -35,6 +35,7 @@
     "@electron-forge/maker-zip": "^6.2.1",
     "@electron-forge/publisher-github": "^6.2.1",
     "electron": "^24",
-    "sass-compiler": "^1.2.3"
+    "sass-compiler": "^1.2.3",
+    "typescript": "^5.1.3"
   }
 }
