@@ -1,8 +1,8 @@
-import { themes, saveCustomTheme } from "../../Data.js"
-import { FiguresViewer } from "./figuresViewer.js"
-import { Figures } from "../../Figures.js"
-import { ConfigScreenBase } from "../Screen.js"
-import { screens } from "../../ScreenManager.js"
+import { ThemesController as Themes } from "../../../storage/controllers/Themes"
+import { Figures, figureName } from "../../Figures"
+import { screens } from "../../ScreenManager"
+import { ConfigScreenBase } from "../Screen"
+import { FiguresViewer } from "./figuresViewer"
 
 export class CustomThemeConfigScreen extends ConfigScreenBase {
     constructor() {
@@ -10,15 +10,14 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
     }
 
     buildFunction() {
-        const colors = { ...themes.custom, figures: { ...themes.custom.figures } }
-        console.log(colors)
+        const colors = Themes.custom
 
-        const resetBackground = () => colors.background = themes.custom.background
-        const resetLines = () => colors.lines = themes.custom.lines
-        const resetFigure = figureName => {
-            console.log(figureName)
-            console.log(themes)
-            colors.figures[figureName] = themes.custom.figures[figureName]
+        const resetBackground = () => colors.background = Themes.custom.background
+
+        const resetLines = () => colors.lines = Themes.custom.lines
+
+        const resetFigure = (figureName: figureName) => {
+            colors.figures[figureName] = Themes.custom.figures[figureName]
         }
 
         const copyCustomTheme = () => {
@@ -76,47 +75,54 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
         </fieldset>`
 
         const colorInputFuctions = {
-            background(event) {
-                colors.background = event.target.value
+            background(event: Event) {
+                const target = event.target as HTMLInputElement
+                colors.background = target.value
                 figuresViewer.setColors(colors)
             },
-            lines(event) {
-                colors.lines = event.target.value
+            lines(event: Event) {
+                const target = event.target as HTMLInputElement
+                colors.lines = target.value
                 figuresViewer.setColors(colors)
             },
-            figure(event) {
+            figure(event: Event) {
+                const target = event.target as HTMLInputElement
                 const atualFigure = figuresViewer.getAtualFigureName()
-                colors.figures[atualFigure] = event.target.value
+                colors.figures[atualFigure] = target.value
                 figuresViewer.setColors(colors)
             }
         }
 
-        const colorInputs = customThemeScreen.querySelectorAll('input[type="color"')
+        const colorInputs = customThemeScreen.querySelectorAll('input[type="color"]') as NodeListOf<HTMLInputElement>
+
         colorInputs.forEach(input => {
-            input.oninput = event => {
-                const target = event.currentTarget
+            input.oninput = (event) => {
+                const target = event.currentTarget as HTMLInputElement
                 const inputName = String(target.id).replace("color-", "")
-                colorInputFuctions[inputName](event)
+
+                type key = keyof typeof colorInputFuctions
+
+                colorInputFuctions[inputName as key](event)
             }
         })
 
         const onChangeFigure = () => {
             const atualFigure = figuresViewer.getAtualFigureName()
             console.log(colors.figures["T"])
-            const figureInput = document.getElementById('color-figure')
+            const figureInput = document.getElementById('color-figure') as HTMLInputElement
             figureInput.value = colors.figures[atualFigure]
         }
 
         const figuresViewer = new FiguresViewer(colors, onChangeFigure)
-        const viewWrapper = customThemeScreen.querySelector(".view-wrapper")
+        const viewWrapper = customThemeScreen.querySelector(".view-wrapper") as HTMLDivElement
         viewWrapper.appendChild(figuresViewer.viewer)
 
         const saveConfig = () => {
-            themes.custom = colors
-            saveCustomTheme()
+            Themes.custom = colors
         }
 
-        const resetButtons = customThemeScreen.querySelectorAll('.line > div > button')
+        const resetButtons = customThemeScreen.querySelectorAll('.line > div > button') as NodeListOf<HTMLButtonElement>
+
         resetButtons.forEach(button => {
             button.onclick = () => {
                 const functions = {
@@ -124,18 +130,27 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
                     lines: resetLines,
                     figure: () => resetFigure(figuresViewer.getAtualFigureName())
                 }
+
+                type key = keyof typeof functions
+
                 const type = button.value
-                functions?.[type]?.()
+                functions?.[type as key]?.()
                 figuresViewer.setColors(colors)
-                customThemeScreen.querySelector(`[data-name="${type}"]`).value = type === "figure" ?
-                    colors.figures[figuresViewer.getAtualFigureName()] : colors[type]
+                const color_input = customThemeScreen.querySelector(`[data-name="${type}"]`) as HTMLInputElement
+
+                type colorskey = "background" | "lines"
+
+                color_input.value = type === "figure" ?
+                    colors.figures[figuresViewer.getAtualFigureName()] : colors[type as colorskey]
             }
         })
 
-        const buttons = customThemeScreen.querySelectorAll('.buttons button')
+        const buttons = customThemeScreen.querySelectorAll('.buttons button') as NodeListOf<HTMLButtonElement>
+
+
         buttons.forEach(button => {
             button.onclick = event => {
-                const target = event.currentTarget
+                const target = event.currentTarget as HTMLButtonElement
                 if (target.value === "1") {
                     saveConfig()
                 }
