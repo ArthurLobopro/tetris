@@ -12,10 +12,10 @@ type NullBlock = {
 const null_block: NullBlock = { type: 'null' }
 const block: Block = { type: 'block' }
 
-type figureNames = "square" | "stick" | "z" | "reverse-z" | "reverse-L" | "L" | "T"
+export type figureName = "square" | "stick" | "z" | "reverse-z" | "reverse-L" | "L" | "T"
 
 type figure = {
-    name: figureNames,
+    name: figureName,
     blocks: (Block | NullBlock)[][]
 }
 
@@ -91,7 +91,7 @@ export class Figures {
         return { blocks, color, figureType: name }
     }
 
-    static getByName(name: figureNames) {
+    static getByName(name: figureName) {
         return (this.types.find((figure) => figure.name === name) as figure).blocks
     }
 
