@@ -1,31 +1,35 @@
-import { screens } from "./ScreenManager.js"
-import { gameScreenComponents } from "./Screens/GameScreen.js"
-import { Figures } from "./Figures.js"
-import "./Controllers.js"
-import { renderAll } from "./View.js"
-import { Audios } from "./Audio.js"
-import { mainKeyDown, mainKeyPress } from "./Controllers.js"
-import { gameData, saveLastPontuation, saveRecords, userPreferences } from "./Data.js"
-import { formatPoints } from "./Util.js"
+import { PreferencesSchema } from "../storage/StoreSchemas"
+import { GameDataController } from "../storage/controllers/GameData"
+import { UserPreferencesController as UserPreferences } from "../storage/controllers/UserPreferences"
+import { Audios } from "./Audio"
+import "./Controllers"
+import { mainKeyDown } from "./Controllers"
+import { gameData, saveLastPontuation, saveRecords } from "./Data"
+import { Figures } from "./Figures"
+import { Interval } from "./Interval"
+import { screens } from "./ScreenManager"
+import { gameScreenComponents } from "./Screens/GameScreen"
+import { formatPoints } from "./Util"
+import { renderAll } from "./View"
 
 const { gameCanvas, last_points_span, nextCanvas, points_span } = gameScreenComponents
+
+type spawnedFigure = { x: number, y: number } & ReturnType<typeof Figures.random>
 
 class Game {
     height = 30
     width = 15
     squareWidth = 16
     pointsPerBlock = 10
-    renderVelocity = 1000 / 60
-    fallInterval = null
-    renderInterval = null
+
     lastPontuation = 0
     points = 0
-    records = []
+    records: { points: number }[] = []
 
     velocities = {
-        slow: 500,
-        normal: 300,
-        fast: 150
+        slow: 2, //500ms
+        normal: 3.5, //300ms
+        fast: 6.5 //150ms
     }
 
     nextCanvasSize = {
@@ -33,10 +37,16 @@ class Game {
         width: 6
     }
 
-    userPreferences = {
-        velocity: null,
-        music: null
-    }
+    declare userPreferences: PreferencesSchema
+    declare status: "active" | "paused" | "inactive"
+    declare moveLock: boolean
+    declare isMusicOn: boolean
+    declare velocity: keyof typeof game.velocities
+    declare atualFigure: spawnedFigure
+    declare nextFigure: ReturnType<typeof Figures.random>
+    declare state: ReturnType<typeof Game.prototype.getNewState>
+    declare renderInterval: Interval
+    declare fallInterval: Interval
 
     //#region Contructor methods
     constructor() {
@@ -45,12 +55,8 @@ class Game {
     }
 
     loadUserPreferences() {
-        gameData.records.forEach(record => {
-            this.records.push(record)
-        })
-        Object.entries(userPreferences).forEach(([key, value]) => {
-            this.userPreferences[key] = value
-        })
+        this.records = GameDataController.records
+        this.userPreferences = UserPreferences.get()
         this.lastPontuation = gameData.lastPontuation
     }
 
@@ -60,7 +66,7 @@ class Game {
             Audios.theme.currentTime = 0
             Audios.theme.loop = true
         }
-        Audios.theme.volume = userPreferences.musicVolume
+        Audios.theme.volume = UserPreferences.musicVolume
     }
 
     reset() {
@@ -68,7 +74,7 @@ class Game {
         this.moveLock = false
         this.isMusicOn = false
         this.state = this.getNewState()
-        this.velocity = userPreferences.velocity
+        this.velocity = UserPreferences.velocity
         this.spawnFirstFigure()
         this.spawnNextFigure()
     }
@@ -142,10 +148,9 @@ class Game {
         const { x, y, blocks, figureType } = this.atualFigure
 
         blocks.forEach((line, indexY) => {
-
             line.forEach((block, indexX) => {
-                this.state[y + indexY] = this.state[y + indexY].map((stateBlock, stateX) => {
-                    if ([x + indexX] == stateX && block.type === 'block') {
+                this.state[y + indexY] = this.state[y + indexY]?.map((stateBlock, stateX) => {
+                    if ((x + indexX) == stateX && block.type === 'block') {
                         return { ...block, figureType }
                     }
                     return stateBlock
@@ -197,6 +202,12 @@ class Game {
         return colidBlock
     }
 
+    dropFigure() {
+        while (!this.collision()) {
+            this.tick()
+        }
+    }
+
     get haveBlocksOnRight() {
         const { y, x, blocks } = this.atualFigure
 
@@ -221,7 +232,7 @@ class Game {
         })
     }
 
-    move(direction) {
+    move(direction: "right" | "left") {
         if (this.moveLock) return
 
         const { x } = this.atualFigure
@@ -256,15 +267,21 @@ class Game {
         renderAll()
 
         window.onkeydown = mainKeyDown
-        window.onkeypress = mainKeyPress
 
-        this.fallInterval = setInterval(this.tick.bind(this), this.velocities[this.velocity])
-        this.renderInterval = setInterval(renderAll, this.renderVelocity)
+        this.fallInterval = new Interval({
+            callback: this.tick.bind(this),
+            rate: this.velocities[this.velocity]
+        })
 
-        if (userPreferences.music) {
+        this.renderInterval = new Interval({
+            callback: renderAll,
+            rate: 60
+        })
+
+        if (UserPreferences.music) {
             this.isMusicOn = true
             Audios.theme.currentTime = 0
-            Audios.theme.volume = userPreferences.musicVolume
+            Audios.theme.volume = UserPreferences.musicVolume
             Audios.theme.play()
             Audios.theme.loop = true
         }
@@ -272,8 +289,7 @@ class Game {
 
     pause() {
         window.onkeydown = mainKeyDown
-        window.onkeypress = mainKeyPress
-        clearInterval(this.fallInterval)
+        this.fallInterval.stop()
         this.status = "paused"
         screens.pause.show()
         if (this.isMusicOn) {
@@ -283,7 +299,7 @@ class Game {
 
     continueGame() {
         this.status = "active"
-        this.fallInterval = setInterval(this.tick.bind(this), this.velocities[this.velocity])
+        this.fallInterval.start()
         window.onkeydown = mainKeyDown
         if (this.isMusicOn) {
             Audios.theme.play()
@@ -291,8 +307,8 @@ class Game {
     }
 
     gameOver() {
-        clearInterval(this.fallInterval)
-        clearInterval(this.renderInterval)
+        this.fallInterval.stop()
+        this.renderInterval.stop()
         this.verifyRecords()
         saveLastPontuation()
 
@@ -303,7 +319,7 @@ class Game {
     tick() {
         if (!this.collision() && this.status == "active") {
             this.atualFigure.y++
-        } else if (this.atualFigure.y == 0) {
+        } else if (this.atualFigure.y <= 0) {
             this.gameOver()
         } else {
             this.addFigurePoints()

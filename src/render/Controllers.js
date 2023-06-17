@@ -75,11 +75,6 @@ const rotate = () => {
     }
 }
 
-const downFigure = () => {
-    while (!game.collision()) {
-        game.tick()
-    }
-}
 //#endregion
 
 const keyDownFunctions = {
@@ -89,22 +84,15 @@ const keyDownFunctions = {
     "a": () => game.move("left"),
     "d": () => game.move("right"),
     'r': rotate,
-    ' ': downFigure,
-    'Escape': () => game.pause()
-}
-
-const keyPressFunctions = {
+    ' ': () => game.dropFigure(),
+    'Escape': () => game.pause(),
     "s": accelerate
 }
 
-const mainKeyPress = event => {
-    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
-    keyPressFunctions[key]?.()
-}
 
 const mainKeyDown = event => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
     keyDownFunctions[key]?.()
 }
 
-export { mainKeyDown, mainKeyPress }
+export { mainKeyDown }
