@@ -28,7 +28,7 @@ export const userPreferences = new Store<PreferencesSchema>({
     migrations: userPreferencesMigrations
 })
 
-const themes = new Store<ThemesSchema>({
+export const themes = new Store<ThemesSchema>({
     cwd: `${dataPath}/themes`,
     schema: themesSchema,
     name: "themes",
