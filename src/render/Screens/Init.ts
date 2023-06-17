@@ -1,6 +1,7 @@
-import { Screen } from "./Screen.js"
+import { ipcRenderer } from "electron"
 import { game } from "../Game.js"
 import { screens } from "../ScreenManager.js"
+import { Screen } from "./Screen.js"
 
 export class InitScreen extends Screen {
     constructor() {
@@ -24,7 +25,7 @@ export class InitScreen extends Screen {
         </fieldset>`
 
         const functions = {
-            start() {
+            start: () => {
                 this.close()
                 game.newGame()
             },
@@ -44,9 +45,11 @@ export class InitScreen extends Screen {
 
         const buttons = initScreen.querySelectorAll('button')
 
+        type key = keyof typeof functions
+
         buttons.forEach(button => {
             button.onclick = () => {
-                functions?.[button.id]?.call(this)
+                functions?.[button.id as key]?.call(this)
             }
         })
 
