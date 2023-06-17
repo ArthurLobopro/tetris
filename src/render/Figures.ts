@@ -41,13 +41,6 @@ const types: figure[] = [
         ]
     },
     {
-        name: "z",
-        blocks: [
-            [block, block, null_block],
-            [null_block, block, block]
-        ]
-    },
-    {
         name: "reverse-z",
         blocks: [
             [null_block, block, block],
