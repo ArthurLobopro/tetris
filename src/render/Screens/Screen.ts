@@ -1,15 +1,19 @@
 import navigation from "./navigation.js"
 
-const container = document.getElementById("container")
+const container = document.getElementById("container") as HTMLElement
 
-export class Screen {
-    buildFunction(){}
-    
+type key = keyof typeof navigation
+
+export abstract class Screen {
+    declare screen: HTMLElement
+
+    abstract buildFunction(): HTMLElement
+
     addNavigation() {
-        window.onkeydown = event => navigation[event.key]?.(this.screen)
+        window.onkeydown = event => navigation[event.key as key]?.(this.screen)
     }
 
-    removeNavigation(){
+    removeNavigation() {
         window.onkeydown = null
     }
 
@@ -19,7 +23,7 @@ export class Screen {
 
     show(navigation = true) {
         container.appendChild(this.screen)
-        if(navigation){
+        if (navigation) {
             this.addNavigation()
         }
     }
@@ -34,8 +38,8 @@ export class Screen {
     }
 }
 
-export class ConfigScreenBase extends Screen {
-    constructor(){
+export abstract class ConfigScreenBase extends Screen {
+    constructor() {
         super()
     }
 
