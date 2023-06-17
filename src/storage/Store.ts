@@ -5,6 +5,7 @@ import { themeMigrations, userPreferencesMigrations } from "./Migrations"
 import {
     GameSchema,
     PreferencesSchema,
+    ThemeSchema,
     ThemesSchema,
     gameSchema,
     preferencesSchema,
@@ -37,9 +38,9 @@ const themes = new Store<ThemesSchema>({
 })
 
 const store = {
-    setUserPreferences(configName: string, value: string) { userPreferences.set(configName, value) },
+    setUserPreferences(preferences: PreferencesSchema) { userPreferences.set(preferences) },
     setGameData(configName: string, value: any) { gameData.set(configName, value) },
-    setTheme(customTheme: ThemesSchema) { themes.set("custom", customTheme) },
+    setTheme(customTheme: ThemeSchema) { themes.set("custom", customTheme) },
     getUserPreferences() { return userPreferences.store },
     getGameData() { return gameData.store },
     getThemes() { return themes.store }

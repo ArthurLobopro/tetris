@@ -1,6 +1,6 @@
 import { themes, saveCustomTheme } from "../../Data.js"
 import { FiguresViewer } from "./figuresViewer.js"
-import { figures } from "../../Figures.js"
+import { Figures } from "../../Figures.js"
 import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
@@ -24,7 +24,7 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
         const copyCustomTheme = () => {
             resetBackground()
             resetLines()
-            for (const figureName of figures.getFigureNames()) {
+            for (const figureName of Figures.getFigureNames()) {
                 resetFigure(figureName)
             }
         }

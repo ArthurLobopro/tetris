@@ -1,6 +1,6 @@
 import { game } from "../../Game.js"
 import { range } from "../../Util.js"
-import { figures } from "../../Figures.js"
+import { Figures } from "../../Figures.js"
 
 export class FiguresViewer {
     constructor(colors, changeFigureCallback) {
@@ -11,7 +11,7 @@ export class FiguresViewer {
         this.atualFigure = "square"
         this.renderFigure(this.atualFigure)
 
-        this.figuresNames = figures.getFigureNames()
+        this.figuresNames = Figures.getFigureNames()
     }
 
     build() {
@@ -73,7 +73,7 @@ export class FiguresViewer {
 
         this.renderBasic()
 
-        const blocks = figures.getByName(figureName)
+        const blocks = Figures.getByName(figureName)
 
         const x = Math.trunc(width / 2 - blocks[0].length / 2)
         const y = Math.trunc(height / 2 - blocks.length / 2)

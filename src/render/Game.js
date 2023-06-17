@@ -1,6 +1,6 @@
 import { screens } from "./ScreenManager.js"
 import { gameScreenComponents } from "./Screens/GameScreen.js"
-import { figures } from "./Figures.js"
+import { Figures } from "./Figures.js"
 import "./Controllers.js"
 import { renderAll } from "./View.js"
 import { Audios } from "./Audio.js"
@@ -93,14 +93,14 @@ class Game {
         this.atualFigure = {
             y: 0,
             x: 0,
-            ...figures.random()
+            ...Figures.random()
         }
         this.centerFigure()
     }
 
     spawnNextFigure() {
         this.nextFigure = {
-            ...figures.random()
+            ...Figures.random()
         }
     }
 

@@ -1,5 +1,5 @@
-import { game } from "./Game.js"
-import { range } from "./Util.js"
+import { game } from "./Game"
+import { range } from "./Util"
 
 //#region Move Blocks
 const accelerate = () => {
@@ -51,7 +51,7 @@ const rotate = () => {
     let newX = x
 
     if (haveBlocksOnRight) {
-        console.log(haveBlocksOnLeft);
+        console.log(haveBlocksOnLeft)
         if (!haveBlocksOnLeft) {
             newX = x - widthDifference
         } else {
