@@ -38,17 +38,23 @@ export class AboutScreen extends Screen {
 
         const repository_link = "https://github.com/ArthurLobopro/tetris.js"
 
-        aboutScreen.querySelector("#github-repo").onclick = () => {
+        const repo_button = aboutScreen.querySelector("#github-repo") as HTMLButtonElement
+
+        repo_button.onclick = () => {
             shell.openExternal(repository_link)
         }
 
-        aboutScreen.querySelectorAll('.link').forEach(span => {
+        const links = aboutScreen.querySelectorAll('.link') as NodeListOf<HTMLSpanElement>
+
+        links.forEach(span => {
             span.onclick = () => {
                 shell.openExternal(span.innerText)
             }
         })
 
-        aboutScreen.querySelector("#return").onclick = () => {
+        const return_button = aboutScreen.querySelector("#return") as HTMLButtonElement
+
+        return_button.onclick = () => {
             this.close()
             screens.init.show()
         }
