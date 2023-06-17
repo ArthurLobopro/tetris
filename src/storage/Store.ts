@@ -14,14 +14,14 @@ import {
 
 const dataPath = "gameData"
 
-const gameData = new Store<GameSchema>({
+export const gameData = new Store<GameSchema>({
     cwd: `${dataPath}/data`,
     schema: gameSchema,
     name: "data",
     clearInvalidConfig: true
 })
 
-const userPreferences = new Store<PreferencesSchema>({
+export const userPreferences = new Store<PreferencesSchema>({
     cwd: `${dataPath}/userPreferences`,
     schema: preferencesSchema,
     //@ts-ignore
