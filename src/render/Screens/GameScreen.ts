@@ -34,11 +34,11 @@ class GameScreen extends Screen {
     getComponents() {
         const gameScreen = this.screen
         const gameCanvas = gameScreen.querySelector('canvas#game') as HTMLCanvasElement
-        const gameCtx = gameCanvas.getContext('2d')
+        const gameCtx = gameCanvas.getContext('2d') as CanvasRenderingContext2D
         const nextCanvas = gameScreen.querySelector('canvas#next') as HTMLCanvasElement
-        const nextCtx = nextCanvas.getContext('2d')
-        const points_span = gameScreen.querySelector('#pontos')
-        const last_points_span = gameScreen.querySelector('#last-pontuation')
+        const nextCtx = nextCanvas.getContext('2d') as CanvasRenderingContext2D
+        const points_span = gameScreen.querySelector('#pontos') as HTMLSpanElement
+        const last_points_span = gameScreen.querySelector('#last-pontuation') as HTMLDivElement
 
         return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, points_span, last_points_span }
     }
