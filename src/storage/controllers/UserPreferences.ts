@@ -6,6 +6,10 @@ export class UserPreferencesController {
         return userPreferences.store
     }
 
+    static set(value: PreferencesSchema) {
+        userPreferences.store = value
+    }
+
     static get music() {
         return userPreferences.get('music')
     }
