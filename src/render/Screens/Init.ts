@@ -29,18 +29,11 @@ export class InitScreen extends Screen {
                 this.close()
                 game.newGame()
             },
-            config() {
-                screens.config.show(this)
-            },
-            controls() {
-                screens.controls.show(screens.init)
-            },
-            about() {
-                screens.about.show()
-            },
-            exit() {
-                ipcRenderer.send('close')
-            }
+
+            config: () => screens.config.show(this),
+            controls: () => screens.controls.show(screens.init),
+            about: () => screens.about.show(),
+            exit: () => ipcRenderer.send('close')
         }
 
         const buttons = initScreen.querySelectorAll('button')
@@ -49,7 +42,7 @@ export class InitScreen extends Screen {
 
         buttons.forEach(button => {
             button.onclick = () => {
-                functions?.[button.id as key]?.call(this)
+                functions?.[button.id as key]?.()
             }
         })
 
