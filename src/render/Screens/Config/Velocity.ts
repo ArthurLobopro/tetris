@@ -1,5 +1,4 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { saveUserPreferences } from "../../Data"
 import { game } from "../../Game"
 import { screens } from "../../ScreenManager"
 import { ConfigScreenBase } from "../Screen"
@@ -21,7 +20,6 @@ export class VelocityConfigScreen extends ConfigScreenBase {
 
             game.userPreferences.velocity = UserPreferences.velocity
             game.velocity = UserPreferences.velocity
-            saveUserPreferences()
         }
 
         const velocity_screen = document.createElement('div')
