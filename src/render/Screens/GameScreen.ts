@@ -1,4 +1,4 @@
-import { Screen } from "./Screen.js"
+import { Screen } from "./Screen"
 
 class GameScreen extends Screen {
     constructor() {
@@ -33,9 +33,9 @@ class GameScreen extends Screen {
 
     getComponents() {
         const gameScreen = this.screen
-        const gameCanvas = gameScreen.querySelector('canvas#game')
+        const gameCanvas = gameScreen.querySelector('canvas#game') as HTMLCanvasElement
         const gameCtx = gameCanvas.getContext('2d')
-        const nextCanvas = gameScreen.querySelector('canvas#next')
+        const nextCanvas = gameScreen.querySelector('canvas#next') as HTMLCanvasElement
         const nextCtx = nextCanvas.getContext('2d')
         const points_span = gameScreen.querySelector('#pontos')
         const last_points_span = gameScreen.querySelector('#last-pontuation')
