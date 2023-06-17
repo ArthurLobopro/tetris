@@ -1,16 +1,17 @@
-import { themes, userPreferences } from "./Data"
+import { UserPreferencesController as UserPreferences } from "../storage/controllers/UserPreferences"
+import { themes } from "./Data"
 
 class Colors {
     get figures() {
-        return themes[userPreferences.theme].figures
+        return themes[UserPreferences.theme].figures
     }
 
     get background() {
-        return themes[userPreferences.theme].background
+        return themes[UserPreferences.theme].background
     }
 
     get lines() {
-        return themes[userPreferences.theme].lines
+        return themes[UserPreferences.theme].lines
     }
 }
 
