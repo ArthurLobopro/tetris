@@ -83,6 +83,8 @@ class Game {
         this.isMusicOn = false
         this.state = this.getNewState()
         this.velocity = UserPreferences.velocity
+        this.lastPontuation = GameData.lastPontuation
+        last_points_span.innerText = formatPoints(this.lastPontuation)
         this.spawnFirstFigure()
         this.spawnNextFigure()
     }
