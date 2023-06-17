@@ -44,7 +44,7 @@ class Game {
     declare velocity: keyof typeof game.velocities
     declare atualFigure: spawnedFigure
     declare nextFigure: ReturnType<typeof Figures.random>
-    declare state: ReturnType<typeof Game.prototype.getNewState>
+    declare state: { figureType?: string, type: "null" | "block" }[][]
     declare renderInterval: Interval
     declare fallInterval: Interval
 
@@ -81,7 +81,7 @@ class Game {
     //#endregion
 
     //#region Figure methods
-    makeNullBlock() { return { type: "null" } }
+    makeNullBlock(): { type: "null" } { return { type: "null" } }
 
     makeALine() {
         return Array.from({ length: this.width }, this.makeNullBlock)

@@ -1,7 +1,7 @@
-import { game } from './Game.js'
-import { formatPoints, range } from './Util.js'
 import { colors } from "./Colors.js"
+import { game } from './Game.js'
 import { gameScreenComponents } from './Screens/GameScreen.js'
+import { formatPoints, range } from './Util.js'
 const { gameCanvas, nextCanvas, nextCtx, gameCtx } = gameScreenComponents
 
 //#region Next Figure Draw
@@ -72,7 +72,7 @@ const drawSquares = () => {
     const { state, squareWidth } = game
     state.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
-            const color = block.type === "null" ? colors.background : colors.figures[block.figureType]
+            const color = block.type === "null" ? colors.background : colors.figures[block.figureType as keyof typeof colors.figures]
 
             gameCtx.fillStyle = color
             gameCtx.fillRect(indexX * squareWidth + (1 * indexX), indexY * squareWidth + (1 * indexY), squareWidth, squareWidth)
@@ -108,7 +108,7 @@ const medals = [
 ]
 
 const showRecords = () => {
-    const lines = []
+    const lines: string[] = []
     game.records.forEach(({ points }, index) => {
         const line = `
         <div class="line">
@@ -117,6 +117,8 @@ const showRecords = () => {
         </div>`
         lines.push(line)
     })
+
+    //@ts-ignore
     document.getElementById('recordes').innerHTML = lines.join('')
 }
 
