@@ -4,19 +4,12 @@ import { screens } from "../../ScreenManager"
 import { ConfigScreenBase } from "../Screen"
 
 export class VelocityConfigScreen extends ConfigScreenBase {
-    constructor() {
-        super()
-    }
-
     buildFunction() {
         const { velocity } = UserPreferences
         const configTemp = UserPreferences.get()
 
         const saveConfig = () => {
-            Object.entries(configTemp).forEach(([key, value]) => {
-                // @ts-ignore
-                UserPreferences[key as key] = value
-            })
+            UserPreferences.set(configTemp)
 
             game.userPreferences.velocity = UserPreferences.velocity
             game.velocity = UserPreferences.velocity

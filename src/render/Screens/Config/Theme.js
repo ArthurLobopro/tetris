@@ -5,10 +5,6 @@ import { ConfigScreenBase } from "../Screen.js"
 import { screens } from "../../ScreenManager.js"
 
 export class ThemeConfigScreen extends ConfigScreenBase {
-    constructor() {
-        super()
-    }
-
     buildFunction() {
         let tempTheme = userPreferences.theme
 

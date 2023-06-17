@@ -2,10 +2,6 @@ import { game } from '../Game'
 import { Screen } from './Screen'
 
 export class GameOverScreen extends Screen {
-    constructor() {
-        super()
-    }
-
     buildFunction() {
         const canvasGame = document.getElementById('game') as HTMLCanvasElement
         const image = canvasGame.toDataURL('image/png') as string
