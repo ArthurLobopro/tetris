@@ -4,7 +4,6 @@ import { UserPreferencesController as UserPreferences } from "../storage/control
 import { Audios } from "./Audio"
 import "./Controllers"
 import { mainKeyDown } from "./Controllers"
-import { saveLastPontuation } from "./Data"
 import { Figures } from "./Figures"
 import { Interval } from "./Interval"
 import { screens } from "./ScreenManager"
@@ -319,8 +318,7 @@ class Game {
         this.fallInterval.stop()
         this.renderInterval.stop()
         this.verifyRecords()
-        saveLastPontuation()
-
+        GameData.lastPontuation = this.points
         screens.gameOver.reset()
         screens.gameOver.show()
     }
