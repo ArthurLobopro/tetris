@@ -1,5 +1,5 @@
-import { colors } from "./Colors.js"
-import { randint } from "./Util.js"
+import { colors } from "./Colors"
+import { randint } from "./Util"
 
 type Block = {
     type: 'block'
