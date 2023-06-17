@@ -10,6 +10,7 @@ export class Interval {
     private _rate: number
     private _callback: () => void
     private _interval?: NodeJS.Timer
+    private _isRunning = false
 
     constructor(props: ITimerConstructor) {
         const {
@@ -28,21 +29,25 @@ export class Interval {
 
     start() {
         this._interval = setInterval(this._callback, fps(this._rate))
+        this._isRunning = true
     }
 
     stop() {
         clearInterval(this._interval as NodeJS.Timer)
+        this._isRunning = false
     }
 
     set rate(value: number) {
-        this.stop()
+        const isRunning = this._isRunning
+        isRunning && this.stop()
         this._rate = value
-        this.start()
+        isRunning && this.start()
     }
 
     set callback(value: () => void) {
-        this.stop()
+        const isRunning = this._isRunning
+        isRunning && this.stop()
         this._callback = value
-        this.start()
+        isRunning && this.start()
     }
 }
