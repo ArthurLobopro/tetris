@@ -10,7 +10,6 @@ export class VelocityConfigScreen extends ConfigScreenBase {
 
         const saveConfig = () => {
             UserPreferences.set(configTemp)
-
             game.userPreferences.velocity = UserPreferences.velocity
             game.velocity = UserPreferences.velocity
         }

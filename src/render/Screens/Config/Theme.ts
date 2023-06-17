@@ -1,9 +1,8 @@
-import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences.js"
-import { themes } from "../../Data.js"
-import { screens } from "../../ScreenManager.js"
-import { ConfigScreenBase } from "../Screen.js"
-import { FiguresViewer } from "./figuresViewer.js"
-
+import { ThemesController as Themes } from "../../../storage/controllers/Themes"
+import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
+import { screens } from "../../ScreenManager"
+import { ConfigScreenBase } from "../Screen"
+import { FiguresViewer } from "./figuresViewer"
 
 export class ThemeConfigScreen extends ConfigScreenBase {
     declare updateColors: () => void
@@ -63,7 +62,7 @@ export class ThemeConfigScreen extends ConfigScreenBase {
             </div>
         </fieldset>`
 
-        const getColors = () => themes[tempTheme]
+        const getColors = () => Themes[tempTheme]
 
         const figuresViewer = new FiguresViewer(getColors())
         const viewWrapper = themeScreen.querySelector(".view-wrapper") as HTMLDivElement

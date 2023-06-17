@@ -108,15 +108,20 @@ export class FiguresViewer {
 
     nextFigure() {
         const figureIndex = this.figuresNames.indexOf(this.atualFigure)
-        this.atualFigure = this.figuresNames[figureIndex + 1 === this.figuresNames.length ? 0 : figureIndex + 1]
-        this.renderFigure(this.atualFigure)
+        this.atualFigure = this.figuresNames[
+            figureIndex + 1 >= this.figuresNames.length ?
+                0 : figureIndex + 1
+        ]
 
-        this.changeFigureCallback()
+        this.renderFigure(this.atualFigure)
+        this?.changeFigureCallback()
     }
 
     previousFigure() {
         const figureIndex = this.figuresNames.indexOf(this.atualFigure)
-        this.atualFigure = this.figuresNames[figureIndex === 0 ? this.figuresNames.length - 1 : figureIndex - 1]
+        this.atualFigure = this.figuresNames[
+            figureIndex === 0 ? this.figuresNames.length - 1 : figureIndex - 1]
+
         this.renderFigure(this.atualFigure)
         this.changeFigureCallback()
     }

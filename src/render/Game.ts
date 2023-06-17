@@ -1,10 +1,10 @@
 import { PreferencesSchema } from "../storage/StoreSchemas"
-import { GameDataController } from "../storage/controllers/GameData"
+import { GameDataController as GameData } from "../storage/controllers/GameData"
 import { UserPreferencesController as UserPreferences } from "../storage/controllers/UserPreferences"
 import { Audios } from "./Audio"
 import "./Controllers"
 import { mainKeyDown } from "./Controllers"
-import { gameData, saveLastPontuation, saveRecords } from "./Data"
+import { saveLastPontuation } from "./Data"
 import { Figures } from "./Figures"
 import { Interval } from "./Interval"
 import { screens } from "./ScreenManager"
@@ -41,12 +41,21 @@ class Game {
     declare status: "active" | "paused" | "inactive"
     declare moveLock: boolean
     declare isMusicOn: boolean
-    declare velocity: keyof typeof game.velocities
+    declare _velocity: keyof typeof game.velocities
     declare atualFigure: spawnedFigure
     declare nextFigure: ReturnType<typeof Figures.random>
     declare state: { figureType?: string, type: "null" | "block" }[][]
     declare renderInterval: Interval
     declare fallInterval: Interval
+
+    get velocity() {
+        return this._velocity
+    }
+
+    set velocity(value: keyof typeof game.velocities) {
+        this._velocity = value
+        this.fallInterval && (this.fallInterval.rate = this.velocities[value])
+    }
 
     //#region Contructor methods
     constructor() {
@@ -55,9 +64,9 @@ class Game {
     }
 
     loadUserPreferences() {
-        this.records = GameDataController.records
+        this.records = GameData.records
         this.userPreferences = UserPreferences.get()
-        this.lastPontuation = gameData.lastPontuation
+        this.lastPontuation = GameData.lastPontuation
     }
 
     reloadConfig() {
@@ -336,7 +345,7 @@ class Game {
             this.records.pop()
             const newRecordIndex = records.findIndex(record => record.points < points)
             this.records.splice(newRecordIndex, 0, { points })
-            saveRecords()
+            GameData.records = this.records
         }
     }
     //#endregion
