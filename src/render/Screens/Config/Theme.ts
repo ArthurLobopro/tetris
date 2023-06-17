@@ -1,12 +1,15 @@
-import { saveUserPreferences, userPreferences, themes } from "../../Data.js"
-import { FiguresViewer } from "./figuresViewer.js"
-import { colors } from "../../Colors.js"
-import { ConfigScreenBase } from "../Screen.js"
+import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences.js"
+import { themes } from "../../Data.js"
 import { screens } from "../../ScreenManager.js"
+import { ConfigScreenBase } from "../Screen.js"
+import { FiguresViewer } from "./figuresViewer.js"
+
 
 export class ThemeConfigScreen extends ConfigScreenBase {
+    declare updateColors: () => void
+
     buildFunction() {
-        let tempTheme = userPreferences.theme
+        let tempTheme = UserPreferences.theme
 
         const themeScreen = document.createElement('div')
         themeScreen.className = "telas-wrapper"
@@ -21,26 +24,26 @@ export class ThemeConfigScreen extends ConfigScreenBase {
                         Retro
                         <div 
                             class="radio" name="theme" 
-                            data-check="${userPreferences.theme === "retro"}" data-value="retro"
+                            data-check="${UserPreferences.theme === "retro"}" data-value="retro"
                         ></div>
                     </div>
                     <div class="line">
                         Tetris
                         <div 
                             class="radio" name="theme" 
-                            data-check="${userPreferences.theme === "tetris"}" data-value="tetris"
+                            data-check="${UserPreferences.theme === "tetris"}" data-value="tetris"
                         ></div>
                     </div>
                     <div class="line">
                         Customizável
                         <div 
                             class="radio" name="theme" 
-                            data-check="${userPreferences.theme === "custom"}" data-value="custom"
+                            data-check="${UserPreferences.theme === "custom"}" data-value="custom"
                         ></div>
                     </div>
                     <div 
                     id="custom-wrapper" class="flex-center" 
-                    style="display: ${userPreferences.theme === "custom" ? "" : "none"};"
+                    style="display: ${UserPreferences.theme === "custom" ? "" : "none"};"
                     >
                         <button id="open-custom-screnn">
                             Customizar
@@ -63,39 +66,44 @@ export class ThemeConfigScreen extends ConfigScreenBase {
         const getColors = () => themes[tempTheme]
 
         const figuresViewer = new FiguresViewer(getColors())
-        const viewWrapper = themeScreen.querySelector(".view-wrapper")
+        const viewWrapper = themeScreen.querySelector(".view-wrapper") as HTMLDivElement
+
         viewWrapper.appendChild(figuresViewer.viewer)
 
-        themeScreen.querySelector("#open-custom-screnn").onclick = () => screens.configScreens.customTheme.show()
+        const open_custom_button = themeScreen.querySelector("#open-custom-screnn") as HTMLButtonElement
+
+        open_custom_button.onclick = () => screens.configScreens.customTheme.show()
 
         this.updateColors = () => {
             figuresViewer.setColors(getColors())
             figuresViewer.renderFigure(figuresViewer.getAtualFigureName())
         }
 
-        const themeRadios = themeScreen.querySelectorAll('.radio')
+        const themeRadios = themeScreen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
 
         themeRadios.forEach(radio => {
             radio.onclick = () => {
-                const checked = document.querySelector('[data-check="true"]')
-                checked.dataset.check = false
-                radio.dataset.check = true
-                tempTheme = radio.dataset.value
-                themeScreen.querySelector("#custom-wrapper").style.display = tempTheme === "custom" ? "" : "none"
+                const checked = document.querySelector('[data-check="true"]') as HTMLDivElement
+                checked.dataset.check = "false"
+                radio.dataset.check = "true"
+                tempTheme = radio.dataset.value as "retro" | "tetris" | "custom"
+
+                const custom_wrapper = themeScreen.querySelector("#custom-wrapper") as HTMLDivElement
+
+                custom_wrapper.style.display = tempTheme === "custom" ? "" : "none"
                 figuresViewer.setColors(getColors())
             }
         })
 
         const saveConfig = () => {
-            userPreferences.theme = tempTheme
-            saveUserPreferences()
+            UserPreferences.theme = tempTheme
         }
 
-        const buttons = themeScreen.querySelectorAll('.line-buttons > button')
+        const buttons = themeScreen.querySelectorAll('.line-buttons > button') as NodeListOf<HTMLButtonElement>
 
         buttons.forEach(button => {
             button.onclick = () => {
-                if (button.value == 1) {
+                if (button.value === "1") {
                     saveConfig()
                 }
                 this.close()
