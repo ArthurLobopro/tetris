@@ -6,7 +6,7 @@ const accelerate = () => {
     if (!game.moveLock && !game.collision() && game.status === "active") {
         game.tick()
         game.moveLock = true
-        setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)
+        setTimeout(() => game.moveLock = false, 1000 / game.velocities[game.velocity])
     }
 }
 
@@ -81,18 +81,16 @@ const keyDownFunctions = {
     "ArrowLeft": () => game.move("left"),
     "ArrowRight": () => game.move("right"),
     "ArrowDown": accelerate,
+    "s": accelerate,
     "a": () => game.move("left"),
     "d": () => game.move("right"),
     'r': rotate,
     ' ': () => game.dropFigure(),
     'Escape': () => game.pause(),
-    "s": accelerate
 }
 
 
-const mainKeyDown = event => {
+export const mainKeyDown = (event: KeyboardEvent) => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
-    keyDownFunctions[key]?.()
+    keyDownFunctions[key as keyof typeof keyDownFunctions]?.()
 }
-
-export { mainKeyDown }
