@@ -1,4 +1,4 @@
-import navigation from "./navigation.js"
+import navigation from "./navigation"
 
 const container = document.getElementById("container") as HTMLElement
 

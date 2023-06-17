@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron"
-import { game } from "../Game.js"
-import { screens } from "../ScreenManager.js"
-import { Screen } from "./Screen.js"
+import { game } from "../Game"
+import { screens } from "../ScreenManager"
+import { Screen } from "./Screen"
 
 export class InitScreen extends Screen {
     constructor() {
