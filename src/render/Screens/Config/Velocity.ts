@@ -1,24 +1,17 @@
-import { game } from "../../Game.js"
-import { userPreferences, saveUserPreferences } from "../../Data.js"
-import { ConfigScreenBase } from "../Screen.js"
-import { screens } from "../../ScreenManager.js"
+import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
+import { game } from "../../Game"
+import { screens } from "../../ScreenManager"
+import { ConfigScreenBase } from "../Screen"
 
 export class VelocityConfigScreen extends ConfigScreenBase {
-    constructor() {
-        super()
-    }
-
     buildFunction() {
-        const { velocity } = userPreferences
-        const configTemp = { ...userPreferences }
+        const { velocity } = UserPreferences
+        const configTemp = UserPreferences.get()
 
         const saveConfig = () => {
-            Object.entries(configTemp).forEach(([key, value]) => {
-                userPreferences[key] = value
-            })
-            game.userPreferences.velocity = userPreferences.velocity
-            game.velocity = userPreferences.velocity
-            saveUserPreferences()
+            UserPreferences.set(configTemp)
+            game.userPreferences.velocity = UserPreferences.velocity
+            game.velocity = UserPreferences.velocity
         }
 
         const velocity_screen = document.createElement('div')
@@ -50,26 +43,27 @@ export class VelocityConfigScreen extends ConfigScreenBase {
             </div>
         </fieldset>`
 
-        const checks = velocity_screen.querySelectorAll('.radio')
+        const checks = velocity_screen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
 
         checks.forEach(e => {
             e.onclick = event => {
-                const target = event.target
+                const target = event.target as HTMLDivElement
 
-                document.querySelectorAll('.radio').forEach(e => {
+                checks.forEach(e => {
                     e.dataset.check = "false"
                 })
 
                 target.dataset.check = "true"
-                configTemp.velocity = target.dataset.value
+                configTemp.velocity = target.dataset.value as "slow" | "normal" | "fast"
             }
         })
 
 
-        const buttons = velocity_screen.querySelectorAll('button')
+        const buttons = velocity_screen.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
+
         buttons.forEach(button => {
             button.onclick = event => {
-                const { value } = event.target
+                const { value } = event.target as HTMLButtonElement
                 if (value == "1") {
                     saveConfig()
                 }

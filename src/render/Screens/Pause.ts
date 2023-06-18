@@ -1,6 +1,6 @@
-import { game } from "../Game.js"
-import { screens } from "../ScreenManager.js"
-import { Screen } from "./Screen.js"
+import { game } from "../Game"
+import { screens } from "../ScreenManager"
+import { Screen } from "./Screen"
 
 export class PauseScreen extends Screen {
     constructor() {
@@ -24,7 +24,7 @@ export class PauseScreen extends Screen {
         </fieldset>`
 
         const functions = {
-            continue() {
+            continue: () => {
                 this.close()
                 game.continueGame()
             },
@@ -32,11 +32,11 @@ export class PauseScreen extends Screen {
                 this.close()
                 game.newGame()
             },
-            controls() {
+            controls: () => {
                 this.removeNavigation()
                 screens.controls.show(screens.pause)
             },
-            config() {
+            config: () => {
                 this.removeNavigation()
                 screens.config.show(this)
             },
@@ -48,10 +48,13 @@ export class PauseScreen extends Screen {
         }
 
         const buttons = pauseScreen.querySelectorAll('button')
+
+        type key = keyof typeof functions
+
         buttons.forEach(button => {
             button.onclick = () => {
                 const { type } = button.dataset
-                functions[type].call(this)
+                functions[type as key]()
             }
         })
 

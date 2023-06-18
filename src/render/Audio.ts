@@ -1,15 +1,15 @@
-import { loadAudio } from "./Util.js"
+import { loadAudio } from "./Util"
 
 class GameAudios {
-    #_theme
+    declare private _theme: HTMLAudioElement
 
     constructor() {
         loadAudio('../assets/audios/tetris-theme.mp3')
-            .then(result => this.#_theme = result)
+            .then(result => this._theme = result)
     }
 
     get theme() {
-        return this.#_theme
+        return this._theme
     }
 }
 

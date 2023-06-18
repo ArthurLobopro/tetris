@@ -1,9 +1,9 @@
-const loadAudio = async path => {
+export const loadAudio = async (path: string) => {
     const audio = new Audio(path)
     return audio
 }
 
-const loadImage = async path => {
+export const loadImage = async (path: string) => {
     const image = new Image()
     image.src = path
     return new Promise(res => {
@@ -13,15 +13,13 @@ const loadImage = async path => {
     })
 }
 
-const range = (min, max, pass = 1) => {
+export const range = (min: number, max: number, pass = 1) => {
     let array = []
     if (min > max && pass > 0) { pass *= -1 }
     for (let i = min; i < max; i += pass) { array.push(i) }
     return array
 }
 
-const randint = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
+export const randint = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 
-const formatPoints = points => String(points).padStart(4, '0')
-
-export { range, randint, loadAudio, loadImage, formatPoints }
+export const formatPoints = (points: number) => String(points).padStart(4, '0')

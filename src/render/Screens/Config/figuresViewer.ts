@@ -1,9 +1,19 @@
-import { game } from "../../Game.js"
-import { range } from "../../Util.js"
-import { figures } from "../../Figures.js"
+import { ThemeSchema } from "../../../storage/StoreSchemas"
+import { Figures, figureName } from "../../Figures"
+import { game } from "../../Game"
+import { range } from "../../Util"
 
 export class FiguresViewer {
-    constructor(colors, changeFigureCallback) {
+    declare colors: ThemeSchema
+    declare changeFigureCallback: () => void
+    declare atualFigure: figureName
+    declare figuresNames: figureName[]
+
+    declare viewer: HTMLDivElement
+    declare viewerCanvas: HTMLCanvasElement
+    declare ctx: CanvasRenderingContext2D
+
+    constructor(colors: ThemeSchema, changeFigureCallback?: () => void) {
         this.colors = colors
         this.changeFigureCallback = changeFigureCallback ?? function () { }
         this.build()
@@ -11,7 +21,7 @@ export class FiguresViewer {
         this.atualFigure = "square"
         this.renderFigure(this.atualFigure)
 
-        this.figuresNames = figures.getFigureNames()
+        this.figuresNames = Figures.getFigureNames()
     }
 
     build() {
@@ -35,15 +45,17 @@ export class FiguresViewer {
             "ArrowRight": () => this.nextFigure()
         }
 
-        window.onkeydown = event => keyBoardFunctions[event.key]?.()
+        type key = keyof typeof keyBoardFunctions
 
-        const rightButton = viewer.querySelector("#right")
-        const leftButton = viewer.querySelector("#left")
+        window.onkeydown = (event) => keyBoardFunctions[event.key as key]?.()
+
+        const rightButton = viewer.querySelector("#right") as HTMLImageElement
+        const leftButton = viewer.querySelector("#left") as HTMLImageElement
 
         rightButton.onclick = keyBoardFunctions.ArrowRight
         leftButton.onclick = keyBoardFunctions.ArrowLeft
 
-        this.ctx = viewerCanvas.getContext('2d')
+        this.ctx = viewerCanvas.getContext('2d') as CanvasRenderingContext2D
         this.viewer = viewer
         this.viewerCanvas = viewerCanvas
     }
@@ -68,12 +80,12 @@ export class FiguresViewer {
         }
     }
 
-    renderFigure(figureName) {
+    renderFigure(figureName: figureName) {
         const [width, height] = [8, 8]
 
         this.renderBasic()
 
-        const blocks = figures.getByName(figureName)
+        const blocks = Figures.getByName(figureName)
 
         const x = Math.trunc(width / 2 - blocks[0].length / 2)
         const y = Math.trunc(height / 2 - blocks.length / 2)
@@ -96,20 +108,25 @@ export class FiguresViewer {
 
     nextFigure() {
         const figureIndex = this.figuresNames.indexOf(this.atualFigure)
-        this.atualFigure = this.figuresNames[figureIndex + 1 === this.figuresNames.length ? 0 : figureIndex + 1]
-        this.renderFigure(this.atualFigure)
+        this.atualFigure = this.figuresNames[
+            figureIndex + 1 >= this.figuresNames.length ?
+                0 : figureIndex + 1
+        ]
 
-        this.changeFigureCallback()
+        this.renderFigure(this.atualFigure)
+        this?.changeFigureCallback()
     }
 
     previousFigure() {
         const figureIndex = this.figuresNames.indexOf(this.atualFigure)
-        this.atualFigure = this.figuresNames[figureIndex === 0 ? this.figuresNames.length - 1 : figureIndex - 1]
+        this.atualFigure = this.figuresNames[
+            figureIndex === 0 ? this.figuresNames.length - 1 : figureIndex - 1]
+
         this.renderFigure(this.atualFigure)
         this.changeFigureCallback()
     }
 
-    setColors(newColors) {
+    setColors(newColors: ThemeSchema) {
         this.colors = newColors
         this.renderFigure(this.atualFigure)
     }

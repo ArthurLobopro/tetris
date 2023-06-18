@@ -1,11 +1,11 @@
-import { game } from "../Game.js"
-import { Screen } from "./Screen.js"
-import { screens } from "../ScreenManager.js"
+import { game } from "../Game"
+import { screens } from "../ScreenManager"
+import { Screen } from "./Screen"
 
 const configs = {
-    music: () => screens.configScreens.music.show(false),
-    velocity: () => screens.configScreens.velocity.show(false),
-    theme: () => screens.configScreens.theme.show(false)
+    music: () => screens.configScreens.music.show(),
+    velocity: () => screens.configScreens.velocity.show(),
+    theme: () => screens.configScreens.theme.show()
 }
 
 export class ConfigScreen extends Screen {
@@ -13,6 +13,8 @@ export class ConfigScreen extends Screen {
         super()
         this.reset()
     }
+
+    declare afterScreen: Screen
 
     buildFunction() {
         const configScreen = document.createElement('div')
@@ -32,13 +34,16 @@ export class ConfigScreen extends Screen {
 
         buttons.forEach(button => {
             button.onclick = async event => {
-                const { type } = event.target.dataset
+                const target = event.target as HTMLButtonElement
+                const { type } = target.dataset
                 if (type === "voltar") {
                     game.reloadConfig()
                     this.close()
                 } else {
                     this.removeNavigation()
-                    configs[type]?.(game)
+                    type key = keyof typeof configs
+
+                    configs[type as key]?.()
                 }
             }
         })
@@ -51,7 +56,8 @@ export class ConfigScreen extends Screen {
         super.close()
     }
 
-    show(afterScreen) {
+    //@ts-ignore
+    show(afterScreen: Screen) {
         super.show()
         this.afterScreen = afterScreen
     }

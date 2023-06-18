@@ -1,6 +1,6 @@
-import { Screen } from "./Screen.js"
+import { Screen } from "./Screen"
 
-class GameScreen extends Screen {
+export class GameScreen extends Screen {
     constructor() {
         super()
         this.reset()
@@ -31,18 +31,31 @@ class GameScreen extends Screen {
         return gameScreen
     }
 
-    getComponents() {
-        const gameScreen = this.screen
-        const gameCanvas = gameScreen.querySelector('canvas#game')
-        const gameCtx = gameCanvas.getContext('2d')
-        const nextCanvas = gameScreen.querySelector('canvas#next')
-        const nextCtx = nextCanvas.getContext('2d')
-        const points_span = gameScreen.querySelector('#pontos')
-        const last_points_span = gameScreen.querySelector('#last-pontuation')
+    get gameScreen() {
+        return this.screen
+    }
 
-        return { gameScreen, gameCanvas, gameCtx, nextCanvas, nextCtx, points_span, last_points_span }
+    get gameCanvas() {
+        return this.screen.querySelector('canvas#game') as HTMLCanvasElement
+    }
+
+    get gameCtx() {
+        return this.gameCanvas.getContext('2d') as CanvasRenderingContext2D
+    }
+
+    get nextCanvas() {
+        return this.screen.querySelector('canvas#next') as HTMLCanvasElement
+    }
+
+    get nextCtx() {
+        return this.nextCanvas.getContext('2d') as CanvasRenderingContext2D
+    }
+
+    get points_span() {
+        return this.screen.querySelector('#pontos') as HTMLSpanElement
+    }
+
+    get last_points_span() {
+        return this.screen.querySelector('#last-pontuation') as HTMLDivElement
     }
 }
-
-export const gameScreen = new GameScreen()
-export const gameScreenComponents = gameScreen.getComponents()

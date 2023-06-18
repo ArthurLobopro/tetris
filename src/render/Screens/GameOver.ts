@@ -1,14 +1,10 @@
-import { game } from '../Game.js'
-import { Screen } from './Screen.js'
+import { game } from '../Game'
+import { Screen } from './Screen'
 
 export class GameOverScreen extends Screen {
-    constructor() {
-        super()
-    }
-
     buildFunction() {
-        const canvasGame = document.getElementById('game')
-        const image = canvasGame.toDataURL('image/png')
+        const canvasGame = document.getElementById('game') as HTMLCanvasElement
+        const image = canvasGame.toDataURL('image/png') as string
 
         const gameOverScreen = document.createElement('div')
         gameOverScreen.className = 'telas-wrapper'
@@ -23,7 +19,7 @@ export class GameOverScreen extends Screen {
             <button class="focus" style="align-self: center;margin-bottom: 10px;">NEW GAME</button>
         </fieldset>`
 
-        const button = gameOverScreen.querySelector('button')
+        const button = gameOverScreen.querySelector('button') as HTMLButtonElement
 
         button.onclick = () => {
             this.close()

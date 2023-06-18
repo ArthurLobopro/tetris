@@ -1,10 +1,12 @@
-import { Screen } from "./Screen.js"
+import { Screen } from "./Screen"
 
 export class ControlsScreen extends Screen {
     constructor() {
         super()
         this.reset()
     }
+
+    declare afterScreen?: Screen
 
     buildFunction() {
         const constrols_screen = document.createElement("div")
@@ -55,20 +57,21 @@ export class ControlsScreen extends Screen {
                 </fieldset>
             </div>`
 
-        constrols_screen.querySelector('button').onclick = () => {
-            this.close()
-        }
+        const return_button = constrols_screen.querySelector('button') as HTMLButtonElement
+
+        return_button.onclick = () => this.close()
 
         return constrols_screen
     }
 
     close() {
         super.close()
-        this.afterScreen.show()
+        this.afterScreen?.show()
     }
 
-    show(afterScreen) {
-        super.show(true)
+    //@ts-ignore
+    show(afterScreen: Screen) {
+        super.show()
         this.afterScreen = afterScreen
     }
 }

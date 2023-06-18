@@ -1,14 +1,9 @@
-import { game } from "./Game.js"
-import { range } from "./Util.js"
+import { game } from "./Game"
+import { screens } from "./ScreenManager"
+import { range } from "./Util"
 
 //#region Move Blocks
-const accelerate = () => {
-    if (!game.moveLock && !game.collision() && game.status === "active") {
-        game.tick()
-        game.moveLock = true
-        setTimeout(() => game.moveLock = false, game.gameplayVelocity / 2)
-    }
-}
+
 
 const rotate = () => {
     const { blocks, x, y } = game.atualFigure
@@ -51,7 +46,7 @@ const rotate = () => {
     let newX = x
 
     if (haveBlocksOnRight) {
-        console.log(haveBlocksOnLeft);
+        console.log(haveBlocksOnLeft)
         if (!haveBlocksOnLeft) {
             newX = x - widthDifference
         } else {
@@ -75,36 +70,27 @@ const rotate = () => {
     }
 }
 
-const downFigure = () => {
-    while (!game.collision()) {
-        game.tick()
-    }
-}
 //#endregion
 
 const keyDownFunctions = {
     "ArrowLeft": () => game.move("left"),
     "ArrowRight": () => game.move("right"),
-    "ArrowDown": accelerate,
+    "ArrowDown": () => game.accelerate(),
+    "s": () => game.accelerate(),
     "a": () => game.move("left"),
     "d": () => game.move("right"),
     'r': rotate,
-    ' ': downFigure,
-    'Escape': () => game.pause()
+    ' ': () => game.dropFigure(),
+    'Escape': () => game.pause(),
 }
 
-const keyPressFunctions = {
-    "s": accelerate
+
+window.onload = () => {
+    screens.game.show(false)
+    screens.init.show()
 }
 
-const mainKeyPress = event => {
+export const mainKeyDown = (event: KeyboardEvent) => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
-    keyPressFunctions[key]?.()
+    keyDownFunctions[key as keyof typeof keyDownFunctions]?.()
 }
-
-const mainKeyDown = event => {
-    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
-    keyDownFunctions[key]?.()
-}
-
-export { mainKeyDown, mainKeyPress }

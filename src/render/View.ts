@@ -1,14 +1,15 @@
-import { game } from './Game.js'
-import { formatPoints, range } from './Util.js'
-import { colors } from "./Colors.js"
-import { gameScreenComponents } from './Screens/GameScreen.js'
-const { gameCanvas, nextCanvas, nextCtx, gameCtx } = gameScreenComponents
+import { colors } from "./Colors"
+import { game } from './Game'
+import { formatPoints, range } from './Util'
 
 //#region Next Figure Draw
 const drawNextFigure = () => {
-    const { squareWidth } = game
-    const { width, height } = game.nextCanvasSize
-    const { blocks, figureType } = game.nextFigure
+    const {
+        squareWidth,
+        screen: { nextCtx },
+        nextFigure: { blocks, figureType },
+        nextCanvasSize: { width, height }
+    } = game
 
     const x = Math.trunc(width / 2 - blocks[0].length / 2)
     const y = Math.trunc(height / 2 - blocks.length / 2)
@@ -28,8 +29,11 @@ const drawNextFigure = () => {
 }
 
 const drawNextLines = () => {
-    const { squareWidth } = game
-    const { width, height } = game.nextCanvasSize
+    const {
+        squareWidth,
+        screen: { nextCtx, nextCanvas },
+        nextCanvasSize: { width, height }
+    } = game
 
     nextCtx.fillStyle = colors.lines
 
@@ -43,19 +47,22 @@ const drawNextLines = () => {
 }
 
 const drawNextBackground = () => {
+    const { nextCanvas: { width, height }, nextCtx } = game.screen
     nextCtx.fillStyle = colors.background
-    nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height)
+    nextCtx.fillRect(0, 0, width, height)
 }
 //#endregion
 
 //#region Main Draw
 const drawBackground = () => {
+    const { gameCanvas: { width, height }, gameCtx } = game.screen
     gameCtx.fillStyle = colors.background
-    gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height)
+    gameCtx.fillRect(0, 0, width, height)
 }
 
 const drawLines = () => {
     const { width, height, squareWidth } = game
+    const { gameCanvas, gameCtx } = game.screen
 
     gameCtx.fillStyle = colors.lines
 
@@ -69,10 +76,10 @@ const drawLines = () => {
 }
 
 const drawSquares = () => {
-    const { state, squareWidth } = game
+    const { state, squareWidth, screen: { gameCtx } } = game
     state.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
-            const color = block.type === "null" ? colors.background : colors.figures[block.figureType]
+            const color = block.type === "null" ? colors.background : colors.figures[block.figureType as keyof typeof colors.figures]
 
             gameCtx.fillStyle = color
             gameCtx.fillRect(indexX * squareWidth + (1 * indexX), indexY * squareWidth + (1 * indexY), squareWidth, squareWidth)
@@ -83,8 +90,11 @@ const drawSquares = () => {
 }
 
 const drawAtualFigure = () => {
-    const { squareWidth } = game
-    const { x, y, blocks, figureType } = game.atualFigure
+    const {
+        squareWidth,
+        atualFigure: { blocks, figureType, x, y },
+        screen: { gameCtx }
+    } = game
 
     blocks.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
@@ -108,7 +118,7 @@ const medals = [
 ]
 
 const showRecords = () => {
-    const lines = []
+    const lines: string[] = []
     game.records.forEach(({ points }, index) => {
         const line = `
         <div class="line">
@@ -117,6 +127,8 @@ const showRecords = () => {
         </div>`
         lines.push(line)
     })
+
+    //@ts-ignore
     document.getElementById('recordes').innerHTML = lines.join('')
 }
 
