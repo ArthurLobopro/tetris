@@ -7,11 +7,8 @@ import { mainKeyDown } from "./Controllers"
 import { Figures } from "./Figures"
 import { Interval } from "./Interval"
 import { screens } from "./ScreenManager"
-import { gameScreenComponents } from "./Screens/GameScreen"
 import { formatPoints } from "./Util"
 import { renderAll } from "./View"
-
-const { gameCanvas, last_points_span, nextCanvas, points_span } = gameScreenComponents
 
 type spawnedFigure = { x: number, y: number } & ReturnType<typeof Figures.random>
 
@@ -40,18 +37,19 @@ class Game {
     declare status: "active" | "paused" | "inactive"
     declare moveLock: boolean
     declare isMusicOn: boolean
-    declare _velocity: keyof typeof game.velocities
+    declare _velocity: keyof typeof this.velocities
     declare atualFigure: spawnedFigure
     declare nextFigure: ReturnType<typeof Figures.random>
     declare state: { figureType?: string, type: "null" | "block" }[][]
     declare renderInterval: Interval
     declare fallInterval: Interval
+    declare screen: typeof screens["game"]
 
     get velocity() {
         return this._velocity
     }
 
-    set velocity(value: keyof typeof game.velocities) {
+    set velocity(value: keyof typeof this.velocities) {
         this._velocity = value
         this.fallInterval && (this.fallInterval.rate = this.velocities[value])
     }
@@ -60,6 +58,13 @@ class Game {
     constructor() {
         this.reset()
         this.loadUserPreferences()
+        this.screen = screens.game
+
+        this.screen.gameCanvas.width = (this.width * this.squareWidth) + this.width - 1
+        this.screen.gameCanvas.height = (this.height * this.squareWidth) + this.height - 1
+
+        this.screen.nextCanvas.width = (this.squareWidth * this.nextCanvasSize.width) + this.nextCanvasSize.width - 1
+        this.screen.nextCanvas.height = (this.squareWidth * this.nextCanvasSize.height) + this.nextCanvasSize.height - 1
     }
 
     loadUserPreferences() {
@@ -69,8 +74,8 @@ class Game {
     }
 
     reloadConfig() {
-        if (this.isMusicOn !== this.userPreferences.music) {
-            this.isMusicOn = this.userPreferences.music
+        if (this.isMusicOn !== UserPreferences.music) {
+            this.isMusicOn = UserPreferences.music
             Audios.theme.currentTime = 0
             Audios.theme.loop = true
         }
@@ -84,7 +89,6 @@ class Game {
         this.state = this.getNewState()
         this.velocity = UserPreferences.velocity
         this.lastPontuation = GameData.lastPontuation
-        last_points_span.innerText = formatPoints(this.lastPontuation)
         this.spawnFirstFigure()
         this.spawnNextFigure()
     }
@@ -218,6 +222,17 @@ class Game {
         }
     }
 
+    accelerate() {
+        if (
+            !this.moveLock && !this.collision()
+            && this.status === "active"
+        ) {
+            this.tick()
+            this.moveLock = true
+            setTimeout(() => this.moveLock = false, 1000 / this.velocities[this.velocity])
+        }
+    }
+
     get haveBlocksOnRight() {
         const { y, x, blocks } = this.atualFigure
 
@@ -268,8 +283,8 @@ class Game {
     newGame() {
         this.lastPontuation = this.points
         this.points = 0
-        points_span.innerText = formatPoints(this.points)
-        last_points_span.innerText = formatPoints(this.lastPontuation)
+        this.screen.points_span.innerText = formatPoints(this.points)
+        this.screen.last_points_span.innerText = formatPoints(this.lastPontuation)
 
         this.reset()
         this.status = "active"
@@ -335,7 +350,7 @@ class Game {
             this.addToState()
             this.spawnFigure()
         }
-        points_span.innerText = formatPoints(this.points)
+        this.screen.points_span.innerText = formatPoints(this.points)
     }
 
     verifyRecords() {
@@ -351,17 +366,4 @@ class Game {
     //#endregion
 }
 
-const game = new Game()
-
-gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
-gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
-
-nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCanvasSize.width - 1
-nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
-
-window.onload = () => {
-    screens.game.show(false)
-    screens.init.show()
-}
-
-export { game }
+export const game = new Game()

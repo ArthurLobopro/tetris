@@ -6,7 +6,7 @@ import { ThemeConfigScreen } from "./Screens/Config/Theme"
 import { VelocityConfigScreen } from "./Screens/Config/Velocity"
 import { ControlsScreen } from "./Screens/Controls"
 import { GameOverScreen } from "./Screens/GameOver"
-import { gameScreen } from "./Screens/GameScreen"
+import { GameScreen } from "./Screens/GameScreen"
 import { InitScreen } from "./Screens/Init"
 import { PauseScreen } from "./Screens/Pause"
 
@@ -15,7 +15,7 @@ const screens = {
     init: new InitScreen(),
     gameOver: new GameOverScreen(),
     pause: new PauseScreen(),
-    game: gameScreen,
+    game: new GameScreen(),
     about: new AboutScreen(),
     controls: new ControlsScreen(),
     configScreens: {

@@ -1,14 +1,9 @@
 import { game } from "./Game"
+import { screens } from "./ScreenManager"
 import { range } from "./Util"
 
 //#region Move Blocks
-const accelerate = () => {
-    if (!game.moveLock && !game.collision() && game.status === "active") {
-        game.tick()
-        game.moveLock = true
-        setTimeout(() => game.moveLock = false, 1000 / game.velocities[game.velocity])
-    }
-}
+
 
 const rotate = () => {
     const { blocks, x, y } = game.atualFigure
@@ -80,8 +75,8 @@ const rotate = () => {
 const keyDownFunctions = {
     "ArrowLeft": () => game.move("left"),
     "ArrowRight": () => game.move("right"),
-    "ArrowDown": accelerate,
-    "s": accelerate,
+    "ArrowDown": () => game.accelerate(),
+    "s": () => game.accelerate(),
     "a": () => game.move("left"),
     "d": () => game.move("right"),
     'r': rotate,
@@ -89,6 +84,11 @@ const keyDownFunctions = {
     'Escape': () => game.pause(),
 }
 
+
+window.onload = () => {
+    screens.game.show(false)
+    screens.init.show()
+}
 
 export const mainKeyDown = (event: KeyboardEvent) => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
