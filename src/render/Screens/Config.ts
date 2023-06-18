@@ -1,6 +1,6 @@
-import { game } from "../Game.js"
-import { screens } from "../ScreenManager.js"
-import { Screen } from "./Screen.js"
+import { game } from "../Game"
+import { screens } from "../ScreenManager"
+import { Screen } from "./Screen"
 
 const configs = {
     music: () => screens.configScreens.music.show(),

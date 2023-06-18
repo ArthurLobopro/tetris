@@ -1,7 +1,7 @@
-import { colors } from "./Colors.js"
-import { game } from './Game.js'
-import { gameScreenComponents } from './Screens/GameScreen.js'
-import { formatPoints, range } from './Util.js'
+import { colors } from "./Colors"
+import { game } from './Game'
+import { gameScreenComponents } from './Screens/GameScreen'
+import { formatPoints, range } from './Util'
 const { gameCanvas, nextCanvas, nextCtx, gameCtx } = gameScreenComponents
 
 //#region Next Figure Draw
