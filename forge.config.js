@@ -1,5 +1,5 @@
 const path = require("path")
-
+const { execSync } = require("child_process")
 const package = require("./package.json")
 const { version } = package
 
@@ -68,5 +68,11 @@ module.exports = {
                 draft: true
             }
         }
-    ]
+    ],
+    hooks: {
+        async generateAssets() {
+            execSync("yarn sass-compiler --compile")
+            execSync("yarn tsc")
+        }
+    }
 }
