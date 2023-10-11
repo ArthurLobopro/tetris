@@ -19,7 +19,7 @@ type figure = {
     blocks: (Block | NullBlock)[][]
 }
 
-const types: figure[] = [
+const FIGURES_TYPES: figure[] = [
     {
         name: "square",
         blocks: [
@@ -73,7 +73,7 @@ const types: figure[] = [
 
 export class Figures {
     static get types() {
-        return types
+        return FIGURES_TYPES
     }
 
     static random() {
