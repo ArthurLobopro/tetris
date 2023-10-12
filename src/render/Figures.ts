@@ -1,5 +1,5 @@
 import { colors } from "./Colors"
-import { randint } from "./Util"
+import { randint, range } from "./Util"
 
 type Block = {
     type: 'block'
@@ -90,5 +90,19 @@ export class Figures {
 
     static getFigureNames() {
         return this.types.map(figure => figure.name)
+    }
+
+    static getRotated(blocks: figure["blocks"]) {
+        const newFigure = []
+
+        for (const block of range(0, blocks[0].length)) {
+            const newLine = []
+            for (const line of range(0, blocks.length)) {
+                newLine.unshift(blocks[line][block])
+            }
+            newFigure.push(newLine)
+        }
+
+        return newFigure
     }
 }

@@ -1,25 +1,18 @@
+import { Figures } from "./Figures"
 import { game } from "./Game"
 import { screens } from "./ScreenManager"
-import { range } from "./Util"
 
 //#region Move Blocks
 
 
 const rotate = () => {
     const { blocks, x, y } = game.figures.atualFigure
-    const newFigure = []
 
-    for (const block of range(0, blocks[0].length)) {
-        const newLine = []
-        for (const line of range(0, blocks.length)) {
-            newLine.unshift(blocks[line][block])
-        }
-        newFigure.push(newLine)
-    }
+    const rotatedFigure = Figures.getRotated(blocks)
 
-    const widthDifference = blocks.length - newFigure.length
+    const widthDifference = blocks.length - rotatedFigure.length
 
-    const haveBlocksOnRight = x + newFigure[0].length > game.width || newFigure.some((line, indexY) => {
+    const haveBlocksOnRight = x + rotatedFigure[0].length > game.width || rotatedFigure.some((line, indexY) => {
         if (line[line.length - 1].type == "null") {
             return false
         }
@@ -28,13 +21,13 @@ const rotate = () => {
 
         return line.some((block, indexX) => {
             return game.state.isBlock({
-                x: x + newFigure.length + increment - indexX,
+                x: x + rotatedFigure.length + increment - indexX,
                 y: y + indexY
             })
         })
     })
 
-    const haveBlocksOnLeft = x - widthDifference < 0 || newFigure.some((line, indexY) => {
+    const haveBlocksOnLeft = x - widthDifference < 0 || rotatedFigure.some((line, indexY) => {
         if (line[0].type === "null") {
             return false
         }
@@ -60,7 +53,7 @@ const rotate = () => {
         }
     }
 
-    const haveBlocksOnDown = newFigure.some((line, indexY) => {
+    const haveBlocksOnDown = rotatedFigure.some((line, indexY) => {
         return line.some((block, indexX) => {
             if (block.type === "null") {
                 return false
@@ -75,7 +68,7 @@ const rotate = () => {
 
     if (!haveBlocksOnDown) {
         game.figures.atualFigure.x = newX
-        game.figures.atualFigure.blocks = newFigure
+        game.figures.atualFigure.blocks = rotatedFigure
     }
 }
 
