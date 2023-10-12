@@ -2,44 +2,10 @@ import { Game } from "./Game"
 
 export class GameController {
     #game: Game
-    declare moveLock: boolean
+    declare private moveLock: boolean
 
     constructor(game: Game) {
         this.#game = game
-    }
-
-    get haveBlocksOnRight() {
-        const { y, x, blocks } = this.#game.figures.atualFigure
-
-        if (x + this.#game.figures.atualFigure.blocks[0].length >= this.#game.width) {
-            return true
-        }
-
-        return blocks.some((line, indexY) => {
-            if (line[line.length - 1].type === "null") {
-                return false
-            }
-
-            return this.#game.state.isBlock({
-                x: x + line.length,
-                y: y + indexY
-            })
-        })
-    }
-
-    get haveBlocksOnLeft() {
-        const { y, x, blocks } = this.#game.figures.atualFigure
-
-        return blocks.some((line, indexY) => {
-            if (line[0].type === "null") {
-                return false
-            }
-
-            return this.#game.state.isBlock({
-                x: x - 1,
-                y: y + indexY
-            })
-        })
     }
 
     reset() {
@@ -55,15 +21,13 @@ export class GameController {
             direction === "right" && !this.haveBlocksOnRight
         ) {
             this.#game.figures.moveRight()
+            this.preventMove(100)
         }
 
         if (direction === "left" && !this.haveBlocksOnLeft && x > 0) {
             this.#game.figures.moveLeft()
+            this.preventMove(100)
         }
-
-        this.moveLock = true
-
-        setTimeout(() => this.moveLock = false, 100)
     }
 
     accelerate() {
@@ -72,8 +36,7 @@ export class GameController {
             && this.#game.status === "active"
         ) {
             this.#game.tick()
-            this.moveLock = true
-            setTimeout(() => this.moveLock = false, 1000 / this.#game.velocities[this.#game.velocity])
+            this.preventMove(1000 / this.#game.velocities[this.#game.velocity])
         }
     }
 
@@ -106,5 +69,44 @@ export class GameController {
         })
 
         return colidBlock
+    }
+
+    private get haveBlocksOnRight() {
+        const { y, x, blocks } = this.#game.figures.atualFigure
+
+        if (x + this.#game.figures.atualFigure.blocks[0].length >= this.#game.width) {
+            return true
+        }
+
+        return blocks.some((line, indexY) => {
+            if (line[line.length - 1].type === "null") {
+                return false
+            }
+
+            return this.#game.state.isBlock({
+                x: x + line.length,
+                y: y + indexY
+            })
+        })
+    }
+
+    private get haveBlocksOnLeft() {
+        const { y, x, blocks } = this.#game.figures.atualFigure
+
+        return blocks.some((line, indexY) => {
+            if (line[0].type === "null") {
+                return false
+            }
+
+            return this.#game.state.isBlock({
+                x: x - 1,
+                y: y + indexY
+            })
+        })
+    }
+
+    private preventMove(time: number) {
+        this.moveLock = true
+        setTimeout(() => this.moveLock = false, time)
     }
 }
