@@ -82,14 +82,14 @@ const rotate = () => {
 //#endregion
 
 const keyDownFunctions = {
-    "ArrowLeft": () => game.move("left"),
-    "ArrowRight": () => game.move("right"),
-    "ArrowDown": () => game.accelerate(),
-    "s": () => game.accelerate(),
-    "a": () => game.move("left"),
-    "d": () => game.move("right"),
+    "ArrowLeft": () => game.controller.move("left"),
+    "ArrowRight": () => game.controller.move("right"),
+    "ArrowDown": () => game.controller.accelerate(),
+    "s": () => game.controller.accelerate(),
+    "a": () => game.controller.move("left"),
+    "d": () => game.controller.move("right"),
     'r': rotate,
-    ' ': () => game.dropFigure(),
+    ' ': () => game.controller.dropFigure(),
     'Escape': () => game.pause(),
 }
 

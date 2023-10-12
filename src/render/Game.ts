@@ -4,6 +4,7 @@ import { UserPreferencesController as UserPreferences } from "../storage/control
 import { Audios } from "./Audio"
 import "./Controllers"
 import { mainKeyDown } from "./Controllers"
+import { GameController } from "./GameController"
 import { GameFigures } from "./GameFigures"
 import { GameState } from "./GameState"
 import { Interval } from "./Interval"
@@ -19,7 +20,7 @@ export class Game {
     pointsPerBlock = 10
 
     lastPontuation = 0
-    points = 0
+    _points = 0
     records: { points: number }[] = []
 
     velocities = {
@@ -35,7 +36,6 @@ export class Game {
 
     declare userPreferences: PreferencesSchema
     declare status: "active" | "paused" | "inactive"
-    declare moveLock: boolean
     declare isMusicOn: boolean
     declare _velocity: keyof typeof this.velocities
     declare figures: GameFigures
@@ -43,6 +43,7 @@ export class Game {
     declare fallInterval: Interval
     declare screen: typeof screens["game"]
     declare state: GameState
+    declare controller: GameController
 
     get velocity() {
         return this._velocity
@@ -53,10 +54,22 @@ export class Game {
         this.fallInterval && (this.fallInterval.rate = this.velocities[value])
     }
 
+    get points() {
+        return this._points
+    }
+
+    set points(points: number) {
+        this._points = points
+        try {
+            this.screen.points_span.innerText = formatPoints(this.points)
+        } catch (error) { }
+    }
+
     //#region Contructor methods
     constructor() {
         this.state = new GameState(this)
         this.figures = new GameFigures(this)
+        this.controller = new GameController(this)
         this.reset()
         this.loadUserPreferences()
         this.screen = screens.game
@@ -85,7 +98,7 @@ export class Game {
 
     reset() {
         this.status = "inactive"
-        this.moveLock = false
+        this.controller.reset()
         this.isMusicOn = false
         this.state.resetState()
         this.velocity = UserPreferences.velocity
@@ -97,101 +110,6 @@ export class Game {
     addPoints(points: number) {
         this.points += points
     }
-
-    //#region Collision
-    collision() {
-        const { x, y, blocks } = this.figures.atualFigure
-
-        const bottomY = y + blocks.length
-
-        if (bottomY === this.height) {
-            return true
-        }
-
-        const colidBlock = blocks.some((line, indexY) => {
-            return line.some((block, indexX) => {
-                if (block.type === "null") {
-                    return false
-                }
-
-                return this.state.isBlock({
-                    y: y + indexY + 1,
-                    x: x + indexX
-                })
-            })
-        })
-
-        return colidBlock
-    }
-
-    dropFigure() {
-        while (!this.collision()) {
-            this.tick()
-        }
-    }
-
-    accelerate() {
-        if (
-            !this.moveLock && !this.collision()
-            && this.status === "active"
-        ) {
-            this.tick()
-            this.moveLock = true
-            setTimeout(() => this.moveLock = false, 1000 / this.velocities[this.velocity])
-        }
-    }
-
-    get haveBlocksOnRight() {
-        const { y, x, blocks } = this.figures.atualFigure
-
-        return blocks.some((line, indexY) => {
-            if (line[line.length - 1].type === "null") {
-                return false
-            }
-
-            return this.state.isBlock({
-                x: x + line.length,
-                y: y + indexY
-            })
-        })
-    }
-
-    get haveBlocksOnLeft() {
-        const { y, x, blocks } = this.figures.atualFigure
-
-        return blocks.some((line, indexY) => {
-            if (line[0].type === "null") {
-                return false
-            }
-
-            return this.state.isBlock({
-                x: x - 1,
-                y: y + indexY
-            })
-        })
-    }
-
-    move(direction: "right" | "left") {
-        if (this.moveLock) return
-
-        const { x } = this.figures.atualFigure
-
-        if (
-            direction === "right" && !this.haveBlocksOnRight && x + this.figures.atualFigure.blocks[0].length <= 14
-        ) {
-            this.figures.moveRight()
-        }
-
-        if (direction === "left" && !this.haveBlocksOnLeft && x > 0) {
-            this.figures.moveLeft()
-        }
-
-        this.moveLock = true
-
-        setTimeout(() => this.moveLock = false, 100)
-    }
-
-    //#endregion
 
     //#region Game methods
     newGame() {
@@ -208,7 +126,7 @@ export class Game {
         window.onkeydown = mainKeyDown
 
         this.fallInterval = new Interval({
-            callback: this.tick.bind(this),
+            callback: () => this.tick(),
             rate: this.velocities[this.velocity]
         })
 
@@ -223,6 +141,18 @@ export class Game {
             Audios.theme.volume = UserPreferences.musicVolume
             Audios.theme.play()
             Audios.theme.loop = true
+        }
+    }
+
+    tick() {
+        if (!this.controller.collision() && this.status == "active") {
+            this.figures.down()
+        } else if (this.figures.atualFigure.y <= 0) {
+            this.gameOver()
+        } else {
+            this.figures.addFigurePoints()
+            this.state.addFigureToState()
+            this.figures.spawnFigure()
         }
     }
 
@@ -252,19 +182,6 @@ export class Game {
         GameData.lastPontuation = this.points
         screens.gameOver.reset()
         screens.gameOver.show()
-    }
-
-    tick() {
-        if (!this.collision() && this.status == "active") {
-            this.figures.down()
-        } else if (this.figures.atualFigure.y <= 0) {
-            this.gameOver()
-        } else {
-            this.figures.addFigurePoints()
-            this.state.addFigureToState()
-            this.figures.spawnFigure()
-        }
-        this.screen.points_span.innerText = formatPoints(this.points)
     }
 
     verifyRecords() {

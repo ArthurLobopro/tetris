@@ -1,8 +1,8 @@
 import { Figures } from "./Figures"
 import { Game } from "./Game"
 
-type figure = ReturnType<typeof Figures.random>
-type spawnedFigure = figure & { x: number, y: number }
+export type figure = ReturnType<typeof Figures.random>
+export type spawnedFigure = figure & { x: number, y: number }
 
 
 export class GameFigures {
