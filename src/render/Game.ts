@@ -5,6 +5,7 @@ import { Audios } from "./Audio"
 import "./Controllers"
 import { mainKeyDown } from "./Controllers"
 import { Figures } from "./Figures"
+import { GameState } from "./GameState"
 import { Interval } from "./Interval"
 import { screens } from "./ScreenManager"
 import { formatPoints } from "./Util"
@@ -12,7 +13,7 @@ import { renderAll } from "./View"
 
 type spawnedFigure = { x: number, y: number } & ReturnType<typeof Figures.random>
 
-class Game {
+export class Game {
     height = 30
     width = 15
     squareWidth = 16
@@ -40,10 +41,10 @@ class Game {
     declare _velocity: keyof typeof this.velocities
     declare atualFigure: spawnedFigure
     declare nextFigure: ReturnType<typeof Figures.random>
-    declare state: { figureType?: string, type: "null" | "block" }[][]
     declare renderInterval: Interval
     declare fallInterval: Interval
     declare screen: typeof screens["game"]
+    declare state: GameState
 
     get velocity() {
         return this._velocity
@@ -56,6 +57,7 @@ class Game {
 
     //#region Contructor methods
     constructor() {
+        this.state = new GameState(this)
         this.reset()
         this.loadUserPreferences()
         this.screen = screens.game
@@ -86,7 +88,7 @@ class Game {
         this.status = "inactive"
         this.moveLock = false
         this.isMusicOn = false
-        this.state = this.getNewState()
+        this.state.resetState()
         this.velocity = UserPreferences.velocity
         this.lastPontuation = GameData.lastPontuation
         this.spawnFirstFigure()
@@ -95,15 +97,6 @@ class Game {
     //#endregion
 
     //#region Figure methods
-    makeNullBlock(): { type: "null" } { return { type: "null" } }
-
-    makeALine() {
-        return Array.from({ length: this.width }, this.makeNullBlock)
-    }
-
-    getNewState() {
-        return Array.from({ length: this.height }, this.makeALine.bind(this))
-    }
 
     centerFigure() {
         this.atualFigure.x = Math.trunc(this.width / 2 - this.atualFigure.blocks[0].length / 2)
@@ -154,43 +147,10 @@ class Game {
         this.points += figureBlocks * this.pointsPerBlock
     }
 
-    addLinePoints() {
-        this.points += this.pointsPerBlock * this.width * 2
+    addPoints(points: number) {
+        this.points += points
     }
 
-    addToState() {
-        const { x, y, blocks, figureType } = this.atualFigure
-
-        blocks.forEach((line, indexY) => {
-            line.forEach((block, indexX) => {
-                this.state[y + indexY] = this.state[y + indexY]?.map((stateBlock, stateX) => {
-                    if ((x + indexX) == stateX && block.type === 'block') {
-                        return { ...block, figureType }
-                    }
-                    return stateBlock
-                })
-            })
-        })
-
-        this.removeLines()
-    }
-
-    removeLines() {
-        const voidLine = this.makeALine()
-
-        this.state = this.state.filter(line => {
-
-            return line.some(block => {
-                return block.type === 'null'
-            })
-
-        })
-
-        while (this.state.length < this.height) {
-            this.addLinePoints()
-            this.state.unshift(voidLine)
-        }
-    }
     //#endregion
 
     //#region Collision
@@ -209,7 +169,10 @@ class Game {
                     return false
                 }
 
-                return this.state[y + indexY + 1][x + indexX].type === 'block'
+                return this.state.isBlock({
+                    y: y + indexY + 1,
+                    x: x + indexX
+                })
             })
         })
 
@@ -241,7 +204,10 @@ class Game {
                 return false
             }
 
-            return this.state[y + indexY]?.[x + line.length]?.type === "block"
+            return this.state.isBlock({
+                x: x + line.length,
+                y: y + indexY
+            })
         })
     }
 
@@ -253,7 +219,10 @@ class Game {
                 return false
             }
 
-            return this.state[y + indexY]?.[x - 1]?.type === "block"
+            return this.state.isBlock({
+                x: x - 1,
+                y: y + indexY
+            })
         })
     }
 
@@ -347,7 +316,7 @@ class Game {
             this.gameOver()
         } else {
             this.addFigurePoints()
-            this.addToState()
+            this.state.addFigureToState()
             this.spawnFigure()
         }
         this.screen.points_span.innerText = formatPoints(this.points)

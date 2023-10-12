@@ -5,7 +5,7 @@ type Block = {
     type: 'block'
 }
 
-type NullBlock = {
+export type NullBlock = {
     type: 'null'
 }
 
