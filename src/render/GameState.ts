@@ -24,7 +24,7 @@ export class GameState {
     }
 
     isBlock({ x, y }: coords) {
-        return this._state[y][x].type === "block"
+        return this._state[y][x]?.type === "block"
     }
 
     resetState() {
