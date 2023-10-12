@@ -11,6 +11,10 @@ export class GameState {
         this.#game = game
     }
 
+    get state() {
+        return this._state
+    }
+
     private makeNullBlock(): NullBlock {
         return { type: "null" }
     }

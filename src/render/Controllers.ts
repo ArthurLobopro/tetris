@@ -27,7 +27,10 @@ const rotate = () => {
         const increment = widthDifference > 0 ? widthDifference : 0
 
         return line.some((block, indexX) => {
-            return game.state[y + indexY]?.[x + newFigure.length + increment - indexX]?.type === "block"
+            return game.state.isBlock({
+                x: x + newFigure.length + increment - indexX,
+                y: y + indexY
+            })
         })
     })
 
@@ -39,7 +42,10 @@ const rotate = () => {
         const decrement = widthDifference > 0 ? widthDifference : 0
 
         return line.some((block, indexX) => {
-            return game.state[y + indexY]?.[x - decrement + indexX]?.type === "block"
+            return game.state.isBlock({
+                x: x - decrement + indexX,
+                y: y + indexY
+            })
         })
     })
 
@@ -60,7 +66,10 @@ const rotate = () => {
                 return false
             }
 
-            return game.state[y + indexY + 1][newX + indexX].type === 'block'
+            return game.state.isBlock({
+                x: newX + indexX,
+                y: y + indexY + 1
+            })
         })
     })
 

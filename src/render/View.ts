@@ -76,7 +76,7 @@ const drawLines = () => {
 }
 
 const drawSquares = () => {
-    const { state, squareWidth, screen: { gameCtx } } = game
+    const { state: { state }, squareWidth, screen: { gameCtx } } = game
     state.forEach((line, indexY) => {
         line.forEach((block, indexX) => {
             const color = block.type === "null" ? colors.background : colors.figures[block.figureType as keyof typeof colors.figures]
