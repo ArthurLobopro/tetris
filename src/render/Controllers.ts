@@ -6,7 +6,7 @@ import { range } from "./Util"
 
 
 const rotate = () => {
-    const { blocks, x, y } = game.atualFigure
+    const { blocks, x, y } = game.figures.atualFigure
     const newFigure = []
 
     for (const block of range(0, blocks[0].length)) {
@@ -74,8 +74,8 @@ const rotate = () => {
     })
 
     if (!haveBlocksOnDown) {
-        game.atualFigure.x = newX
-        game.atualFigure.blocks = newFigure
+        game.figures.atualFigure.x = newX
+        game.figures.atualFigure.blocks = newFigure
     }
 }
 

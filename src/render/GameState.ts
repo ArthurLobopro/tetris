@@ -32,7 +32,7 @@ export class GameState {
     }
 
     addFigureToState() {
-        const { x, y, blocks, figureType } = this.#game.atualFigure
+        const { x, y, blocks, figureType } = this.#game.figures.atualFigure
 
         blocks.forEach((line, indexY) => {
             line.forEach((block, indexX) => {

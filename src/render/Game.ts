@@ -4,14 +4,13 @@ import { UserPreferencesController as UserPreferences } from "../storage/control
 import { Audios } from "./Audio"
 import "./Controllers"
 import { mainKeyDown } from "./Controllers"
-import { Figures } from "./Figures"
+import { GameFigures } from "./GameFigures"
 import { GameState } from "./GameState"
 import { Interval } from "./Interval"
 import { screens } from "./ScreenManager"
 import { formatPoints } from "./Util"
 import { renderAll } from "./View"
 
-type spawnedFigure = { x: number, y: number } & ReturnType<typeof Figures.random>
 
 export class Game {
     height = 30
@@ -39,8 +38,7 @@ export class Game {
     declare moveLock: boolean
     declare isMusicOn: boolean
     declare _velocity: keyof typeof this.velocities
-    declare atualFigure: spawnedFigure
-    declare nextFigure: ReturnType<typeof Figures.random>
+    declare figures: GameFigures
     declare renderInterval: Interval
     declare fallInterval: Interval
     declare screen: typeof screens["game"]
@@ -58,6 +56,7 @@ export class Game {
     //#region Contructor methods
     constructor() {
         this.state = new GameState(this)
+        this.figures = new GameFigures(this)
         this.reset()
         this.loadUserPreferences()
         this.screen = screens.game
@@ -91,71 +90,17 @@ export class Game {
         this.state.resetState()
         this.velocity = UserPreferences.velocity
         this.lastPontuation = GameData.lastPontuation
-        this.spawnFirstFigure()
-        this.spawnNextFigure()
+        this.figures.spawnFigure()
     }
     //#endregion
-
-    //#region Figure methods
-
-    centerFigure() {
-        this.atualFigure.x = Math.trunc(this.width / 2 - this.atualFigure.blocks[0].length / 2)
-    }
-
-    spawnFirstFigure() {
-        this.atualFigure = {
-            y: 0,
-            x: 0,
-            ...Figures.random()
-        }
-        this.centerFigure()
-    }
-
-    spawnNextFigure() {
-        this.nextFigure = {
-            ...Figures.random()
-        }
-    }
-
-    spawnFigure() {
-        const nextFigure = this.nextFigure
-        this.atualFigure = {
-            y: 0,
-            x: 0,
-            ...nextFigure
-        }
-        this.atualFigure.y = -this.atualFigure.blocks.length + 1
-        this.centerFigure()
-        this.spawnNextFigure()
-    }
-    //#endregion
-
-    //#region Game State
-    addFigurePoints() {
-        const { blocks } = this.atualFigure
-
-        let figureBlocks = 0
-
-        blocks.forEach(line => {
-            line.forEach(block => {
-                if (block.type === 'block') {
-                    figureBlocks++
-                }
-            })
-        })
-
-        this.points += figureBlocks * this.pointsPerBlock
-    }
 
     addPoints(points: number) {
         this.points += points
     }
 
-    //#endregion
-
     //#region Collision
     collision() {
-        const { x, y, blocks } = this.atualFigure
+        const { x, y, blocks } = this.figures.atualFigure
 
         const bottomY = y + blocks.length
 
@@ -197,7 +142,7 @@ export class Game {
     }
 
     get haveBlocksOnRight() {
-        const { y, x, blocks } = this.atualFigure
+        const { y, x, blocks } = this.figures.atualFigure
 
         return blocks.some((line, indexY) => {
             if (line[line.length - 1].type === "null") {
@@ -212,7 +157,7 @@ export class Game {
     }
 
     get haveBlocksOnLeft() {
-        const { y, x, blocks } = this.atualFigure
+        const { y, x, blocks } = this.figures.atualFigure
 
         return blocks.some((line, indexY) => {
             if (line[0].type === "null") {
@@ -229,16 +174,16 @@ export class Game {
     move(direction: "right" | "left") {
         if (this.moveLock) return
 
-        const { x } = this.atualFigure
+        const { x } = this.figures.atualFigure
 
         if (
-            direction === "right" && !this.haveBlocksOnRight && x + this.atualFigure.blocks[0].length <= 14
+            direction === "right" && !this.haveBlocksOnRight && x + this.figures.atualFigure.blocks[0].length <= 14
         ) {
-            this.atualFigure.x++
+            this.figures.moveRight()
         }
 
         if (direction === "left" && !this.haveBlocksOnLeft && x > 0) {
-            this.atualFigure.x--
+            this.figures.moveLeft()
         }
 
         this.moveLock = true
@@ -311,13 +256,13 @@ export class Game {
 
     tick() {
         if (!this.collision() && this.status == "active") {
-            this.atualFigure.y++
-        } else if (this.atualFigure.y <= 0) {
+            this.figures.down()
+        } else if (this.figures.atualFigure.y <= 0) {
             this.gameOver()
         } else {
-            this.addFigurePoints()
+            this.figures.addFigurePoints()
             this.state.addFigureToState()
-            this.spawnFigure()
+            this.figures.spawnFigure()
         }
         this.screen.points_span.innerText = formatPoints(this.points)
     }
