@@ -11,6 +11,10 @@ export class GameController {
     get haveBlocksOnRight() {
         const { y, x, blocks } = this.#game.figures.atualFigure
 
+        if (x + this.#game.figures.atualFigure.blocks[0].length >= this.#game.width) {
+            return true
+        }
+
         return blocks.some((line, indexY) => {
             if (line[line.length - 1].type === "null") {
                 return false
