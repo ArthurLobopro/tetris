@@ -31,15 +31,12 @@ export class GameController {
 
         const { atualFigure } = this.#game.figures
 
-        if (direction === "right" && !this.haveBlocksOnRight) {
+        if (direction === "right" && !this.simulateHasBlocksOnRight(atualFigure)) {
             this.#game.figures.moveRight()
             this.preventMove(delay(100))
         }
 
-        if (
-            direction === "left"
-            && !this.simulateHaveBlocksOnLeft(atualFigure)
-        ) {
+        if (direction === "left" && !this.simulateHasBlocksOnLeft(atualFigure)) {
             this.#game.figures.moveLeft()
             this.preventMove(delay(100))
         }
@@ -70,62 +67,44 @@ export class GameController {
             return true
         }
 
-        const colidBlock = blocks.some((line, indexY) => {
-            return line.some((block, indexX) => {
-                if (block.type === "null") {
-                    return false
-                }
-
-                return this.#game.state.isBlock({
-                    y: y + indexY + 1,
-                    x: x + indexX
-                })
-            })
-        })
-
-        return colidBlock
+        return this.simulateHasBlocksOnBottom({ x, y, blocks })
     }
 
-    private get haveBlocksOnRight() {
-        const { y, x, blocks } = this.#game.figures.atualFigure
-
+    private simulateHasBlocksOnRight({ x, y, blocks }: blocksWithCoords) {
         if (x + this.#game.figures.atualFigure.blocks[0].length >= this.#game.width) {
             return true
         }
 
-        return blocks.some((line, indexY) => {
-            if (line[line.length - 1].type === "null") {
-                return false
-            }
-
-            return this.#game.state.isBlock({
-                x: x + line.length,
-                y: y + indexY
-            })
+        return this.simulateAnyCollision({
+            x: x + 1,
+            y,
+            blocks
         })
     }
 
-    private simulateHaveBlocksOnLeft({ x, y, blocks }: blocksWithCoords) {
-        return x === 0 || blocks.some((line, indexY) => {
-            if (line[0].type === "null") {
-                return false
-            }
+    private simulateHasBlocksOnLeft({ x, y, blocks }: blocksWithCoords) {
+        return x === 0 || this.simulateAnyCollision({
+            x: x - 1,
+            y,
+            blocks
+        })
+    }
 
-            // return this.#game.state.isBlock({
-            //     x: x - 1,
-            //     y: y + indexY
-            // })
+    private simulateHasBlocksOnBottom({ x, y, blocks }: blocksWithCoords) {
+        return this.simulateAnyCollision({
+            blocks,
+            x,
+            y: y + 1
+        })
+    }
 
+    private simulateAnyCollision({ x, y, blocks }: blocksWithCoords) {
+        return blocks.some((line, indexY) => {
             return line.some((block, indexX) => {
-                const coords = {
-                    x: x - 1 + indexX,
-                    y: y + indexY
-                }
-
-                const is = this.#game.state.isBlock(coords)
-                console.log({ ...coords, is })
-
-                return is
+                return block.type === "block" && this.#game.state.isBlock({
+                    x: x + indexX,
+                    y: y + indexY,
+                })
             })
         })
     }
