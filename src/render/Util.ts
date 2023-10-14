@@ -23,3 +23,11 @@ export const range = (min: number, max: number, pass = 1) => {
 export const randint = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 
 export const formatPoints = (points: number) => String(points).padStart(4, '0')
+
+export function delay(ms: number) {
+    return new Promise(res => {
+        setTimeout(() => {
+            res(true)
+        }, ms)
+    })
+}
