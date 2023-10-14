@@ -1,4 +1,12 @@
 import { Game } from "./Game"
+import { figure } from "./GameFigures"
+import { delay } from "./Util"
+
+type blocksWithCoords = {
+    blocks: figure["blocks"]
+    x: number
+    y: number
+}
 
 export class GameController {
     #game: Game
@@ -12,17 +20,28 @@ export class GameController {
         this.moveLock = false
     }
 
+    async preventMove(time: Promise<any>) {
+        this.moveLock = true
+        await time
+        this.moveLock = false
+    }
+
     move(direction: "right" | "left") {
         if (this.moveLock) return
 
+        const { atualFigure } = this.#game.figures
+
         if (direction === "right" && !this.haveBlocksOnRight) {
             this.#game.figures.moveRight()
-            this.preventMove(100)
+            this.preventMove(delay(100))
         }
 
-        if (direction === "left" && !this.haveBlocksOnLeft) {
+        if (
+            direction === "left"
+            && !this.simulateHaveBlocksOnLeft(atualFigure)
+        ) {
             this.#game.figures.moveLeft()
-            this.preventMove(100)
+            this.preventMove(delay(100))
         }
     }
 
@@ -32,7 +51,7 @@ export class GameController {
             && this.#game.status === "active"
         ) {
             this.#game.tick()
-            this.preventMove(1000 / this.#game.velocities[this.#game.velocity])
+            this.preventMove(delay(1000 / this.#game.velocities[this.#game.velocity]))
         }
     }
 
@@ -86,23 +105,28 @@ export class GameController {
         })
     }
 
-    private get haveBlocksOnLeft() {
-        const { y, x, blocks } = this.#game.figures.atualFigure
-
+    private simulateHaveBlocksOnLeft({ x, y, blocks }: blocksWithCoords) {
         return x === 0 || blocks.some((line, indexY) => {
             if (line[0].type === "null") {
                 return false
             }
 
-            return this.#game.state.isBlock({
-                x: x - 1,
-                y: y + indexY
+            // return this.#game.state.isBlock({
+            //     x: x - 1,
+            //     y: y + indexY
+            // })
+
+            return line.some((block, indexX) => {
+                const coords = {
+                    x: x - 1 + indexX,
+                    y: y + indexY
+                }
+
+                const is = this.#game.state.isBlock(coords)
+                console.log({ ...coords, is })
+
+                return is
             })
         })
-    }
-
-    private preventMove(time: number) {
-        this.moveLock = true
-        setTimeout(() => this.moveLock = false, time)
     }
 }
