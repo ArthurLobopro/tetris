@@ -2,62 +2,57 @@ import { Figures } from "./Figures"
 import { game } from "./Game"
 import { screens } from "./ScreenManager"
 
-//#region Move Blocks
-
-
-const rotate = () => {
+function rotate() {
     const { blocks, x, y } = game.figures.atualFigure
 
     const rotatedFigure = Figures.getRotated(blocks)
 
     const widthDifference = blocks.length - rotatedFigure.length
 
-    const haveBlocksOnRight = x + rotatedFigure[0].length > game.width || rotatedFigure.some((line, indexY) => {
-        if (line[line.length - 1].type == "null") {
-            return false
-        }
+    function simulateHaveBlocksOnRight() {
+        return x + rotatedFigure[0].length >= game.width || rotatedFigure.some((line, indexY) => {
+            if (line.at(-1)?.type == "null") {
+                return false
+            }
 
-        const increment = widthDifference > 0 ? widthDifference : 0
+            const increment = widthDifference > 0 ? widthDifference : 0
 
-        return line.some((block, indexX) => {
-            return game.state.isBlock({
-                x: x + rotatedFigure.length + increment - indexX,
-                y: y + indexY
+            return line.some((block, indexX) => {
+                return game.state.isBlock({
+                    x: x + rotatedFigure.length + increment - indexX,
+                    y: y + indexY
+                })
             })
         })
-    })
-
-    const haveBlocksOnLeft = x - widthDifference < 0 || rotatedFigure.some((line, indexY) => {
-        if (line[0].type === "null") {
-            return false
-        }
-
-        const decrement = widthDifference > 0 ? widthDifference : 0
-
-        return line.some((block, indexX) => {
-            return game.state.isBlock({
-                x: x - decrement + indexX,
-                y: y + indexY
-            })
-        })
-    })
-
-    let newX = x
-
-    if (haveBlocksOnRight) {
-        console.log(haveBlocksOnLeft)
-        if (!haveBlocksOnLeft) {
-            newX = x - widthDifference
-        } else {
-            return
-        }
     }
+
+    function simulateHaveBlocksOnLeft() {
+        return x - widthDifference < 0 || rotatedFigure.some((line, indexY) => {
+            if (line[0].type === "null") return false
+
+            const decrement = widthDifference > 0 ? widthDifference : 0
+
+            return line.some((block, indexX) => {
+                return game.state.isBlock({
+                    x: x - decrement + indexX,
+                    y: y + indexY
+                })
+            })
+        })
+    }
+
+    const haveBlocksOnRight = simulateHaveBlocksOnRight()
+    const haveBlocksOnLeft = simulateHaveBlocksOnLeft()
+
+    if (haveBlocksOnLeft && haveBlocksOnRight) {
+        return
+    }
+
+    const newX = haveBlocksOnRight ? x - widthDifference : x
 
     const haveBlocksOnDown = rotatedFigure.some((line, indexY) => {
         return line.some((block, indexX) => {
-            if (block.type === "null") {
-                return false
-            }
+            if (block.type === "null") return false
 
             return game.state.isBlock({
                 x: newX + indexX,
@@ -71,8 +66,6 @@ const rotate = () => {
         game.figures.atualFigure.blocks = rotatedFigure
     }
 }
-
-//#endregion
 
 const keyDownFunctions = {
     "ArrowLeft": () => game.controller.move("left"),
