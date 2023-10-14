@@ -24,7 +24,8 @@ export class GameState {
     }
 
     isBlock({ x, y }: coords) {
-        return this._state[y][x].type === "block"
+        // y < 0 means the figure is spawning
+        return y > 0 && this._state[y][x].type === "block"
     }
 
     resetState() {
