@@ -29,35 +29,32 @@ export class GameFigures {
     addFigurePoints() {
         const { blocks } = this.atualFigure
 
-        let figureBlocks = 0
-
-        blocks.forEach(line => {
-            line.forEach(block => {
-                if (block.type === 'block') {
-                    figureBlocks++
-                }
-            })
-        })
+        const figureBlocks = blocks.flat().filter(block => block.type === 'block').length
 
         this.#game.addPoints(figureBlocks * this.#game.pointsPerBlock)
     }
 
     spawnFigure() {
-        this.atualFigure = {
-            y: 0,
-            x: 0,
-            ...(this.nextFigure ? this.nextFigure : Figures.random())
-        }
-        this.atualFigure.y = -this.atualFigure.blocks.length + 1
-        this.centerFigure()
-        this.spawnNextFigure()
+        this.#game.controller.preventMove(new Promise(res => {
+            this.atualFigure = {
+                y: 0,
+                x: 0,
+                ...(this.nextFigure ? this.nextFigure : Figures.random())
+            }
+
+            this.atualFigure.y = -this.atualFigure.blocks.length + 1
+            this.centerFigure()
+            this.spawnNextFigure()
+
+            res(true)
+        }))
     }
 
-    centerFigure() {
+    private centerFigure() {
         this.atualFigure.x = Math.trunc(this.#game.width / 2 - this.atualFigure.blocks[0].length / 2)
     }
 
-    spawnNextFigure() {
+    private spawnNextFigure() {
         this.nextFigure = {
             ...Figures.random()
         }
