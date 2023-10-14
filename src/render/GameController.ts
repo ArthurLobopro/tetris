@@ -15,16 +15,12 @@ export class GameController {
     move(direction: "right" | "left") {
         if (this.moveLock) return
 
-        const { x } = this.#game.figures.atualFigure
-
-        if (
-            direction === "right" && !this.haveBlocksOnRight
-        ) {
+        if (direction === "right" && !this.haveBlocksOnRight) {
             this.#game.figures.moveRight()
             this.preventMove(100)
         }
 
-        if (direction === "left" && !this.haveBlocksOnLeft && x > 0) {
+        if (direction === "left" && !this.haveBlocksOnLeft) {
             this.#game.figures.moveLeft()
             this.preventMove(100)
         }
@@ -93,7 +89,7 @@ export class GameController {
     private get haveBlocksOnLeft() {
         const { y, x, blocks } = this.#game.figures.atualFigure
 
-        return blocks.some((line, indexY) => {
+        return x === 0 || blocks.some((line, indexY) => {
             if (line[0].type === "null") {
                 return false
             }
