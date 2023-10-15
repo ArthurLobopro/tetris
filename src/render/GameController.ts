@@ -1,3 +1,4 @@
+import { Figures } from "./Figures"
 import { Game } from "./Game"
 import { figure } from "./GameFigures"
 import { delay } from "./Util"
@@ -39,6 +40,35 @@ export class GameController {
         if (direction === "left" && !this.simulateHasBlocksOnLeft(atualFigure)) {
             this.#game.figures.moveLeft()
             this.preventMove(delay(100))
+        }
+    }
+
+    rotate() {
+        const { blocks, x, y } = this.#game.figures.atualFigure
+
+        const rotatedFigure = Figures.getRotated(blocks)
+        const widthDifference = blocks.length - rotatedFigure.length
+
+        const hasCollision = (
+            x + rotatedFigure[0].length >= this.#game.width
+            || this.simulateAnyCollision({
+                x,
+                y,
+                blocks: rotatedFigure
+            })
+        )
+
+        const newX = hasCollision ? x - widthDifference : x
+
+        const stillHasCollision = this.simulateAnyCollision({
+            x: newX,
+            y,
+            blocks: rotatedFigure
+        })
+
+        if (!stillHasCollision) {
+            this.#game.figures.atualFigure.x = newX
+            this.#game.figures.atualFigure.blocks = rotatedFigure
         }
     }
 

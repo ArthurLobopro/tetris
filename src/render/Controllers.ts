@@ -1,71 +1,5 @@
-import { Figures } from "./Figures"
 import { game } from "./Game"
 import { screens } from "./ScreenManager"
-
-function rotate() {
-    const { blocks, x, y } = game.figures.atualFigure
-
-    const rotatedFigure = Figures.getRotated(blocks)
-
-    const widthDifference = blocks.length - rotatedFigure.length
-
-    function simulateHaveBlocksOnRight() {
-        return x + rotatedFigure[0].length >= game.width || rotatedFigure.some((line, indexY) => {
-            if (line.at(-1)?.type == "null") {
-                return false
-            }
-
-            const increment = widthDifference > 0 ? widthDifference : 0
-
-            return line.some((block, indexX) => {
-                return game.state.isBlock({
-                    x: x + rotatedFigure.length + increment - indexX,
-                    y: y + indexY
-                })
-            })
-        })
-    }
-
-    function simulateHaveBlocksOnLeft() {
-        return x - widthDifference < 0 || rotatedFigure.some((line, indexY) => {
-            if (line[0].type === "null") return false
-
-            const decrement = widthDifference > 0 ? widthDifference : 0
-
-            return line.some((block, indexX) => {
-                return game.state.isBlock({
-                    x: x - decrement + indexX,
-                    y: y + indexY
-                })
-            })
-        })
-    }
-
-    const haveBlocksOnRight = simulateHaveBlocksOnRight()
-    const haveBlocksOnLeft = simulateHaveBlocksOnLeft()
-
-    if (haveBlocksOnLeft && haveBlocksOnRight) {
-        return
-    }
-
-    const newX = haveBlocksOnRight ? x - widthDifference : x
-
-    const haveBlocksOnDown = rotatedFigure.some((line, indexY) => {
-        return line.some((block, indexX) => {
-            if (block.type === "null") return false
-
-            return game.state.isBlock({
-                x: newX + indexX,
-                y: y + indexY + 1
-            })
-        })
-    })
-
-    if (!haveBlocksOnDown) {
-        game.figures.atualFigure.x = newX
-        game.figures.atualFigure.blocks = rotatedFigure
-    }
-}
 
 const keyDownFunctions = {
     "ArrowLeft": () => game.controller.move("left"),
@@ -74,11 +8,10 @@ const keyDownFunctions = {
     "s": () => game.controller.accelerate(),
     "a": () => game.controller.move("left"),
     "d": () => game.controller.move("right"),
-    'r': rotate,
+    'r': () => game.controller.rotate(),
     ' ': () => game.controller.dropFigure(),
     'Escape': () => game.pause(),
 }
-
 
 window.onload = () => {
     screens.game.show(false)
