@@ -83,9 +83,13 @@ export class GameController {
     }
 
     dropFigure() {
-        while (!this.collision()) {
-            this.#game.tick()
-        }
+        this.preventMove(new Promise(res => {
+            while (!this.collision()) {
+                this.#game.tick()
+            }
+
+            res(true)
+        }))
     }
 
     collision() {
