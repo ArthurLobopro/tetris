@@ -1,7 +1,5 @@
-import { NullBlock } from "./Figures"
+import { NullBlock, coords } from "./Figures"
 import { Game } from "./Game"
-
-type coords = { x: number, y: number }
 
 export class GameState {
     declare private _state: { figureType?: string, type: "null" | "block" }[][]
@@ -33,7 +31,7 @@ export class GameState {
     }
 
     addFigureToState() {
-        const { x, y, blocks, figureType } = this.#game.figures.atualFigure
+        const { x, y, figure: { blocks, figureType } } = this.#game.figures.atualFigure
 
         blocks.forEach((line, indexY) => {
             line.forEach((block, indexX) => {
@@ -53,11 +51,7 @@ export class GameState {
         const voidLine = this.makeALine()
 
         this._state = this._state.filter(line => {
-
-            return line.some(block => {
-                return block.type === 'null'
-            })
-
+            return line.some(block => block.type === 'null')
         })
 
         while (this._state.length < this.#game.height) {

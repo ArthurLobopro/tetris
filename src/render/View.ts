@@ -7,7 +7,7 @@ const drawNextFigure = () => {
     const {
         squareWidth,
         screen: { nextCtx },
-        figures: { nextFigure: { blocks, figureType } },
+        figures: { nextFigure: { figure: { blocks, figureType } } },
         nextCanvasSize: { width, height }
     } = game
 
@@ -92,7 +92,7 @@ const drawSquares = () => {
 const drawAtualFigure = () => {
     const {
         squareWidth,
-        figures: { atualFigure: { blocks, figureType, x, y } },
+        figures: { atualFigure: { x, y, figure: { blocks, figureType } } },
         screen: { gameCtx }
     } = game
 

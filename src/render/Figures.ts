@@ -14,9 +14,11 @@ const block: Block = { type: 'block' }
 
 export type figureName = "square" | "stick" | "z" | "reverse-z" | "reverse-L" | "L" | "T"
 
+export type blocks = (Block | NullBlock)[][]
+
 type figure = {
     name: figureName,
-    blocks: (Block | NullBlock)[][]
+    blocks: blocks
 }
 
 const FIGURES_TYPES: figure[] = [
@@ -45,7 +47,6 @@ const FIGURES_TYPES: figure[] = [
         blocks: [
             [null_block, block, block],
             [block, block, null_block]
-
         ]
     },
     {
@@ -104,5 +105,74 @@ export class Figures {
         }
 
         return newFigure
+    }
+}
+
+export interface coords {
+    x: number
+    y: number
+}
+
+export class Figure {
+    declare x: number
+    declare y: number
+    declare figure: ReturnType<typeof Figures.random>
+
+    constructor() {
+        this.x = 0
+        this.y = 0
+        this.figure = Figures.random()
+    }
+
+    get width() {
+        return this.figure.blocks[0].length
+    }
+
+    get height() {
+        return this.figure.blocks.length
+    }
+
+    get blocks() {
+        return this.figure.blocks
+    }
+
+    getRotated() {
+        const blocks = []
+
+        for (const block of range(0, this.width)) {
+            const newLine = []
+            for (const line of range(0, this.height)) {
+                newLine.unshift(this.figure.blocks[line][block])
+            }
+            blocks.push(newLine)
+        }
+
+        return new Figure().turnInto({
+            ...this.figure,
+            blocks
+        })
+    }
+
+    turnInto(figure: ReturnType<typeof Figures.random>) {
+        this.figure = figure
+
+        return this
+    }
+
+    turnIntoRandom() {
+        return this.turnInto(Figures.random())
+    }
+
+    setCoords({ x, y }: Partial<coords>) {
+        if (x) this.x = x
+        if (y) this.y = y
+
+        return this
+    }
+
+    resetCoords() {
+        this.setCoords({ x: 0, y: 0 })
+
+        return this
     }
 }

@@ -1,4 +1,3 @@
-import { Figures } from "./Figures"
 import { Game } from "./Game"
 import { figure } from "./GameFigures"
 import { delay } from "./Util"
@@ -44,17 +43,17 @@ export class GameController {
     }
 
     rotate() {
-        const { blocks, x, y } = this.#game.figures.atualFigure
+        const { atualFigure, atualFigure: { x, y } } = this.#game.figures
 
-        const rotatedFigure = Figures.getRotated(blocks)
-        const widthDifference = blocks.length - rotatedFigure.length
+        const rotatedFigure = atualFigure.getRotated()
+        const widthDifference = atualFigure.width - rotatedFigure.width
 
         const hasCollision = (
-            x + rotatedFigure[0].length >= this.#game.width
+            x + rotatedFigure.width >= this.#game.width
             || this.simulateAnyCollision({
                 x,
                 y,
-                blocks: rotatedFigure
+                blocks: rotatedFigure.figure.blocks
             })
         )
 
@@ -63,12 +62,13 @@ export class GameController {
         const stillHasCollision = this.simulateAnyCollision({
             x: newX,
             y,
-            blocks: rotatedFigure
+            blocks: rotatedFigure.figure.blocks
         })
 
         if (!stillHasCollision) {
-            this.#game.figures.atualFigure.x = newX
-            this.#game.figures.atualFigure.blocks = rotatedFigure
+            this.#game.figures.atualFigure
+                .turnInto(rotatedFigure.figure)
+                .setCoords({ x: newX })
         }
     }
 
@@ -122,9 +122,9 @@ export class GameController {
 
     private simulateHasBlocksOnBottom({ x, y, blocks }: blocksWithCoords) {
         return this.simulateAnyCollision({
-            blocks,
             x,
-            y: y + 1
+            y: y + 1,
+            blocks
         })
     }
 
