@@ -105,11 +105,7 @@ export class GameController {
     }
 
     private simulateHasBlocksOnRight({ x, y, blocks }: blocksWithCoords) {
-        if (x + this.#game.figures.atualFigure.blocks[0].length >= this.#game.width) {
-            return true
-        }
-
-        return this.simulateAnyCollision({
+        return x + blocks[0].length >= this.#game.width || this.simulateAnyCollision({
             x: x + 1,
             y,
             blocks
