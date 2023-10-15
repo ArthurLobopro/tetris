@@ -6,7 +6,7 @@ export class GameScreen extends Screen {
         this.reset()
     }
 
-    buildFunction() {
+    build() {
         const gameScreen = document.createElement('div')
         gameScreen.id = "tela"
         gameScreen.innerHTML = `

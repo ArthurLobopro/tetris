@@ -8,7 +8,7 @@ export class AboutScreen extends Screen {
         this.reset()
     }
 
-    buildFunction() {
+    build() {
         const aboutScreen = document.createElement('div')
         aboutScreen.className = "telas-wrapper"
         aboutScreen.innerHTML = `

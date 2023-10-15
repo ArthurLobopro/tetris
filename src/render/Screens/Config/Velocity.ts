@@ -4,7 +4,7 @@ import { screens } from "../../ScreenManager"
 import { ConfigScreenBase } from "../Screen"
 
 export class VelocityConfigScreen extends ConfigScreenBase {
-    buildFunction() {
+    build() {
         const { velocity } = UserPreferences
         const configTemp = UserPreferences.get()
 

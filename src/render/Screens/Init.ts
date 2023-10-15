@@ -9,7 +9,7 @@ export class InitScreen extends Screen {
         this.reset()
     }
 
-    buildFunction() {
+    build() {
         const initScreen = document.createElement('div')
         initScreen.className = "telas-wrapper"
         initScreen.innerHTML = `

@@ -7,7 +7,7 @@ import { FiguresViewer } from "./figuresViewer"
 export class ThemeConfigScreen extends ConfigScreenBase {
     declare updateColors: () => void
 
-    buildFunction() {
+    build() {
         let tempTheme = UserPreferences.theme
 
         const themeScreen = document.createElement('div')

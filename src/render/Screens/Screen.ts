@@ -7,7 +7,7 @@ type key = keyof typeof navigation
 export abstract class Screen {
     declare screen: HTMLElement
 
-    abstract buildFunction(): HTMLElement
+    abstract build(): HTMLElement
 
     addNavigation() {
         window.onkeydown = event => navigation[event.key as key]?.(this.screen)
@@ -18,7 +18,7 @@ export abstract class Screen {
     }
 
     reset() {
-        this.screen = this.buildFunction()
+        this.screen = this.build()
     }
 
     show(navigation = true) {

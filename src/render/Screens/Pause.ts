@@ -8,7 +8,7 @@ export class PauseScreen extends Screen {
         this.reset()
     }
 
-    buildFunction() {
+    build() {
         const pauseScreen = document.createElement('div')
         pauseScreen.id = "pause-wrapper"
         pauseScreen.innerHTML = `

@@ -8,7 +8,7 @@ export class ControlsScreen extends Screen {
 
     declare afterScreen?: Screen
 
-    buildFunction() {
+    build() {
         const constrols_screen = document.createElement("div")
         constrols_screen.className = "telas-wrapper"
         constrols_screen.innerHTML = `

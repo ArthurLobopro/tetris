@@ -4,7 +4,7 @@ import { screens } from "../../ScreenManager"
 import { ConfigScreenBase } from "../Screen"
 
 export class MusicConfigScreen extends ConfigScreenBase {
-    buildFunction() {
+    build() {
         const configTemp = UserPreferences.get()
 
         const saveConfig = () => {

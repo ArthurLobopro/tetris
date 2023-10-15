@@ -9,7 +9,7 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
         super()
     }
 
-    buildFunction() {
+    build() {
         const colors = Themes.custom
 
         const resetBackground = () => colors.background = Themes.custom.background
