@@ -1,6 +1,6 @@
 import { ThemeSchema } from "../../../storage/StoreSchemas"
 import { Figures, figureName } from "../../Figures"
-import { game } from "../../Game"
+import { game } from "../../Game/Game"
 import { range } from "../../Util"
 
 export class FiguresViewer {

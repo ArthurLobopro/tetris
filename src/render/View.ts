@@ -1,5 +1,5 @@
 import { colors } from "./Colors"
-import { game } from './Game'
+import { game } from './Game/Game'
 import { formatPoints, range } from './Util'
 
 //#region Next Figure Draw

@@ -1,4 +1,4 @@
-import { Figure, Figures } from "./Figures"
+import { Figure, Figures } from "../Figures"
 import { Game } from "./Game"
 
 export type figure = ReturnType<typeof Figures.random>

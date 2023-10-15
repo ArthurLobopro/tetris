@@ -1,4 +1,4 @@
-import { NullBlock, coords } from "./Figures"
+import { NullBlock, coords } from "../Figures"
 import { Game } from "./Game"
 
 export class GameState {

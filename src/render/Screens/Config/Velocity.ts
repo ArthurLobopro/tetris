@@ -1,5 +1,5 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { game } from "../../Game"
+import { game } from "../../Game/Game"
 import { screens } from "../../ScreenManager"
 import { ConfigScreenBase } from "../Screen"
 

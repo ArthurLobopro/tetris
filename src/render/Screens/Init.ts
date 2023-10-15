@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron"
-import { game } from "../Game"
+import { game } from "../Game/Game"
 import { screens } from "../ScreenManager"
 import { Screen } from "./Screen"
 

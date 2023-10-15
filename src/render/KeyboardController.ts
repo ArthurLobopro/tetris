@@ -1,4 +1,4 @@
-import { game } from "./Game"
+import { game } from "./Game/Game"
 import { screens } from "./ScreenManager"
 
 const keyDownFunctions = {

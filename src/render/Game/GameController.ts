@@ -1,6 +1,6 @@
+import { delay } from "../Util"
 import { Game } from "./Game"
 import { figure } from "./GameFigures"
-import { delay } from "./Util"
 
 type blocksWithCoords = {
     blocks: figure["blocks"]

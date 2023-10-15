@@ -1,4 +1,4 @@
-import { game } from '../Game'
+import { game } from '../Game/Game'
 import { Screen } from './Screen'
 
 export class GameOverScreen extends Screen {
