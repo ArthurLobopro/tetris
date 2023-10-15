@@ -2,12 +2,12 @@ import { PreferencesSchema } from "../storage/StoreSchemas"
 import { GameDataController as GameData } from "../storage/controllers/GameData"
 import { UserPreferencesController as UserPreferences } from "../storage/controllers/UserPreferences"
 import { Audios } from "./Audio"
-import "./Controllers"
-import { mainKeyDown } from "./Controllers"
 import { GameController } from "./GameController"
 import { GameFigures } from "./GameFigures"
 import { GameState } from "./GameState"
 import { Interval } from "./Interval"
+import "./KeyboardController"
+import { mainKeyDown } from "./KeyboardController"
 import { screens } from "./ScreenManager"
 import { formatPoints } from "./Util"
 import { renderAll } from "./View"
@@ -65,7 +65,6 @@ export class Game {
         } catch (error) { }
     }
 
-    //#region Contructor methods
     constructor() {
         this.state = new GameState(this)
         this.figures = new GameFigures(this)
@@ -105,7 +104,6 @@ export class Game {
         this.lastPontuation = GameData.lastPontuation
         this.figures.spawnFigure()
     }
-    //#endregion
 
     addPoints(points: number) {
         this.points += points
