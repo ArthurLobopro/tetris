@@ -5,5 +5,5 @@ window.addEventListener("DOMContentLoaded", () => {
     NunitoFont.inject()
     PressStart2PFont.inject()
 
-    require("../render/Game")
+    require("../render/Game/Game")
 })

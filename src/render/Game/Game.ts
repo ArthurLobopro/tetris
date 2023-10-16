@@ -6,12 +6,12 @@ import { Interval } from "../Interval"
 import "../KeyboardController"
 import { mainKeyDown } from "../KeyboardController"
 import { screens } from "../ScreenManager"
+import { GameScreen } from "../Screens/GameScreen"
 import { formatPoints } from "../Util"
-import { renderAll } from "../View"
 import { GameController } from "./GameController"
 import { GameFigures } from "./GameFigures"
+import { GameRenderer } from "./GameRenderer"
 import { GameState } from "./GameState"
-
 
 export class Game {
     height = 30
@@ -41,9 +41,14 @@ export class Game {
     declare figures: GameFigures
     declare renderInterval: Interval
     declare fallInterval: Interval
-    declare screen: typeof screens["game"]
     declare state: GameState
     declare controller: GameController
+    declare renderer: GameRenderer
+    screen: GameScreen
+
+    // get screen() {
+    //     return screens.game
+    // }
 
     get velocity() {
         return this._velocity
@@ -69,15 +74,11 @@ export class Game {
         this.state = new GameState(this)
         this.figures = new GameFigures(this)
         this.controller = new GameController(this)
-        this.reset()
-        this.loadUserPreferences()
+        this.renderer = new GameRenderer(this)
         this.screen = screens.game
-
-        this.screen.gameCanvas.width = (this.width * this.squareWidth) + this.width - 1
-        this.screen.gameCanvas.height = (this.height * this.squareWidth) + this.height - 1
-
-        this.screen.nextCanvas.width = (this.squareWidth * this.nextCanvasSize.width) + this.nextCanvasSize.width - 1
-        this.screen.nextCanvas.height = (this.squareWidth * this.nextCanvasSize.height) + this.nextCanvasSize.height - 1
+        this.screen.updateDimensions(this)
+        this.loadUserPreferences()
+        this.reset()
     }
 
     loadUserPreferences() {
@@ -103,13 +104,13 @@ export class Game {
         this.velocity = UserPreferences.velocity
         this.lastPontuation = GameData.lastPontuation
         this.figures.spawnFigure()
+        this.screen.updateRecords(this.records)
     }
 
     addPoints(points: number) {
         this.points += points
     }
 
-    //#region Game methods
     newGame() {
         this.lastPontuation = this.points
         this.points = 0
@@ -119,7 +120,7 @@ export class Game {
         this.reset()
         this.status = "active"
 
-        renderAll()
+        this.renderer.render()
 
         window.onkeydown = mainKeyDown
 
@@ -129,7 +130,7 @@ export class Game {
         })
 
         this.renderInterval = new Interval({
-            callback: renderAll,
+            callback: () => this.renderer.render(),
             rate: 60
         })
 
@@ -192,7 +193,6 @@ export class Game {
             GameData.records = this.records
         }
     }
-    //#endregion
 }
 
 export const game = new Game()

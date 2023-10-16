@@ -1,8 +1,8 @@
-import { NullBlock, coords } from "../Figures"
+import { NullBlock, coords, figureName } from "../Figures"
 import { Game } from "./Game"
 
 export class GameState {
-    declare private _state: { figureType?: string, type: "null" | "block" }[][]
+    declare private _state: { figureType?: figureName, type: "null" | "block" }[][]
     #game: Game
 
     constructor(game: Game) {
