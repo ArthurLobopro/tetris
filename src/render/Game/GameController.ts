@@ -27,18 +27,18 @@ export class GameController {
     }
 
     move(direction: "right" | "left") {
-        if (this.moveLock) return
+        if (!this.moveLock) {
+            const { atualFigure } = this.#game.figures
 
-        const { atualFigure } = this.#game.figures
+            if (direction === "right" && !this.simulateHasBlocksOnRight(atualFigure)) {
+                this.#game.figures.moveRight()
+                this.preventMove(delay(100))
+            }
 
-        if (direction === "right" && !this.simulateHasBlocksOnRight(atualFigure)) {
-            this.#game.figures.moveRight()
-            this.preventMove(delay(100))
-        }
-
-        if (direction === "left" && !this.simulateHasBlocksOnLeft(atualFigure)) {
-            this.#game.figures.moveLeft()
-            this.preventMove(delay(100))
+            if (direction === "left" && !this.simulateHasBlocksOnLeft(atualFigure)) {
+                this.#game.figures.moveLeft()
+                this.preventMove(delay(100))
+            }
         }
     }
 
@@ -93,15 +93,7 @@ export class GameController {
     }
 
     collision() {
-        const { x, y, blocks } = this.#game.figures.atualFigure
-
-        const bottomY = y + blocks.length
-
-        if (bottomY === this.#game.height) {
-            return true
-        }
-
-        return this.simulateHasBlocksOnBottom({ x, y, blocks })
+        return this.simulateHasBlocksOnBottom(this.#game.figures.atualFigure)
     }
 
     private simulateHasBlocksOnRight({ x, y, blocks }: blocksWithCoords) {
@@ -121,7 +113,9 @@ export class GameController {
     }
 
     private simulateHasBlocksOnBottom({ x, y, blocks }: blocksWithCoords) {
-        return this.simulateAnyCollision({
+        const bottomY = y + blocks.length
+
+        return bottomY === this.#game.height || this.simulateAnyCollision({
             x,
             y: y + 1,
             blocks
