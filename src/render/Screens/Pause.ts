@@ -9,15 +9,15 @@ export class PauseScreen extends DynamicGameBasedScreen {
         <fieldset id="pause">
             <legend>Pause</legend>
             <div class="button-wrapper">
-                <button data-type="continue" class="focus">CONTINUAR</button>
-                <button data-type="config">CONFIGURAÇÕES</button>
-                <button data-type="controls">CONTROLES</button>
-                <button data-type="new-game">NOVO JOGO</button>
-                <button data-type="go-to-init">IR PARA O INICIO</button>
+                <button data-action="continue" class="focus">CONTINUAR</button>
+                <button data-action="config">CONFIGURAÇÕES</button>
+                <button data-action="controls">CONTROLES</button>
+                <button data-action="new-game">NOVO JOGO</button>
+                <button data-action="go-to-init">IR PARA O INICIO</button>
             </div>
         </fieldset>`
 
-        const functions = {
+        const actions = {
             continue: () => {
                 this.close()
                 this.game.continueGame()
@@ -43,12 +43,12 @@ export class PauseScreen extends DynamicGameBasedScreen {
 
         const buttons = pauseScreen.querySelectorAll('button')
 
-        type key = keyof typeof functions
+        type key = keyof typeof actions
 
         buttons.forEach(button => {
             button.onclick = () => {
-                const { type } = button.dataset
-                functions[type as key]()
+                const { action } = button.dataset
+                actions[action as key]()
             }
         })
 
