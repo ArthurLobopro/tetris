@@ -12,22 +12,6 @@ import { InitScreen } from "./Screens/Init"
 import { PauseScreen } from "./Screens/Pause"
 import { Screen } from "./Screens/Screen"
 
-// const screens = {
-//     config: new ConfigScreen(),
-//     init: new InitScreen(),
-//     gameOver: new GameOverScreen(),
-//     pause: new PauseScreen(),
-//     game: new GameScreen(),
-//     about: new AboutScreen(),
-//     controls: new ControlsScreen(),
-//     configScreens: {
-//         music: new MusicConfigScreen(),
-//         velocity: new VelocityConfigScreen(),
-//         theme: new ThemeConfigScreen(),
-//         customTheme: new CustomThemeConfigScreen()
-//     }
-// }
-
 interface Screens {
     config: ConfigScreen
     init: InitScreen
@@ -71,7 +55,6 @@ export class ScreenManager {
         this._lastScreen = this._atualScreen
         this._atualScreen = screen
         console.log(screen)
-
     }
 
     get lastScreen() {
