@@ -1,12 +1,15 @@
 import { ipcRenderer } from "electron"
-import { game } from "../Game/Game"
-import { screens } from "../ScreenManager"
+import { Game } from "../Game/Game"
+import { ScreenManager } from "../ScreenManager"
 import { Screen } from "./Screen"
 
 export class InitScreen extends Screen {
-    constructor() {
+    #game: Game
+
+    constructor(game: Game) {
         super()
         this.reset()
+        this.#game = game
     }
 
     build() {
@@ -27,12 +30,13 @@ export class InitScreen extends Screen {
         const functions = {
             start: () => {
                 this.close()
-                game.newGame()
+                ScreenManager.screens.game.show()
+                this.#game.newGame()
             },
 
-            config: () => screens.config.show(this),
-            controls: () => screens.controls.show(screens.init),
-            about: () => screens.about.show(),
+            config: () => ScreenManager.screens.config.show(this),
+            controls: () => ScreenManager.screens.controls.show(this),
+            about: () => ScreenManager.screens.about.show(),
             exit: () => ipcRenderer.send('close')
         }
 

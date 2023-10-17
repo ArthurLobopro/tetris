@@ -1,13 +1,7 @@
-import { Game } from "../Game/Game"
 import { formatPoints } from "../Util"
-import { Screen } from "./Screen"
+import { DynamicGameBasedScreen } from "./Screen"
 
-export class GameScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
-
+export class GameScreen extends DynamicGameBasedScreen {
     build() {
         const gameScreen = document.createElement('div')
         gameScreen.id = "tela"
@@ -33,7 +27,9 @@ export class GameScreen extends Screen {
         return gameScreen
     }
 
-    updateRecords(records: { points: number }[]) {
+    updateRecords() {
+        const { records } = this.game
+
         const medals = [
             "../assets/medals/1.png",
             "../assets/medals/2.png",
@@ -54,7 +50,15 @@ export class GameScreen extends Screen {
         this.records_wrapper.innerHTML = lines.join('')
     }
 
-    updateDimensions(game: Game) {
+    reset() {
+        super.reset()
+        this.updateDimensions()
+        this.updateRecords()
+    }
+
+    updateDimensions() {
+        const game = this.game
+
         this.gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
         this.gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
 

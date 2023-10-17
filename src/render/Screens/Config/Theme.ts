@@ -1,10 +1,10 @@
 import { ThemesController as Themes } from "../../../storage/controllers/Themes"
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { ScreenManager } from "../../ScreenManager"
+import { DynamicGameBasedScreen } from "../Screen"
 import { FiguresViewer } from "./figuresViewer"
 
-export class ThemeConfigScreen extends ConfigScreenBase {
+export class ThemeConfigScreen extends DynamicGameBasedScreen {
     declare updateColors: () => void
 
     build() {
@@ -64,14 +64,17 @@ export class ThemeConfigScreen extends ConfigScreenBase {
 
         const getColors = () => Themes[tempTheme]
 
-        const figuresViewer = new FiguresViewer(getColors())
+        const figuresViewer = new FiguresViewer({
+            colors: getColors(),
+            game: this.game
+        })
         const viewWrapper = themeScreen.querySelector(".view-wrapper") as HTMLDivElement
 
         viewWrapper.appendChild(figuresViewer.viewer)
 
         const open_custom_button = themeScreen.querySelector("#open-custom-screnn") as HTMLButtonElement
 
-        open_custom_button.onclick = () => screens.configScreens.customTheme.show()
+        open_custom_button.onclick = () => ScreenManager.screens.configScreens.customTheme.show()
 
         this.updateColors = () => {
             figuresViewer.setColors(getColors())
@@ -106,7 +109,7 @@ export class ThemeConfigScreen extends ConfigScreenBase {
                     saveConfig()
                 }
                 this.close()
-                screens.config.addNavigation()
+                ScreenManager.screens.config.addNavigation()
             }
         })
 

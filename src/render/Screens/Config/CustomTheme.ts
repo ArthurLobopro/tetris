@@ -1,14 +1,10 @@
 import { ThemesController as Themes } from "../../../storage/controllers/Themes"
 import { Figures, figureName } from "../../Figures"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { ScreenManager } from "../../ScreenManager"
+import { DynamicGameBasedScreen } from "../Screen"
 import { FiguresViewer } from "./figuresViewer"
 
-export class CustomThemeConfigScreen extends ConfigScreenBase {
-    constructor() {
-        super()
-    }
-
+export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
     build() {
         const colors = Themes.custom
 
@@ -113,7 +109,11 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
             figureInput.value = colors.figures[atualFigure]
         }
 
-        const figuresViewer = new FiguresViewer(colors, onChangeFigure)
+        const figuresViewer = new FiguresViewer({
+            colors,
+            onChangeFigure,
+            game: this.game
+        })
         const viewWrapper = customThemeScreen.querySelector(".view-wrapper") as HTMLDivElement
         viewWrapper.appendChild(figuresViewer.viewer)
 
@@ -155,7 +155,7 @@ export class CustomThemeConfigScreen extends ConfigScreenBase {
                     saveConfig()
                 }
                 this.close()
-                screens.configScreens.theme.updateColors()
+                ScreenManager.screens.configScreens.theme.updateColors()
             }
         })
 

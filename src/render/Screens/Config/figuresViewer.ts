@@ -1,7 +1,13 @@
 import { ThemeSchema } from "../../../storage/StoreSchemas"
 import { Figures, figureName } from "../../Figures"
-import { game } from "../../Game/Game"
+import { Game } from "../../Game/Game"
 import { range } from "../../Util"
+
+interface FiguresViewerProps {
+    colors: ThemeSchema
+    onChangeFigure?: () => void
+    game: Game
+}
 
 export class FiguresViewer {
     declare colors: ThemeSchema
@@ -13,9 +19,13 @@ export class FiguresViewer {
     declare viewerCanvas: HTMLCanvasElement
     declare ctx: CanvasRenderingContext2D
 
-    constructor(colors: ThemeSchema, changeFigureCallback?: () => void) {
+    #game: Game
+
+    constructor({ colors, onChangeFigure, game }: FiguresViewerProps) {
+        this.#game = game
+
         this.colors = colors
-        this.changeFigureCallback = changeFigureCallback ?? function () { }
+        this.changeFigureCallback = onChangeFigure ?? function () { }
         this.build()
 
         this.atualFigure = "square"
@@ -25,9 +35,11 @@ export class FiguresViewer {
     }
 
     build() {
+        const { squareWidth } = this.#game
+
         const viewerCanvas = document.createElement("canvas")
-        viewerCanvas.width = game.squareWidth * 8 + 7
-        viewerCanvas.height = game.squareWidth * 8 + 7
+        viewerCanvas.width = squareWidth * 8 + 7
+        viewerCanvas.height = squareWidth * 8 + 7
 
         const viewer = document.createElement('div')
         viewer.id = "theme-viewer"
@@ -62,7 +74,7 @@ export class FiguresViewer {
 
     renderBasic() {
         const [width, height] = [8, 8]
-        const { squareWidth } = game
+        const { squareWidth } = this.#game
 
         //Background
         this.ctx.fillStyle = this.colors.background
@@ -82,6 +94,7 @@ export class FiguresViewer {
 
     renderFigure(figureName: figureName) {
         const [width, height] = [8, 8]
+        const { squareWidth } = this.#game
 
         this.renderBasic()
 
@@ -97,9 +110,9 @@ export class FiguresViewer {
                 if (block.type === 'block') {
                     this.ctx.fillStyle = color
                     this.ctx.fillRect(
-                        (x + indexX) * game.squareWidth + (1 * x + indexX),
-                        (y + indexY) * game.squareWidth + (1 * y + indexY),
-                        game.squareWidth, game.squareWidth
+                        (x + indexX) * squareWidth + (1 * x + indexX),
+                        (y + indexY) * squareWidth + (1 * y + indexY),
+                        squareWidth, squareWidth
                     )
                 }
             })

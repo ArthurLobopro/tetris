@@ -1,13 +1,8 @@
 import { ipcRenderer, shell } from "electron"
-import { screens } from "../ScreenManager"
-import { Screen } from "./Screen"
+import { ScreenManager } from "../ScreenManager"
+import { DynamicScreen } from "./Screen"
 
-export class AboutScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
-
+export class AboutScreen extends DynamicScreen {
     build() {
         const aboutScreen = document.createElement('div')
         aboutScreen.className = "telas-wrapper"
@@ -56,7 +51,7 @@ export class AboutScreen extends Screen {
 
         return_button.onclick = () => {
             this.close()
-            screens.init.show()
+            ScreenManager.screens.init.show()
         }
 
         return aboutScreen

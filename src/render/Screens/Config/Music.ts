@@ -1,15 +1,14 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { game } from "../../Game/Game"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { ScreenManager } from "../../ScreenManager"
+import { DynamicGameBasedScreen } from "../Screen"
 
-export class MusicConfigScreen extends ConfigScreenBase {
+export class MusicConfigScreen extends DynamicGameBasedScreen {
     build() {
         const configTemp = UserPreferences.get()
 
         const saveConfig = () => {
             UserPreferences.set(configTemp)
-            game.userPreferences = UserPreferences.get()
+            this.game.userPreferences = UserPreferences.get()
         }
 
         const music_screen = document.createElement('div')
@@ -55,10 +54,10 @@ export class MusicConfigScreen extends ConfigScreenBase {
                 const { value } = event.target as HTMLButtonElement
                 if (value == "1") {
                     saveConfig()
-                    game.reloadConfig()
+                    this.game.reloadConfig()
                 }
                 this.close()
-                screens.config.addNavigation()
+                ScreenManager.screens.config.addNavigation()
             }
         })
 

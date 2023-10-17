@@ -1,17 +1,16 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { game } from "../../Game/Game"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { ScreenManager } from "../../ScreenManager"
+import { DynamicGameBasedScreen } from "../Screen"
 
-export class VelocityConfigScreen extends ConfigScreenBase {
+export class VelocityConfigScreen extends DynamicGameBasedScreen {
     build() {
         const { velocity } = UserPreferences
         const configTemp = UserPreferences.get()
 
         const saveConfig = () => {
             UserPreferences.set(configTemp)
-            game.userPreferences.velocity = UserPreferences.velocity
-            game.velocity = UserPreferences.velocity
+            this.game.userPreferences.velocity = UserPreferences.velocity
+            this.game.velocity = UserPreferences.velocity
         }
 
         const velocity_screen = document.createElement('div')
@@ -68,7 +67,7 @@ export class VelocityConfigScreen extends ConfigScreenBase {
                     saveConfig()
                 }
                 this.close()
-                screens.config.addNavigation()
+                ScreenManager.screens.config.addNavigation()
             }
         })
 

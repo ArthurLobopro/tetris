@@ -1,7 +1,14 @@
-import { game } from '../Game/Game'
+import { Game } from "../Game/Game"
 import { Screen } from './Screen'
 
 export class GameOverScreen extends Screen {
+    #game: Game
+
+    constructor(game: Game) {
+        super()
+        this.#game = game
+    }
+
     build() {
         const canvasGame = document.getElementById('game') as HTMLCanvasElement
         const image = canvasGame.toDataURL('image/png') as string
@@ -13,7 +20,7 @@ export class GameOverScreen extends Screen {
             <legend>GAME OVER</legend>
             <div class="line">
                 <div>Pontuação:</div>
-                <div>${game.points}</div>
+                <div>${this.#game.points}</div>
             </div>
             <img src="${image}" style="border: 1px solid #aaa;max-height:73%" id="game-over-print">
             <button class="focus" style="align-self: center;margin-bottom: 10px;">NEW GAME</button>
@@ -23,9 +30,14 @@ export class GameOverScreen extends Screen {
 
         button.onclick = () => {
             this.close()
-            game.newGame()
+            this.#game.newGame()
         }
 
         return gameOverScreen
+    }
+
+    show() {
+        this.reset()
+        super.show()
     }
 }

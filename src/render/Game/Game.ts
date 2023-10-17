@@ -4,9 +4,8 @@ import { UserPreferencesController as UserPreferences } from "../../storage/cont
 import { Audios } from "../Audio"
 import { Interval } from "../Interval"
 import "../KeyboardController"
-import { mainKeyDown } from "../KeyboardController"
-import { screens } from "../ScreenManager"
-import { GameScreen } from "../Screens/GameScreen"
+import { CreateKeyDownHandler } from "../KeyboardController"
+import { ScreenManager } from "../ScreenManager"
 import { formatPoints } from "../Util"
 import { GameController } from "./GameController"
 import { GameFigures } from "./GameFigures"
@@ -44,11 +43,7 @@ export class Game {
     declare state: GameState
     declare controller: GameController
     declare renderer: GameRenderer
-    screen: GameScreen
-
-    // get screen() {
-    //     return screens.game
-    // }
+    declare screenManager: ScreenManager
 
     get velocity() {
         return this._velocity
@@ -70,15 +65,38 @@ export class Game {
         } catch (error) { }
     }
 
+    get screen() {
+        return ScreenManager.screens.game
+    }
+
+    get keyDownFunctions() {
+        return {
+            "ArrowLeft": () => this.controller.move("left"),
+            "ArrowRight": () => this.controller.move("right"),
+            "ArrowDown": () => this.controller.accelerate(),
+            "s": () => this.controller.accelerate(),
+            "a": () => this.controller.move("left"),
+            "d": () => this.controller.move("right"),
+            'r': () => this.controller.rotate(),
+            ' ': () => this.controller.dropFigure(),
+            'Escape': () => this.pause(),
+        }
+    }
+
     constructor() {
+        this.loadUserPreferences()
+
         this.state = new GameState(this)
         this.figures = new GameFigures(this)
         this.controller = new GameController(this)
         this.renderer = new GameRenderer(this)
-        this.screen = screens.game
-        this.screen.updateDimensions(this)
-        this.loadUserPreferences()
+        this.screenManager = new ScreenManager(this)
+
         this.reset()
+    }
+
+    init() {
+        this.screenManager.screens.init.show(true)
     }
 
     loadUserPreferences() {
@@ -104,7 +122,6 @@ export class Game {
         this.velocity = UserPreferences.velocity
         this.lastPontuation = GameData.lastPontuation
         this.figures.spawnFigure()
-        this.screen.updateRecords(this.records)
     }
 
     addPoints(points: number) {
@@ -122,7 +139,7 @@ export class Game {
 
         this.renderer.render()
 
-        window.onkeydown = mainKeyDown
+        window.onkeydown = CreateKeyDownHandler(this.keyDownFunctions)
 
         this.fallInterval = new Interval({
             callback: () => this.tick(),
@@ -156,10 +173,10 @@ export class Game {
     }
 
     pause() {
-        window.onkeydown = mainKeyDown
+        window.onkeydown = CreateKeyDownHandler(this.keyDownFunctions)
         this.fallInterval.stop()
         this.status = "paused"
-        screens.pause.show()
+        ScreenManager.screens.pause.show()
         if (this.isMusicOn) {
             Audios.theme.pause()
         }
@@ -168,7 +185,7 @@ export class Game {
     continueGame() {
         this.status = "active"
         this.fallInterval.start()
-        window.onkeydown = mainKeyDown
+        window.onkeydown = CreateKeyDownHandler(this.keyDownFunctions)
         if (this.isMusicOn) {
             Audios.theme.play()
         }
@@ -179,8 +196,7 @@ export class Game {
         this.renderInterval.stop()
         this.verifyRecords()
         GameData.lastPontuation = this.points
-        screens.gameOver.reset()
-        screens.gameOver.show()
+        ScreenManager.screens.gameOver.show()
     }
 
     verifyRecords() {
@@ -194,5 +210,3 @@ export class Game {
         }
     }
 }
-
-export const game = new Game()

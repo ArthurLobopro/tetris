@@ -1,19 +1,13 @@
-import { game } from "../Game/Game"
-import { screens } from "../ScreenManager"
-import { Screen } from "./Screen"
+import { ScreenManager } from "../ScreenManager"
+import { DynamicGameBasedScreen, Screen } from "./Screen"
 
 const configs = {
-    music: () => screens.configScreens.music.show(),
-    velocity: () => screens.configScreens.velocity.show(),
-    theme: () => screens.configScreens.theme.show()
+    music: () => ScreenManager.screens.configScreens.music.show(),
+    velocity: () => ScreenManager.screens.configScreens.velocity.show(),
+    theme: () => ScreenManager.screens.configScreens.theme.show()
 }
 
-export class ConfigScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
-
+export class ConfigScreen extends DynamicGameBasedScreen {
     declare afterScreen: Screen
 
     build() {
@@ -37,7 +31,7 @@ export class ConfigScreen extends Screen {
                 const target = event.target as HTMLButtonElement
                 const { type } = target.dataset
                 if (type === "voltar") {
-                    game.reloadConfig()
+                    this.game.reloadConfig()
                     this.close()
                 } else {
                     this.removeNavigation()

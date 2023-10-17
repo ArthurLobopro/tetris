@@ -1,3 +1,5 @@
+import { Game } from "../Game/Game"
+import { ScreenManager } from "../ScreenManager"
 import navigation from "./navigation"
 
 const container = document.getElementById("container") as HTMLElement
@@ -23,13 +25,14 @@ export abstract class Screen {
 
     show(navigation = true) {
         container.appendChild(this.screen)
+        ScreenManager.instance.setScreen(this)
         if (navigation) {
             this.addNavigation()
         }
     }
 
     hide() {
-        container.removeChild(this.screen)
+        this.screen.remove()
     }
 
     close() {
@@ -38,13 +41,27 @@ export abstract class Screen {
     }
 }
 
-export abstract class ConfigScreenBase extends Screen {
-    constructor() {
-        super()
-    }
+export abstract class GameBasedScreen extends Screen {
+    protected game: Game
 
+    constructor(game: Game) {
+        super()
+        this.game = game
+    }
+}
+
+export abstract class DynamicScreen extends Screen {
     show() {
         this.reset()
         super.show()
+    }
+}
+
+export abstract class DynamicGameBasedScreen extends DynamicScreen {
+    protected game: Game
+
+    constructor(game: Game) {
+        super()
+        this.game = game
     }
 }
