@@ -52,20 +52,16 @@ export class FiguresViewer {
 
         viewer.insertBefore(viewerCanvas, viewer.querySelector('div'))
 
-        const keyBoardFunctions = {
+        const actions = {
             "ArrowLeft": () => this.previousFigure(),
             "ArrowRight": () => this.nextFigure()
         }
 
-        type key = keyof typeof keyBoardFunctions
-
-        window.onkeydown = (event) => keyBoardFunctions[event.key as key]?.()
-
         const rightButton = viewer.querySelector("#right") as HTMLImageElement
         const leftButton = viewer.querySelector("#left") as HTMLImageElement
 
-        rightButton.onclick = keyBoardFunctions.ArrowRight
-        leftButton.onclick = keyBoardFunctions.ArrowLeft
+        rightButton.onclick = actions.ArrowRight
+        leftButton.onclick = actions.ArrowLeft
 
         this.ctx = viewerCanvas.getContext('2d') as CanvasRenderingContext2D
         this.viewer = viewer

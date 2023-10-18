@@ -1,5 +1,6 @@
 import { ScreenManager } from "../ScreenManager"
 import { DynamicGameBasedScreen, Screen } from "./Screen"
+import { CreateNavigation } from "./navigation"
 
 const configs = {
     music: () => ScreenManager.screens.configScreens.music.show(),
@@ -17,27 +18,26 @@ export class ConfigScreen extends DynamicGameBasedScreen {
             <fieldset>
                 <legend>CONFIGURAÇÕES</legend>
                 <div class="button-wrapper">
-                    <button data-type="music" class="focus">Musica</button>
-                    <button data-type="velocity">Velocidade</button>
-                    <button data-type="theme">Tema</button>
-                    <button data-type="voltar">Voltar</button>
+                    <button data-action="music" class="focus">Musica</button>
+                    <button data-action="velocity">Velocidade</button>
+                    <button data-action="theme">Tema</button>
+                    <button data-action="voltar">Voltar</button>
                 </div>
             </fieldset>`
 
         const buttons = configScreen.querySelectorAll('button')
 
         buttons.forEach(button => {
-            button.onclick = async event => {
-                const target = event.target as HTMLButtonElement
-                const { type } = target.dataset
-                if (type === "voltar") {
+            button.onclick = () => {
+                const { action } = button.dataset
+
+                if (action === "voltar") {
                     this.game.reloadConfig()
                     this.close()
                 } else {
-                    this.removeNavigation()
                     type key = keyof typeof configs
 
-                    configs[type as key]?.()
+                    configs[action as key]?.()
                 }
             }
         })
@@ -46,13 +46,11 @@ export class ConfigScreen extends DynamicGameBasedScreen {
     }
 
     close() {
-        this.afterScreen.show()
         super.close()
+        ScreenManager.instance._lastScreen.show()
     }
 
-    //@ts-ignore
-    show(afterScreen: Screen) {
-        super.show()
-        this.afterScreen = afterScreen
+    onKeyDown(event: KeyboardEvent): void {
+        CreateNavigation(this.screen)(event)
     }
 }

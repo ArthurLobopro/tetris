@@ -1,13 +1,7 @@
-import { Screen } from "./Screen"
+import { ScreenManager } from "../ScreenManager"
+import { DynamicNavigableScreen } from "./Screen"
 
-export class ControlsScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
-
-    declare afterScreen?: Screen
-
+export class ControlsScreen extends DynamicNavigableScreen {
     build() {
         const constrols_screen = document.createElement("div")
         constrols_screen.className = "telas-wrapper"
@@ -66,12 +60,6 @@ export class ControlsScreen extends Screen {
 
     close() {
         super.close()
-        this.afterScreen?.show()
-    }
-
-    //@ts-ignore
-    show(afterScreen: Screen) {
-        super.show()
-        this.afterScreen = afterScreen
+        ScreenManager.instance._lastScreen.show()
     }
 }

@@ -1,5 +1,4 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { ScreenManager } from "../../ScreenManager"
 import { DynamicGameBasedScreen } from "../Screen"
 
 export class VelocityConfigScreen extends DynamicGameBasedScreen {
@@ -67,7 +66,6 @@ export class VelocityConfigScreen extends DynamicGameBasedScreen {
                     saveConfig()
                 }
                 this.close()
-                ScreenManager.screens.config.addNavigation()
             }
         })
 

@@ -4,7 +4,6 @@ import { UserPreferencesController as UserPreferences } from "../../storage/cont
 import { Audios } from "../Audio"
 import { Interval } from "../Interval"
 import "../KeyboardController"
-import { CreateKeyDownHandler } from "../KeyboardController"
 import { ScreenManager } from "../ScreenManager"
 import { formatPoints } from "../Util"
 import { GameController } from "./GameController"
@@ -96,7 +95,7 @@ export class Game {
     }
 
     init() {
-        this.screenManager.screens.init.show(true)
+        this.screenManager.screens.init.show()
     }
 
     loadUserPreferences() {
@@ -140,8 +139,6 @@ export class Game {
 
         this.renderer.render()
 
-        window.onkeydown = CreateKeyDownHandler(this.keyDownFunctions)
-
         this.fallInterval = new Interval({
             callback: () => this.tick(),
             rate: this.velocities[this.velocity]
@@ -174,22 +171,18 @@ export class Game {
     }
 
     pause() {
-        window.onkeydown = CreateKeyDownHandler(this.keyDownFunctions)
         this.fallInterval.stop()
         this.status = "paused"
         ScreenManager.screens.pause.show()
-        if (this.isMusicOn) {
-            Audios.theme.pause()
-        }
+
+        this.isMusicOn && Audios.theme.pause()
     }
 
     continueGame() {
         this.status = "active"
         this.fallInterval.start()
-        window.onkeydown = CreateKeyDownHandler(this.keyDownFunctions)
-        if (this.isMusicOn) {
-            Audios.theme.play()
-        }
+
+        this.isMusicOn && Audios.theme.play()
     }
 
     gameOver() {

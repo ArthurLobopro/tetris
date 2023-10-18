@@ -38,17 +38,15 @@ export class GameFigures {
         this.#game.controller.preventMove(new Promise(res => {
             this.atualFigure
                 .turnInto(this.nextFigure.figure)
-                .setCoords({ y: -this.atualFigure.height + 1 })
+                .setCoords({
+                    x: Math.trunc(this.#game.width / 2 - this.atualFigure.width / 2),
+                    y: -this.atualFigure.height + 1
+                })
 
-            this.centerFigure()
             this.spawnNextFigure()
 
             res(true)
         }))
-    }
-
-    private centerFigure() {
-        this.atualFigure.x = Math.trunc(this.#game.width / 2 - this.atualFigure.width / 2)
     }
 
     private spawnNextFigure() {

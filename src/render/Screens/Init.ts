@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron"
 import { Game } from "../Game/Game"
 import { ScreenManager } from "../ScreenManager"
-import { Screen } from "./Screen"
+import { DynamicNavigableScreen } from "./Screen"
 
-export class InitScreen extends Screen {
+export class InitScreen extends DynamicNavigableScreen {
     #game: Game
 
     constructor(game: Game) {
@@ -19,34 +19,43 @@ export class InitScreen extends Screen {
         <fieldset id="init">
             <legend>Início</legend>
             <div class="button-wrapper">
-                <button id="start" class="focus">START</button>
-                <button id="config">CONFIGURAÇÕES</button>
-                <button id="controls">CONTROLES</button>
-                <button id="about">SOBRE</button>
-                <button id="exit">SAIR</button>
+                <button data-action="start" class="focus">START</button>
+                <button data-action="config">CONFIGURAÇÕES</button>
+                <button data-action="controls">CONTROLES</button>
+                <button data-action="about">SOBRE</button>
+                <button data-action="exit">SAIR</button>
             </div>
         </fieldset>`
 
-        const functions = {
+        const actions = {
             start: () => {
                 this.close()
                 ScreenManager.screens.game.show()
                 this.#game.newGame()
             },
-
-            config: () => ScreenManager.screens.config.show(this),
-            controls: () => ScreenManager.screens.controls.show(this),
-            about: () => ScreenManager.screens.about.show(),
+            config: () => {
+                this.close()
+                ScreenManager.screens.config.show()
+            },
+            controls: () => {
+                this.close()
+                ScreenManager.screens.controls.show()
+            },
+            about: () => {
+                this.close()
+                ScreenManager.screens.about.show()
+            },
             exit: () => ipcRenderer.send('close')
         }
 
         const buttons = initScreen.querySelectorAll('button')
 
-        type key = keyof typeof functions
+        type key = keyof typeof actions
 
         buttons.forEach(button => {
             button.onclick = () => {
-                functions?.[button.id as key]?.()
+                const { action } = button.dataset
+                actions?.[action as key]?.()
             }
         })
 

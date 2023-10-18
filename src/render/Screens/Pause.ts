@@ -1,7 +1,7 @@
 import { ScreenManager } from "../ScreenManager"
-import { DynamicGameBasedScreen } from "./Screen"
+import { DynamicGameBasedNavigableScreen } from "./Screen"
 
-export class PauseScreen extends DynamicGameBasedScreen {
+export class PauseScreen extends DynamicGameBasedNavigableScreen {
     build() {
         const pauseScreen = document.createElement('div')
         pauseScreen.id = "pause-wrapper"
@@ -20,19 +20,21 @@ export class PauseScreen extends DynamicGameBasedScreen {
         const actions = {
             continue: () => {
                 this.close()
+                ScreenManager.screens.game.focus()
                 this.game.continueGame()
             },
             "new-game": () => {
                 this.close()
+                ScreenManager.screens.game.focus()
                 this.game.newGame()
             },
             controls: () => {
                 this.close()
-                ScreenManager.screens.controls.show(this)
+                ScreenManager.screens.controls.show()
             },
             config: () => {
                 this.close()
-                ScreenManager.screens.config.show(this)
+                ScreenManager.screens.config.show()
             },
             "go-to-init": () => {
                 this.close()

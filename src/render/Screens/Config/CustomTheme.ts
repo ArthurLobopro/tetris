@@ -155,7 +155,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                     saveConfig()
                 }
                 this.close()
-                ScreenManager.screens.configScreens.theme.updateColors()
+                ScreenManager.instance._lastScreen.show()
             }
         })
 

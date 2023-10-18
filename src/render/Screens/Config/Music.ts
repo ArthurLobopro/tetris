@@ -1,5 +1,4 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { ScreenManager } from "../../ScreenManager"
 import { DynamicGameBasedScreen } from "../Screen"
 
 export class MusicConfigScreen extends DynamicGameBasedScreen {
@@ -57,7 +56,6 @@ export class MusicConfigScreen extends DynamicGameBasedScreen {
                     this.game.reloadConfig()
                 }
                 this.close()
-                ScreenManager.screens.config.addNavigation()
             }
         })
 

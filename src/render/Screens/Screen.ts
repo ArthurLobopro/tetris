@@ -1,34 +1,23 @@
 import { Game } from "../Game/Game"
 import { ScreenManager } from "../ScreenManager"
-import navigation from "./navigation"
+import { CreateNavigation } from "./navigation"
 
 const container = document.getElementById("container") as HTMLElement
-
-type key = keyof typeof navigation
 
 export abstract class Screen {
     declare screen: HTMLElement
 
     abstract build(): HTMLElement
 
-    addNavigation() {
-        window.onkeydown = event => navigation[event.key as key]?.(this.screen)
-    }
-
-    removeNavigation() {
-        window.onkeydown = null
-    }
+    onKeyDown(event: KeyboardEvent) { }
 
     reset() {
         this.screen = this.build()
     }
 
-    show(navigation = true) {
+    show() {
         container.appendChild(this.screen)
         ScreenManager.instance.setScreen(this)
-        if (navigation) {
-            this.addNavigation()
-        }
     }
 
     hide() {
@@ -63,5 +52,16 @@ export abstract class DynamicGameBasedScreen extends DynamicScreen {
     constructor(game: Game) {
         super()
         this.game = game
+    }
+}
+
+export abstract class DynamicNavigableScreen extends DynamicScreen {
+    onKeyDown(event: KeyboardEvent): void {
+        CreateNavigation(this.screen)(event)
+    }
+}
+export abstract class DynamicGameBasedNavigableScreen extends DynamicGameBasedScreen {
+    onKeyDown(event: KeyboardEvent): void {
+        CreateNavigation(this.screen)(event)
     }
 }

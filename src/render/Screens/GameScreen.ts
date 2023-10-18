@@ -1,3 +1,5 @@
+import { CreateKeyDownHandler } from "../KeyboardController"
+import { ScreenManager } from "../ScreenManager"
 import { formatPoints } from "../Util"
 import { DynamicGameBasedScreen } from "./Screen"
 
@@ -25,6 +27,14 @@ export class GameScreen extends DynamicGameBasedScreen {
         </div>`
 
         return gameScreen
+    }
+
+    focus() {
+        ScreenManager.instance._atualScreen = this
+    }
+
+    onKeyDown(event: KeyboardEvent): void {
+        CreateKeyDownHandler(this.game.keyDownFunctions)(event)
     }
 
     updateRecords() {

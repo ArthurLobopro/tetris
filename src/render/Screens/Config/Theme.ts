@@ -44,7 +44,7 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
                     id="custom-wrapper" class="flex-center" 
                     style="display: ${UserPreferences.theme === "custom" ? "" : "none"};"
                     >
-                        <button id="open-custom-screnn">
+                        <button id="open-custom-screen">
                             Customizar
                         </button>
                     </div>
@@ -68,11 +68,12 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
             colors: getColors(),
             game: this.game
         })
+
         const viewWrapper = themeScreen.querySelector(".view-wrapper") as HTMLDivElement
 
         viewWrapper.appendChild(figuresViewer.viewer)
 
-        const open_custom_button = themeScreen.querySelector("#open-custom-screnn") as HTMLButtonElement
+        const open_custom_button = themeScreen.querySelector("#open-custom-screen") as HTMLButtonElement
 
         open_custom_button.onclick = () => ScreenManager.screens.configScreens.customTheme.show()
 
@@ -109,7 +110,6 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
                     saveConfig()
                 }
                 this.close()
-                ScreenManager.screens.config.addNavigation()
             }
         })
 
