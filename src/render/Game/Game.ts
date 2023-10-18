@@ -115,6 +115,7 @@ export class Game {
     }
 
     reset() {
+        this.figures.spawnFigure()
         this.status = "inactive"
         this.controller.reset()
         this.isMusicOn = false
@@ -197,6 +198,11 @@ export class Game {
         this.verifyRecords()
         GameData.lastPontuation = this.points
         ScreenManager.screens.gameOver.show()
+    }
+
+    forceGameOver() {
+        this.fallInterval.stop()
+        this.renderInterval.stop()
     }
 
     verifyRecords() {

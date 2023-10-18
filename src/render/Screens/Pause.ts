@@ -36,6 +36,7 @@ export class PauseScreen extends DynamicGameBasedScreen {
             },
             "go-to-init": () => {
                 this.close()
+                this.game.screen.close()
                 this.game.status = "inactive"
                 ScreenManager.screens.init.show()
             }
