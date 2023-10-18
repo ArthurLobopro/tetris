@@ -164,8 +164,8 @@ export class Figure {
     }
 
     setCoords({ x, y }: Partial<coords>) {
-        if (x) this.x = x
-        if (y) this.y = y
+        this.x = x ?? this.x
+        this.y = y ?? this.y
 
         return this
     }
