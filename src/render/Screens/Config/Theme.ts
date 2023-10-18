@@ -75,7 +75,10 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
 
         const open_custom_button = themeScreen.querySelector("#open-custom-screen") as HTMLButtonElement
 
-        open_custom_button.onclick = () => ScreenManager.screens.configScreens.customTheme.show()
+        open_custom_button.onclick = () => {
+            this.close()
+            ScreenManager.screens.configScreens.customTheme.show()
+        }
 
         this.updateColors = () => {
             figuresViewer.setColors(getColors())
@@ -87,6 +90,9 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
         themeRadios.forEach(radio => {
             radio.onclick = () => {
                 const checked = document.querySelector('[data-check="true"]') as HTMLDivElement
+
+                if (checked === radio) return
+
                 checked.dataset.check = "false"
                 radio.dataset.check = "true"
                 tempTheme = radio.dataset.value as "retro" | "tetris" | "custom"
