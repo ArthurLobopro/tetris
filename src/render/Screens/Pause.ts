@@ -19,25 +19,20 @@ export class PauseScreen extends DynamicGameBasedNavigableScreen {
 
         const actions = {
             continue: () => {
-                this.close()
                 ScreenManager.screens.game.focus()
                 this.game.continueGame()
             },
             "new-game": () => {
-                this.close()
                 ScreenManager.screens.game.focus()
                 this.game.newGame()
             },
             controls: () => {
-                this.close()
-                ScreenManager.screens.controls.show()
+                ScreenManager.screens.controls.show(this)
             },
             config: () => {
-                this.close()
-                ScreenManager.screens.config.show()
+                ScreenManager.screens.config.show(this)
             },
             "go-to-init": () => {
-                this.close()
                 this.game.screen.close()
                 this.game.status = "inactive"
                 ScreenManager.screens.init.show()
@@ -51,6 +46,7 @@ export class PauseScreen extends DynamicGameBasedNavigableScreen {
         buttons.forEach(button => {
             button.onclick = () => {
                 const { action } = button.dataset
+                this.close()
                 actions[action as key]()
             }
         })
