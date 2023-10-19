@@ -1,7 +1,13 @@
 import { ThemeSchema } from "../../../storage/StoreSchemas"
 import { Figures, figureName } from "../../Figures"
-import { game } from "../../Game"
+import { Game } from "../../Game/Game"
 import { range } from "../../Util"
+
+interface FiguresViewerProps {
+    colors: ThemeSchema
+    onChangeFigure?: () => void
+    game: Game
+}
 
 export class FiguresViewer {
     declare colors: ThemeSchema
@@ -13,21 +19,27 @@ export class FiguresViewer {
     declare viewerCanvas: HTMLCanvasElement
     declare ctx: CanvasRenderingContext2D
 
-    constructor(colors: ThemeSchema, changeFigureCallback?: () => void) {
+    #game: Game
+
+    constructor({ colors, onChangeFigure, game }: FiguresViewerProps) {
+        this.#game = game
+
         this.colors = colors
-        this.changeFigureCallback = changeFigureCallback ?? function () { }
+        this.changeFigureCallback = onChangeFigure ?? function () { }
         this.build()
 
         this.atualFigure = "square"
         this.renderFigure(this.atualFigure)
 
-        this.figuresNames = Figures.getFigureNames()
+        this.figuresNames = Figures.figuresNames
     }
 
     build() {
+        const { squareWidth } = this.#game
+
         const viewerCanvas = document.createElement("canvas")
-        viewerCanvas.width = game.squareWidth * 8 + 7
-        viewerCanvas.height = game.squareWidth * 8 + 7
+        viewerCanvas.width = squareWidth * 8 + 7
+        viewerCanvas.height = squareWidth * 8 + 7
 
         const viewer = document.createElement('div')
         viewer.id = "theme-viewer"
@@ -40,20 +52,16 @@ export class FiguresViewer {
 
         viewer.insertBefore(viewerCanvas, viewer.querySelector('div'))
 
-        const keyBoardFunctions = {
+        const actions = {
             "ArrowLeft": () => this.previousFigure(),
             "ArrowRight": () => this.nextFigure()
         }
 
-        type key = keyof typeof keyBoardFunctions
-
-        window.onkeydown = (event) => keyBoardFunctions[event.key as key]?.()
-
         const rightButton = viewer.querySelector("#right") as HTMLImageElement
         const leftButton = viewer.querySelector("#left") as HTMLImageElement
 
-        rightButton.onclick = keyBoardFunctions.ArrowRight
-        leftButton.onclick = keyBoardFunctions.ArrowLeft
+        rightButton.onclick = actions.ArrowRight
+        leftButton.onclick = actions.ArrowLeft
 
         this.ctx = viewerCanvas.getContext('2d') as CanvasRenderingContext2D
         this.viewer = viewer
@@ -62,7 +70,7 @@ export class FiguresViewer {
 
     renderBasic() {
         const [width, height] = [8, 8]
-        const { squareWidth } = game
+        const { squareWidth } = this.#game
 
         //Background
         this.ctx.fillStyle = this.colors.background
@@ -82,6 +90,7 @@ export class FiguresViewer {
 
     renderFigure(figureName: figureName) {
         const [width, height] = [8, 8]
+        const { squareWidth } = this.#game
 
         this.renderBasic()
 
@@ -97,9 +106,9 @@ export class FiguresViewer {
                 if (block.type === 'block') {
                     this.ctx.fillStyle = color
                     this.ctx.fillRect(
-                        (x + indexX) * game.squareWidth + (1 * x + indexX),
-                        (y + indexY) * game.squareWidth + (1 * y + indexY),
-                        game.squareWidth, game.squareWidth
+                        (x + indexX) * squareWidth + (1 * x + indexX),
+                        (y + indexY) * squareWidth + (1 * y + indexY),
+                        squareWidth, squareWidth
                     )
                 }
             })
@@ -131,7 +140,7 @@ export class FiguresViewer {
         this.renderFigure(this.atualFigure)
     }
 
-    getAtualFigureName() {
+    get atualFigureName() {
         return this.atualFigure
     }
 }

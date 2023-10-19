@@ -1,14 +1,9 @@
 import { ipcRenderer, shell } from "electron"
-import { screens } from "../ScreenManager"
-import { Screen } from "./Screen"
+import { ScreenManager } from "../ScreenManager"
+import { DynamicNavigableScreen } from "./Screen"
 
-export class AboutScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
-
-    buildFunction() {
+export class AboutScreen extends DynamicNavigableScreen {
+    build() {
         const aboutScreen = document.createElement('div')
         aboutScreen.className = "telas-wrapper"
         aboutScreen.innerHTML = `
@@ -39,24 +34,19 @@ export class AboutScreen extends Screen {
         const repository_link = "https://github.com/ArthurLobopro/tetris.js"
 
         const repo_button = aboutScreen.querySelector("#github-repo") as HTMLButtonElement
-
         repo_button.onclick = () => {
             shell.openExternal(repository_link)
         }
 
-        const links = aboutScreen.querySelectorAll('.link') as NodeListOf<HTMLSpanElement>
-
+        const links = aboutScreen.querySelectorAll<HTMLSpanElement>('.link')
         links.forEach(span => {
-            span.onclick = () => {
-                shell.openExternal(span.innerText)
-            }
+            span.onclick = () => shell.openExternal(span.innerText)
         })
 
         const return_button = aboutScreen.querySelector("#return") as HTMLButtonElement
-
         return_button.onclick = () => {
             this.close()
-            screens.init.show()
+            ScreenManager.instance._lastScreen.show()
         }
 
         return aboutScreen

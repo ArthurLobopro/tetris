@@ -1,14 +1,9 @@
-import { Screen } from "./Screen"
+import { DynamicNavigableScreen, Screen } from "./Screen"
 
-export class ControlsScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
+export class ControlsScreen extends DynamicNavigableScreen {
+    declare beforeScreen: Screen
 
-    declare afterScreen?: Screen
-
-    buildFunction() {
+    build() {
         const constrols_screen = document.createElement("div")
         constrols_screen.className = "telas-wrapper"
         constrols_screen.innerHTML = `
@@ -58,7 +53,6 @@ export class ControlsScreen extends Screen {
             </div>`
 
         const return_button = constrols_screen.querySelector('button') as HTMLButtonElement
-
         return_button.onclick = () => this.close()
 
         return constrols_screen
@@ -66,12 +60,11 @@ export class ControlsScreen extends Screen {
 
     close() {
         super.close()
-        this.afterScreen?.show()
+        this.beforeScreen?.show()
     }
 
-    //@ts-ignore
-    show(afterScreen: Screen) {
+    show(beforeScreen?: Screen) {
         super.show()
-        this.afterScreen = afterScreen
+        if (beforeScreen) this.beforeScreen = beforeScreen
     }
 }

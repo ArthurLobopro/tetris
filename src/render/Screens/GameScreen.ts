@@ -1,12 +1,10 @@
-import { Screen } from "./Screen"
+import { CreateKeyDownHandler } from "../KeyboardController"
+import { ScreenManager } from "../ScreenManager"
+import { formatPoints } from "../Util"
+import { DynamicGameBasedScreen } from "./Screen"
 
-export class GameScreen extends Screen {
-    constructor() {
-        super()
-        this.reset()
-    }
-
-    buildFunction() {
+export class GameScreen extends DynamicGameBasedScreen {
+    build() {
         const gameScreen = document.createElement('div')
         gameScreen.id = "tela"
         gameScreen.innerHTML = `
@@ -29,6 +27,62 @@ export class GameScreen extends Screen {
         </div>`
 
         return gameScreen
+    }
+
+    focus() {
+        ScreenManager.instance._atualScreen = this
+    }
+
+    onKeyDown(event: KeyboardEvent): void {
+        CreateKeyDownHandler(this.game.keyDownFunctions)(event)
+    }
+
+    updateRecords() {
+        const { records } = this.game
+
+        const medals = [
+            "../assets/medals/1.png",
+            "../assets/medals/2.png",
+            "../assets/medals/3.png"
+        ]
+
+        const lines: string[] = []
+
+        records.forEach(({ points }, index) => {
+            const line =
+                `<div class="line">
+                    <img src=" ${medals[index]}" width="16px">
+                    <div>${formatPoints(points)}</div>
+                </div>`
+            lines.push(line)
+        })
+
+        this.records_wrapper.innerHTML = lines.join('')
+    }
+
+    updatePoints() {
+        this.points_span.innerText = formatPoints(this.game.points)
+        this.last_points_span.innerText = formatPoints(this.game.lastPontuation)
+    }
+
+    reset() {
+        super.reset()
+        this.updateDimensions()
+        this.updateRecords()
+    }
+
+    updateDimensions() {
+        const game = this.game
+
+        this.gameCanvas.width = (game.width * game.squareWidth) + game.width - 1
+        this.gameCanvas.height = (game.height * game.squareWidth) + game.height - 1
+
+        this.nextCanvas.width = (game.squareWidth * game.nextCanvasSize.width) + game.nextCanvasSize.width - 1
+        this.nextCanvas.height = (game.squareWidth * game.nextCanvasSize.height) + game.nextCanvasSize.height - 1
+    }
+
+    private get records_wrapper() {
+        return this.screen.querySelector("#recordes") as HTMLDivElement
     }
 
     get gameScreen() {

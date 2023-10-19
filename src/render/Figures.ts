@@ -1,11 +1,11 @@
 import { colors } from "./Colors"
-import { randint } from "./Util"
+import { randint, range } from "./Util"
 
 type Block = {
     type: 'block'
 }
 
-type NullBlock = {
+export type NullBlock = {
     type: 'null'
 }
 
@@ -14,12 +14,14 @@ const block: Block = { type: 'block' }
 
 export type figureName = "square" | "stick" | "z" | "reverse-z" | "reverse-L" | "L" | "T"
 
+export type blocks = (Block | NullBlock)[][]
+
 type figure = {
     name: figureName,
-    blocks: (Block | NullBlock)[][]
+    blocks: blocks
 }
 
-const types: figure[] = [
+const FIGURES_TYPES: figure[] = [
     {
         name: "square",
         blocks: [
@@ -45,7 +47,6 @@ const types: figure[] = [
         blocks: [
             [null_block, block, block],
             [block, block, null_block]
-
         ]
     },
     {
@@ -73,7 +74,11 @@ const types: figure[] = [
 
 export class Figures {
     static get types() {
-        return types
+        return FIGURES_TYPES
+    }
+
+    static get figuresNames() {
+        return this.types.map(figure => figure.name)
     }
 
     static random() {
@@ -87,8 +92,73 @@ export class Figures {
     static getByName(name: figureName) {
         return (this.types.find((figure) => figure.name === name) as figure).blocks
     }
+}
 
-    static getFigureNames() {
-        return this.types.map(figure => figure.name)
+export interface coords {
+    x: number
+    y: number
+}
+
+export class Figure {
+    declare x: number
+    declare y: number
+    declare figure: ReturnType<typeof Figures.random>
+
+    constructor() {
+        this.x = 0
+        this.y = 0
+        this.figure = Figures.random()
+    }
+
+    get width() {
+        return this.figure.blocks[0].length
+    }
+
+    get height() {
+        return this.figure.blocks.length
+    }
+
+    get blocks() {
+        return this.figure.blocks
+    }
+
+    getRotated() {
+        const blocks = []
+
+        for (const block of range(0, this.width)) {
+            const newLine = []
+            for (const line of range(0, this.height)) {
+                newLine.unshift(this.figure.blocks[line][block])
+            }
+            blocks.push(newLine)
+        }
+
+        return new Figure().turnInto({
+            ...this.figure,
+            blocks
+        })
+    }
+
+    turnInto(figure: ReturnType<typeof Figures.random>) {
+        this.figure = figure
+
+        return this
+    }
+
+    turnIntoRandom() {
+        return this.turnInto(Figures.random())
+    }
+
+    setCoords({ x, y }: Partial<coords>) {
+        this.x = x ?? this.x
+        this.y = y ?? this.y
+
+        return this
+    }
+
+    resetCoords() {
+        this.setCoords({ x: 0, y: 0 })
+
+        return this
     }
 }

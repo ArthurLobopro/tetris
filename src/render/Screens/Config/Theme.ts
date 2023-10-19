@@ -1,13 +1,20 @@
 import { ThemesController as Themes } from "../../../storage/controllers/Themes"
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { ScreenManager } from "../../ScreenManager"
+import { DynamicGameBasedScreen } from "../Screen"
 import { FiguresViewer } from "./figuresViewer"
 
-export class ThemeConfigScreen extends ConfigScreenBase {
-    declare updateColors: () => void
+type themeNames = typeof UserPreferences.theme
 
-    buildFunction() {
+export class ThemeConfigScreen extends DynamicGameBasedScreen {
+    updateColors(theme: themeNames) {
+        this.figuresViewer.setColors(Themes[theme])
+        this.figuresViewer.renderFigure(this.figuresViewer.atualFigureName)
+    }
+
+    declare figuresViewer: FiguresViewer
+
+    build() {
         let tempTheme = UserPreferences.theme
 
         const themeScreen = document.createElement('div')
@@ -42,18 +49,18 @@ export class ThemeConfigScreen extends ConfigScreenBase {
                     </div>
                     <div 
                     id="custom-wrapper" class="flex-center" 
-                    style="display: ${UserPreferences.theme === "custom" ? "" : "none"};"
+                    style="display:${UserPreferences.theme === "custom" ? "" : "none"}"
                     >
-                        <button id="open-custom-screnn">
+                        <button id="open-custom-screen">
                             Customizar
                         </button>
                     </div>
 
                     <div class="line-buttons">
-                        <button value="1">
+                        <button data-action="save">
                             OK
                         </button>
-                        <button class="cancel" value="0">
+                        <button data-action="cancel">
                             Cancelar
                         </button>
                     </div>
@@ -64,33 +71,35 @@ export class ThemeConfigScreen extends ConfigScreenBase {
 
         const getColors = () => Themes[tempTheme]
 
-        const figuresViewer = new FiguresViewer(getColors())
+        this.figuresViewer = new FiguresViewer({
+            colors: getColors(),
+            game: this.game
+        })
+
         const viewWrapper = themeScreen.querySelector(".view-wrapper") as HTMLDivElement
+        viewWrapper.appendChild(this.figuresViewer.viewer)
 
-        viewWrapper.appendChild(figuresViewer.viewer)
-
-        const open_custom_button = themeScreen.querySelector("#open-custom-screnn") as HTMLButtonElement
-
-        open_custom_button.onclick = () => screens.configScreens.customTheme.show()
-
-        this.updateColors = () => {
-            figuresViewer.setColors(getColors())
-            figuresViewer.renderFigure(figuresViewer.getAtualFigureName())
+        const open_custom_button = themeScreen.querySelector("#open-custom-screen") as HTMLButtonElement
+        open_custom_button.onclick = () => {
+            this.close()
+            ScreenManager.screens.configScreens.customTheme.show()
         }
 
-        const themeRadios = themeScreen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
-
+        const themeRadios = themeScreen.querySelectorAll<HTMLDivElement>('.radio')
         themeRadios.forEach(radio => {
             radio.onclick = () => {
                 const checked = document.querySelector('[data-check="true"]') as HTMLDivElement
+
+                if (checked === radio) return
+
                 checked.dataset.check = "false"
                 radio.dataset.check = "true"
-                tempTheme = radio.dataset.value as "retro" | "tetris" | "custom"
+                tempTheme = radio.dataset.value as themeNames
 
                 const custom_wrapper = themeScreen.querySelector("#custom-wrapper") as HTMLDivElement
 
                 custom_wrapper.style.display = tempTheme === "custom" ? "" : "none"
-                figuresViewer.setColors(getColors())
+                this.figuresViewer.setColors(getColors())
             }
         })
 
@@ -98,15 +107,15 @@ export class ThemeConfigScreen extends ConfigScreenBase {
             UserPreferences.theme = tempTheme
         }
 
-        const buttons = themeScreen.querySelectorAll('.line-buttons > button') as NodeListOf<HTMLButtonElement>
-
+        const buttons = themeScreen.querySelectorAll<HTMLButtonElement>('.line-buttons > button')
         buttons.forEach(button => {
             button.onclick = () => {
-                if (button.value === "1") {
-                    saveConfig()
-                }
+                const { action } = button.dataset
+
+                action === "save" && saveConfig()
+
                 this.close()
-                screens.config.addNavigation()
+                this.game.screenManager.screens.config.show()
             }
         })
 

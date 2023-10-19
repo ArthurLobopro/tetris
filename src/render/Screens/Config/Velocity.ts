@@ -1,17 +1,15 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { game } from "../../Game"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { DynamicGameBasedScreen } from "../Screen"
 
-export class VelocityConfigScreen extends ConfigScreenBase {
-    buildFunction() {
+export class VelocityConfigScreen extends DynamicGameBasedScreen {
+    build() {
         const { velocity } = UserPreferences
         const configTemp = UserPreferences.get()
 
         const saveConfig = () => {
             UserPreferences.set(configTemp)
-            game.userPreferences.velocity = UserPreferences.velocity
-            game.velocity = UserPreferences.velocity
+            this.game.userPreferences.velocity = UserPreferences.velocity
+            this.game.velocity = UserPreferences.velocity
         }
 
         const velocity_screen = document.createElement('div')
@@ -34,41 +32,36 @@ export class VelocityConfigScreen extends ConfigScreenBase {
                 </div>
             </div>
             <div class="buttons">
-                <button value="1">
+                <button data-action="save">
                     OK
                 </button>
-                <button class="cancel" value="0">
+                <button data-action="cancel">
                     Cancelar
                 </button>
             </div>
         </fieldset>`
 
-        const checks = velocity_screen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
+        const checks = velocity_screen.querySelectorAll<HTMLDivElement>('.radio')
 
-        checks.forEach(e => {
-            e.onclick = event => {
-                const target = event.target as HTMLDivElement
+        checks.forEach(check => {
+            check.onclick = () => {
+                checks.forEach(e => e.dataset.check = "false")
 
-                checks.forEach(e => {
-                    e.dataset.check = "false"
-                })
-
-                target.dataset.check = "true"
-                configTemp.velocity = target.dataset.value as "slow" | "normal" | "fast"
+                check.dataset.check = "true"
+                configTemp.velocity = check.dataset.value as "slow" | "normal" | "fast"
             }
         })
 
-
-        const buttons = velocity_screen.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
+        const buttons = velocity_screen.querySelectorAll<HTMLButtonElement>('button')
 
         buttons.forEach(button => {
-            button.onclick = event => {
-                const { value } = event.target as HTMLButtonElement
-                if (value == "1") {
-                    saveConfig()
-                }
+            button.onclick = () => {
+                const { action } = button.dataset
+
+                action === "save" && saveConfig()
+
                 this.close()
-                screens.config.addNavigation()
+                this.game.screenManager.screens.config.focus()
             }
         })
 

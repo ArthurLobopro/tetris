@@ -9,7 +9,7 @@ const fps = (rate: number) => 1000 / rate
 export class Interval {
     private _rate: number
     private _callback: () => void
-    private _interval?: NodeJS.Timer
+    private _interval?: ReturnType<typeof setInterval>
     private _isRunning = false
 
     constructor(props: ITimerConstructor) {
@@ -33,7 +33,7 @@ export class Interval {
     }
 
     stop() {
-        clearInterval(this._interval as NodeJS.Timer)
+        clearInterval(this._interval)
         this._isRunning = false
     }
 

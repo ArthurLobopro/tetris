@@ -1,15 +1,13 @@
 import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { game } from "../../Game"
-import { screens } from "../../ScreenManager"
-import { ConfigScreenBase } from "../Screen"
+import { DynamicGameBasedScreen } from "../Screen"
 
-export class MusicConfigScreen extends ConfigScreenBase {
-    buildFunction() {
+export class MusicConfigScreen extends DynamicGameBasedScreen {
+    build() {
         const configTemp = UserPreferences.get()
 
         const saveConfig = () => {
             UserPreferences.set(configTemp)
-            game.userPreferences = UserPreferences.get()
+            this.game.userPreferences = UserPreferences.get()
         }
 
         const music_screen = document.createElement('div')
@@ -24,41 +22,40 @@ export class MusicConfigScreen extends ConfigScreenBase {
                     Volume: <input type="range" id="volume"  min="0" max="100" value="${UserPreferences?.musicVolume * 100}">
                 </div>
                 <div class="buttons">
-                    <button value="1">
+                    <button data-action="save">
                         OK
                     </button>
-                    <button class="cancel" value="0">
+                    <button data-action="cancel">
                         Cancelar
                     </button>
                 </div>
         </fieldset>`
 
         const music_input = music_screen.querySelector('#music') as HTMLDivElement
-
-        music_input.onclick = (event) => {
-            const target = event.target as HTMLDivElement
-            const value = target.dataset.check === "true"
-            target.dataset.check = (!value).toString()
+        music_input.onclick = () => {
+            const value = music_input.dataset.check === "true"
+            music_input.dataset.check = (!value).toString()
             configTemp.music = !value
         }
 
         const volume_input = music_screen.querySelector('#volume') as HTMLInputElement
-
-        volume_input.onchange = event => {
-            const { valueAsNumber: value } = event.target as HTMLInputElement
+        volume_input.onchange = () => {
+            const { valueAsNumber: value } = volume_input
             configTemp.musicVolume = value / 100
         }
 
         const buttons = music_screen.querySelectorAll('button')
         buttons.forEach(button => {
-            button.onclick = event => {
-                const { value } = event.target as HTMLButtonElement
-                if (value == "1") {
+            button.onclick = () => {
+                const { action } = button.dataset
+
+                if (action === "save") {
                     saveConfig()
-                    game.reloadConfig()
+                    this.game.reloadConfig()
                 }
+
                 this.close()
-                screens.config.addNavigation()
+                this.game.screenManager.screens.config.focus()
             }
         })
 

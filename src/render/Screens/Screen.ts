@@ -1,35 +1,31 @@
-import navigation from "./navigation"
+import { Game } from "../Game/Game"
+import { ScreenManager } from "../ScreenManager"
+import { CreateNavigation } from "./navigation"
 
 const container = document.getElementById("container") as HTMLElement
-
-type key = keyof typeof navigation
 
 export abstract class Screen {
     declare screen: HTMLElement
 
-    abstract buildFunction(): HTMLElement
+    abstract build(): HTMLElement
 
-    addNavigation() {
-        window.onkeydown = event => navigation[event.key as key]?.(this.screen)
-    }
-
-    removeNavigation() {
-        window.onkeydown = null
-    }
+    onKeyDown(event: KeyboardEvent) { }
 
     reset() {
-        this.screen = this.buildFunction()
+        this.screen = this.build()
     }
 
-    show(navigation = true) {
+    show() {
         container.appendChild(this.screen)
-        if (navigation) {
-            this.addNavigation()
-        }
+        this.focus()
     }
 
     hide() {
-        container.removeChild(this.screen)
+        this.screen.remove()
+    }
+
+    focus() {
+        ScreenManager.instance.setScreen(this)
     }
 
     close() {
@@ -38,13 +34,38 @@ export abstract class Screen {
     }
 }
 
-export abstract class ConfigScreenBase extends Screen {
-    constructor() {
-        super()
-    }
+export abstract class GameBasedScreen extends Screen {
+    protected game: Game
 
+    constructor(game: Game) {
+        super()
+        this.game = game
+    }
+}
+
+export abstract class DynamicScreen extends Screen {
     show() {
         this.reset()
         super.show()
+    }
+}
+
+export abstract class DynamicGameBasedScreen extends DynamicScreen {
+    protected game: Game
+
+    constructor(game: Game) {
+        super()
+        this.game = game
+    }
+}
+
+export abstract class DynamicNavigableScreen extends DynamicScreen {
+    onKeyDown(event: KeyboardEvent): void {
+        CreateNavigation(this.screen)(event)
+    }
+}
+export abstract class DynamicGameBasedNavigableScreen extends DynamicGameBasedScreen {
+    onKeyDown(event: KeyboardEvent): void {
+        CreateNavigation(this.screen)(event)
     }
 }

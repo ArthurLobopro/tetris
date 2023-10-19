@@ -1,11 +1,12 @@
-const getButtons = (element: Element) => {
-    const buttons = element.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
-    const focused = element.querySelector('button.focus') as HTMLButtonElement
-    return { buttons, focused }
+const getButtons = (element: HTMLElement) => {
+    return {
+        buttons: element.querySelectorAll<HTMLButtonElement>('button'),
+        focused: element.querySelector('button.focus') as HTMLButtonElement
+    }
 }
 
 const functions = {
-    up(element: Element) {
+    up(element: HTMLElement) {
         const { buttons, focused } = getButtons(element)
         let previus = focused?.previousElementSibling || null
         if (previus?.tagName !== "BUTTON") {
@@ -14,7 +15,7 @@ const functions = {
         focused?.classList.remove('focus')
         previus.classList.add('focus')
     },
-    down(element: Element) {
+    down(element: HTMLElement) {
         const { buttons, focused } = getButtons(element)
         let next = focused?.nextElementSibling || null
         if (!next || next?.tagName !== "BUTTON" || next == focused) {
@@ -35,6 +36,12 @@ const keys = {
     "ArrowDown": functions.down,
     "s": functions.down,
     "Enter": functions.select
+}
+
+type key = keyof typeof keys
+
+export function CreateNavigation(screen: HTMLElement) {
+    return (event: KeyboardEvent) => keys[event.key as key]?.(screen)
 }
 
 export default keys
