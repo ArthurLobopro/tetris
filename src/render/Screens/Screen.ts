@@ -17,11 +17,15 @@ export abstract class Screen {
 
     show() {
         container.appendChild(this.screen)
-        ScreenManager.instance.setScreen(this)
+        this.focus()
     }
 
     hide() {
         this.screen.remove()
+    }
+
+    focus() {
+        ScreenManager.instance.setScreen(this)
     }
 
     close() {
