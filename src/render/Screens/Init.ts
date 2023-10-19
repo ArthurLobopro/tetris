@@ -35,11 +35,11 @@ export class InitScreen extends DynamicNavigableScreen {
             },
             config: () => {
                 this.close()
-                ScreenManager.screens.config.show()
+                ScreenManager.screens.config.show(this)
             },
             controls: () => {
                 this.close()
-                ScreenManager.screens.controls.show()
+                ScreenManager.screens.controls.show(this)
             },
             about: () => {
                 this.close()
