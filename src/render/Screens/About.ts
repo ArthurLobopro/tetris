@@ -34,19 +34,16 @@ export class AboutScreen extends DynamicNavigableScreen {
         const repository_link = "https://github.com/ArthurLobopro/tetris.js"
 
         const repo_button = aboutScreen.querySelector("#github-repo") as HTMLButtonElement
-
         repo_button.onclick = () => {
             shell.openExternal(repository_link)
         }
 
         const links = aboutScreen.querySelectorAll<HTMLSpanElement>('.link')
-
         links.forEach(span => {
             span.onclick = () => shell.openExternal(span.innerText)
         })
 
         const return_button = aboutScreen.querySelector("#return") as HTMLButtonElement
-
         return_button.onclick = () => {
             this.close()
             ScreenManager.instance._lastScreen.show()

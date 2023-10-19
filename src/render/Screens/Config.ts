@@ -25,7 +25,6 @@ export class ConfigScreen extends DynamicGameBasedNavigableScreen {
             </fieldset>`
 
         const buttons = configScreen.querySelectorAll('button')
-
         buttons.forEach(button => {
             button.onclick = () => {
                 const { action } = button.dataset

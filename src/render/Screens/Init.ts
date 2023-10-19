@@ -48,10 +48,9 @@ export class InitScreen extends DynamicNavigableScreen {
             exit: () => ipcRenderer.send('close')
         }
 
-        const buttons = initScreen.querySelectorAll('button')
-
         type key = keyof typeof actions
 
+        const buttons = initScreen.querySelectorAll('button')
         buttons.forEach(button => {
             button.onclick = () => {
                 const { action } = button.dataset

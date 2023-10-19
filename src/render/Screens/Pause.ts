@@ -39,10 +39,9 @@ export class PauseScreen extends DynamicGameBasedNavigableScreen {
             }
         }
 
-        const buttons = pauseScreen.querySelectorAll('button')
-
         type key = keyof typeof actions
 
+        const buttons = pauseScreen.querySelectorAll('button')
         buttons.forEach(button => {
             button.onclick = () => {
                 const { action } = button.dataset

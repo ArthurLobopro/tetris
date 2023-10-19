@@ -53,7 +53,6 @@ export class ControlsScreen extends DynamicNavigableScreen {
             </div>`
 
         const return_button = constrols_screen.querySelector('button') as HTMLButtonElement
-
         return_button.onclick = () => this.close()
 
         return constrols_screen
