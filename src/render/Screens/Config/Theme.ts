@@ -9,7 +9,7 @@ type themeNames = typeof UserPreferences.theme
 export class ThemeConfigScreen extends DynamicGameBasedScreen {
     updateColors(theme: themeNames) {
         this.figuresViewer.setColors(Themes[theme])
-        this.figuresViewer.renderFigure(this.figuresViewer.getAtualFigureName())
+        this.figuresViewer.renderFigure(this.figuresViewer.atualFigureName)
     }
 
     declare figuresViewer: FiguresViewer

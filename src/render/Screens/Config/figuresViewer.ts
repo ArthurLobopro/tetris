@@ -140,7 +140,7 @@ export class FiguresViewer {
         this.renderFigure(this.atualFigure)
     }
 
-    getAtualFigureName() {
+    get atualFigureName() {
         return this.atualFigure
     }
 }

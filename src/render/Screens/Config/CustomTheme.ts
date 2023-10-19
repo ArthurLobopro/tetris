@@ -82,7 +82,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
             },
             figure(event: Event) {
                 const target = event.target as HTMLInputElement
-                const atualFigure = figuresViewer.getAtualFigureName()
+                const atualFigure = figuresViewer.atualFigureName
                 colors.figures[atualFigure] = target.value
                 figuresViewer.setColors(colors)
             }
@@ -100,7 +100,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
         })
 
         const onChangeFigure = () => {
-            const atualFigure = figuresViewer.getAtualFigureName()
+            const atualFigure = figuresViewer.atualFigureName
             const figureInput = document.getElementById('color-figure') as HTMLInputElement
             figureInput.value = colors.figures[atualFigure]
         }
@@ -121,7 +121,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                 const functions = {
                     background: resetBackground,
                     lines: resetLines,
-                    figure: () => resetFigure(figuresViewer.getAtualFigureName())
+                    figure: () => resetFigure(figuresViewer.atualFigureName)
                 }
 
                 type key = keyof typeof functions
@@ -134,7 +134,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                 type colorskey = "background" | "lines"
 
                 color_input.value = type === "figure" ?
-                    colors.figures[figuresViewer.getAtualFigureName()] : colors[type as colorskey]
+                    colors.figures[figuresViewer.atualFigureName] : colors[type as colorskey]
             }
         })
 
