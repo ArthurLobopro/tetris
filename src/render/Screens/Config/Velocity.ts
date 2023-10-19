@@ -32,10 +32,10 @@ export class VelocityConfigScreen extends DynamicGameBasedScreen {
                 </div>
             </div>
             <div class="buttons">
-                <button value="1">
+                <button data-action="save">
                     OK
                 </button>
-                <button class="cancel" value="0">
+                <button data-action="cancel">
                     Cancelar
                 </button>
             </div>
@@ -43,29 +43,25 @@ export class VelocityConfigScreen extends DynamicGameBasedScreen {
 
         const checks = velocity_screen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
 
-        checks.forEach(e => {
-            e.onclick = event => {
-                const target = event.target as HTMLDivElement
+        checks.forEach(check => {
+            check.onclick = () => {
+                checks.forEach(e => e.dataset.check = "false")
 
-                checks.forEach(e => {
-                    e.dataset.check = "false"
-                })
-
-                target.dataset.check = "true"
-                configTemp.velocity = target.dataset.value as "slow" | "normal" | "fast"
+                check.dataset.check = "true"
+                configTemp.velocity = check.dataset.value as "slow" | "normal" | "fast"
             }
         })
-
 
         const buttons = velocity_screen.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
 
         buttons.forEach(button => {
-            button.onclick = event => {
-                const { value } = event.target as HTMLButtonElement
-                if (value == "1") {
-                    saveConfig()
-                }
+            button.onclick = () => {
+                const { action } = button.dataset
+
+                action === "save" && saveConfig()
+
                 this.close()
+                this.game.screenManager.screens.config.focus()
             }
         })
 

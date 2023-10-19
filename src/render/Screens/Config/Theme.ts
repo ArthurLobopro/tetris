@@ -4,8 +4,15 @@ import { ScreenManager } from "../../ScreenManager"
 import { DynamicGameBasedScreen } from "../Screen"
 import { FiguresViewer } from "./figuresViewer"
 
+type themeNames = typeof UserPreferences.theme
+
 export class ThemeConfigScreen extends DynamicGameBasedScreen {
-    declare updateColors: () => void
+    updateColors(theme: themeNames) {
+        this.figuresViewer.setColors(Themes[theme])
+        this.figuresViewer.renderFigure(this.figuresViewer.getAtualFigureName())
+    }
+
+    declare figuresViewer: FiguresViewer
 
     build() {
         let tempTheme = UserPreferences.theme
@@ -42,7 +49,7 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
                     </div>
                     <div 
                     id="custom-wrapper" class="flex-center" 
-                    style="display: ${UserPreferences.theme === "custom" ? "" : "none"};"
+                    style="display:${UserPreferences.theme === "custom" ? "" : "none"}"
                     >
                         <button id="open-custom-screen">
                             Customizar
@@ -50,10 +57,10 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
                     </div>
 
                     <div class="line-buttons">
-                        <button value="1">
+                        <button data-action="save">
                             OK
                         </button>
-                        <button class="cancel" value="0">
+                        <button data-action="cancel">
                             Cancelar
                         </button>
                     </div>
@@ -64,29 +71,21 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
 
         const getColors = () => Themes[tempTheme]
 
-        const figuresViewer = new FiguresViewer({
+        this.figuresViewer = new FiguresViewer({
             colors: getColors(),
             game: this.game
         })
 
         const viewWrapper = themeScreen.querySelector(".view-wrapper") as HTMLDivElement
-
-        viewWrapper.appendChild(figuresViewer.viewer)
+        viewWrapper.appendChild(this.figuresViewer.viewer)
 
         const open_custom_button = themeScreen.querySelector("#open-custom-screen") as HTMLButtonElement
-
         open_custom_button.onclick = () => {
             this.close()
             ScreenManager.screens.configScreens.customTheme.show()
         }
 
-        this.updateColors = () => {
-            figuresViewer.setColors(getColors())
-            figuresViewer.renderFigure(figuresViewer.getAtualFigureName())
-        }
-
         const themeRadios = themeScreen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
-
         themeRadios.forEach(radio => {
             radio.onclick = () => {
                 const checked = document.querySelector('[data-check="true"]') as HTMLDivElement
@@ -95,12 +94,12 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
 
                 checked.dataset.check = "false"
                 radio.dataset.check = "true"
-                tempTheme = radio.dataset.value as "retro" | "tetris" | "custom"
+                tempTheme = radio.dataset.value as themeNames
 
                 const custom_wrapper = themeScreen.querySelector("#custom-wrapper") as HTMLDivElement
 
                 custom_wrapper.style.display = tempTheme === "custom" ? "" : "none"
-                figuresViewer.setColors(getColors())
+                this.figuresViewer.setColors(getColors())
             }
         })
 
@@ -108,14 +107,15 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
             UserPreferences.theme = tempTheme
         }
 
-        const buttons = themeScreen.querySelectorAll('.line-buttons > button') as NodeListOf<HTMLButtonElement>
-
+        const buttons = themeScreen.querySelectorAll<HTMLButtonElement>('.line-buttons > button')
         buttons.forEach(button => {
             button.onclick = () => {
-                if (button.value === "1") {
-                    saveConfig()
-                }
+                const { action } = button.dataset
+
+                action === "save" && saveConfig()
+
                 this.close()
+                this.game.screenManager.screens.config.show()
             }
         })
 
