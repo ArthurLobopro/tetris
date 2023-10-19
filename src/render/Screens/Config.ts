@@ -1,6 +1,5 @@
 import { ScreenManager } from "../ScreenManager"
-import { DynamicGameBasedScreen, Screen } from "./Screen"
-import { CreateNavigation } from "./navigation"
+import { DynamicGameBasedNavigableScreen, Screen } from "./Screen"
 
 const configs = {
     music: () => ScreenManager.screens.configScreens.music.show(),
@@ -8,8 +7,8 @@ const configs = {
     theme: () => ScreenManager.screens.configScreens.theme.show()
 }
 
-export class ConfigScreen extends DynamicGameBasedScreen {
-    declare afterScreen: Screen
+export class ConfigScreen extends DynamicGameBasedNavigableScreen {
+    declare beforeScreen: Screen
 
     build() {
         const configScreen = document.createElement('div')
@@ -47,10 +46,11 @@ export class ConfigScreen extends DynamicGameBasedScreen {
 
     close() {
         super.close()
-        ScreenManager.instance._lastScreen.show()
+        this.beforeScreen?.show()
     }
 
-    onKeyDown(event: KeyboardEvent): void {
-        CreateNavigation(this.screen)(event)
+    show(beforeScreen?: Screen) {
+        super.show()
+        if (beforeScreen) this.beforeScreen = beforeScreen
     }
 }

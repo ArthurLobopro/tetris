@@ -1,7 +1,8 @@
-import { ScreenManager } from "../ScreenManager"
-import { DynamicNavigableScreen } from "./Screen"
+import { DynamicNavigableScreen, Screen } from "./Screen"
 
 export class ControlsScreen extends DynamicNavigableScreen {
+    declare beforeScreen: Screen
+
     build() {
         const constrols_screen = document.createElement("div")
         constrols_screen.className = "telas-wrapper"
@@ -60,6 +61,11 @@ export class ControlsScreen extends DynamicNavigableScreen {
 
     close() {
         super.close()
-        ScreenManager.instance._lastScreen.show()
+        this.beforeScreen?.show()
+    }
+
+    show(beforeScreen?: Screen) {
+        super.show()
+        if (beforeScreen) this.beforeScreen = beforeScreen
     }
 }
