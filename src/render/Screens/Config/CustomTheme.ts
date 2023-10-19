@@ -70,20 +70,17 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
         </fieldset>`
 
         const inputActions = {
-            background(event: Event) {
-                const target = event.target as HTMLInputElement
-                colors.background = target.value
+            background(input: HTMLInputElement) {
+                colors.background = input.value
                 figuresViewer.setColors(colors)
             },
-            lines(event: Event) {
-                const target = event.target as HTMLInputElement
-                colors.lines = target.value
+            lines(input: HTMLInputElement) {
+                colors.lines = input.value
                 figuresViewer.setColors(colors)
             },
-            figure(event: Event) {
-                const target = event.target as HTMLInputElement
+            figure(input: HTMLInputElement) {
                 const atualFigure = figuresViewer.atualFigureName
-                colors.figures[atualFigure] = target.value
+                colors.figures[atualFigure] = input.value
                 figuresViewer.setColors(colors)
             }
         }
@@ -92,10 +89,10 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
 
         const colorInputs = customThemeScreen.querySelectorAll<HTMLInputElement>('input[type="color"]')
         colorInputs.forEach(input => {
-            input.oninput = (event) => {
+            input.oninput = () => {
                 const { name } = input.dataset
 
-                inputActions[name as inputActionsKey](event)
+                inputActions[name as inputActionsKey](input)
             }
         })
 

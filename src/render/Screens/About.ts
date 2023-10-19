@@ -39,12 +39,10 @@ export class AboutScreen extends DynamicNavigableScreen {
             shell.openExternal(repository_link)
         }
 
-        const links = aboutScreen.querySelectorAll('.link') as NodeListOf<HTMLSpanElement>
+        const links = aboutScreen.querySelectorAll<HTMLSpanElement>('.link')
 
         links.forEach(span => {
-            span.onclick = () => {
-                shell.openExternal(span.innerText)
-            }
+            span.onclick = () => shell.openExternal(span.innerText)
         })
 
         const return_button = aboutScreen.querySelector("#return") as HTMLButtonElement

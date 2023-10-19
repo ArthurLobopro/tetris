@@ -85,7 +85,7 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
             ScreenManager.screens.configScreens.customTheme.show()
         }
 
-        const themeRadios = themeScreen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
+        const themeRadios = themeScreen.querySelectorAll<HTMLDivElement>('.radio')
         themeRadios.forEach(radio => {
             radio.onclick = () => {
                 const checked = document.querySelector('[data-check="true"]') as HTMLDivElement

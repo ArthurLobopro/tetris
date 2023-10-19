@@ -41,7 +41,7 @@ export class VelocityConfigScreen extends DynamicGameBasedScreen {
             </div>
         </fieldset>`
 
-        const checks = velocity_screen.querySelectorAll('.radio') as NodeListOf<HTMLDivElement>
+        const checks = velocity_screen.querySelectorAll<HTMLDivElement>('.radio')
 
         checks.forEach(check => {
             check.onclick = () => {
@@ -52,7 +52,7 @@ export class VelocityConfigScreen extends DynamicGameBasedScreen {
             }
         })
 
-        const buttons = velocity_screen.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
+        const buttons = velocity_screen.querySelectorAll<HTMLButtonElement>('button')
 
         buttons.forEach(button => {
             button.onclick = () => {

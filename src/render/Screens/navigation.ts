@@ -1,5 +1,5 @@
 const getButtons = (element: HTMLElement) => {
-    const buttons = element.querySelectorAll('button') as NodeListOf<HTMLButtonElement>
+    const buttons = element.querySelectorAll<HTMLButtonElement>('button')
     const focused = element.querySelector('button.focus') as HTMLButtonElement
     return { buttons, focused }
 }
