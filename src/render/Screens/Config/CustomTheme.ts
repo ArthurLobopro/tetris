@@ -19,7 +19,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
         const copyCustomTheme = () => {
             resetBackground()
             resetLines()
-            Figures.getFigureNames().forEach(resetFigure)
+            Figures.figuresNames.forEach(resetFigure)
         }
 
         copyCustomTheme()

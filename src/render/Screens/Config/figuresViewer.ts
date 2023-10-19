@@ -31,7 +31,7 @@ export class FiguresViewer {
         this.atualFigure = "square"
         this.renderFigure(this.atualFigure)
 
-        this.figuresNames = Figures.getFigureNames()
+        this.figuresNames = Figures.figuresNames
     }
 
     build() {

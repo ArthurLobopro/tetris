@@ -77,6 +77,10 @@ export class Figures {
         return FIGURES_TYPES
     }
 
+    static get figuresNames() {
+        return this.types.map(figure => figure.name)
+    }
+
     static random() {
         const max = this.types.length - 1
 
@@ -87,24 +91,6 @@ export class Figures {
 
     static getByName(name: figureName) {
         return (this.types.find((figure) => figure.name === name) as figure).blocks
-    }
-
-    static getFigureNames() {
-        return this.types.map(figure => figure.name)
-    }
-
-    static getRotated(blocks: figure["blocks"]) {
-        const newFigure = []
-
-        for (const block of range(0, blocks[0].length)) {
-            const newLine = []
-            for (const line of range(0, blocks.length)) {
-                newLine.unshift(blocks[line][block])
-            }
-            newFigure.push(newLine)
-        }
-
-        return newFigure
     }
 }
 

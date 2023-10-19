@@ -5,7 +5,6 @@ import { Audios } from "../Audio"
 import { Interval } from "../Interval"
 import "../KeyboardController"
 import { ScreenManager } from "../ScreenManager"
-import { formatPoints } from "../Util"
 import { GameController } from "./GameController"
 import { GameFigures } from "./GameFigures"
 import { GameRenderer } from "./GameRenderer"
@@ -60,7 +59,7 @@ export class Game {
     set points(points: number) {
         this._points = points
         try {
-            this.screen.points_span.innerText = formatPoints(this.points)
+            this.screen.updatePoints()
         } catch (error) { }
     }
 
@@ -131,8 +130,8 @@ export class Game {
     newGame() {
         this.lastPontuation = this.points
         this.points = 0
-        this.screen.points_span.innerText = formatPoints(this.points)
-        this.screen.last_points_span.innerText = formatPoints(this.lastPontuation)
+        this.screen.updatePoints()
+        this.screen.updateRecords()
 
         this.reset()
         this.status = "active"

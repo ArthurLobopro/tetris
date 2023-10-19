@@ -23,6 +23,12 @@ export class GameState {
 
     isBlock({ x, y }: coords) {
         // y < 0 means the figure is spawning
+        if (y < 0) return false
+
+        // x lower than 0 is not alowed
+        // x equal or upper than game width is not alowed
+        if (x < 0 || x >= this.#game.width) return true
+
         return y > 0 && this._state[y][x].type === "block"
     }
 

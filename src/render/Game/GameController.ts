@@ -57,7 +57,12 @@ export class GameController {
             })
         )
 
-        const newX = hasCollision ? x - widthDifference : x
+        console.log(widthDifference)
+
+
+        const newX = hasCollision ?
+            x - (widthDifference > 0 ? widthDifference : -widthDifference)
+            : x
 
         const stillHasCollision = this.simulateAnyCollision({
             x: newX,

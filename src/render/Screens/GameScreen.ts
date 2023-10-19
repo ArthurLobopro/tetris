@@ -60,6 +60,11 @@ export class GameScreen extends DynamicGameBasedScreen {
         this.records_wrapper.innerHTML = lines.join('')
     }
 
+    updatePoints() {
+        this.points_span.innerText = formatPoints(this.game.points)
+        this.last_points_span.innerText = formatPoints(this.game.lastPontuation)
+    }
+
     reset() {
         super.reset()
         this.updateDimensions()
