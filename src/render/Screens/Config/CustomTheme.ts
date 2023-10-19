@@ -8,10 +8,10 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
     build() {
         const colors = Themes.custom
 
+        const saveConfig = () => Themes.custom = colors
+
         const resetBackground = () => colors.background = Themes.custom.background
-
         const resetLines = () => colors.lines = Themes.custom.lines
-
         const resetFigure = (figureName: figureName) => {
             colors.figures[figureName] = Themes.custom.figures[figureName]
         }
@@ -19,9 +19,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
         const copyCustomTheme = () => {
             resetBackground()
             resetLines()
-            for (const figureName of Figures.getFigureNames()) {
-                resetFigure(figureName)
-            }
+            Figures.getFigureNames().forEach(resetFigure)
         }
 
         copyCustomTheme()
@@ -35,7 +33,6 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                 <div class="view-wrapper"></div>
     
                 <div class="view-wrapper">
-    
                     <div class="line">
                         Fundo
                         <div>
@@ -43,6 +40,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                             <button value="background">Zerar</button>
                         </div>
                     </div>
+
                     <div class="line">
                         Linhas
                         <div>
@@ -50,6 +48,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                             <button value="lines">Zerar</button>
                         </div>
                     </div>
+
                     <div class="line">
                         Figura atual
                         <div>
@@ -58,19 +57,19 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                         </div>
                     </div>
     
-                <div class="buttons">
-                    <button value="1">
-                        OK
-                    </button>
-                    <button class="cancel" value="0">
-                        Cancelar
-                    </button>
-                </div>
+                    <div class="buttons">
+                        <button data-action="save">
+                            OK
+                        </button>
+                        <button data-action="cancel">
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
         </fieldset>`
 
-        const colorInputFuctions = {
+        const inputActions = {
             background(event: Event) {
                 const target = event.target as HTMLInputElement
                 colors.background = target.value
@@ -89,22 +88,19 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
             }
         }
 
-        const colorInputs = customThemeScreen.querySelectorAll('input[type="color"]') as NodeListOf<HTMLInputElement>
+        type inputActionsKey = keyof typeof inputActions
 
+        const colorInputs = customThemeScreen.querySelectorAll<HTMLInputElement>('input[type="color"]')
         colorInputs.forEach(input => {
             input.oninput = (event) => {
-                const target = event.currentTarget as HTMLInputElement
-                const inputName = String(target.id).replace("color-", "")
+                const { name } = input.dataset
 
-                type key = keyof typeof colorInputFuctions
-
-                colorInputFuctions[inputName as key](event)
+                inputActions[name as inputActionsKey](event)
             }
         })
 
         const onChangeFigure = () => {
             const atualFigure = figuresViewer.getAtualFigureName()
-            console.log(colors.figures["T"])
             const figureInput = document.getElementById('color-figure') as HTMLInputElement
             figureInput.value = colors.figures[atualFigure]
         }
@@ -114,14 +110,11 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
             onChangeFigure,
             game: this.game
         })
+
         const viewWrapper = customThemeScreen.querySelector(".view-wrapper") as HTMLDivElement
         viewWrapper.appendChild(figuresViewer.viewer)
 
-        const saveConfig = () => {
-            Themes.custom = colors
-        }
-
-        const resetButtons = customThemeScreen.querySelectorAll('.line > div > button') as NodeListOf<HTMLButtonElement>
+        const resetButtons = customThemeScreen.querySelectorAll<HTMLButtonElement>('.line > div > button')
 
         resetButtons.forEach(button => {
             button.onclick = () => {
@@ -145,15 +138,13 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
             }
         })
 
-        const buttons = customThemeScreen.querySelectorAll('.buttons button') as NodeListOf<HTMLButtonElement>
-
-
+        const buttons = customThemeScreen.querySelectorAll<HTMLButtonElement>('.buttons button')
         buttons.forEach(button => {
-            button.onclick = event => {
-                const target = event.currentTarget as HTMLButtonElement
-                if (target.value === "1") {
-                    saveConfig()
-                }
+            button.onclick = () => {
+                const { action } = button.dataset
+
+                action === "save" && saveConfig()
+
                 this.close()
                 ScreenManager.instance._lastScreen.show()
             }
