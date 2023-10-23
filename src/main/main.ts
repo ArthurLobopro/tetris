@@ -1,28 +1,32 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
-import path from 'path'
+import { app, BrowserWindow, ipcMain } from "electron"
+import path from "path"
+import { updateElectronApp } from "update-electron-app"
 
-require('../storage/Store')
-require("electron-css-injector/main")
-require('update-electron-app')()
+import "electron-css-injector/main"
+import "../storage/Store"
+
+updateElectronApp()
 
 // Faz com que o programa não inicie várias vezes durante a instalação
-if (require('electron-squirrel-startup')) {
+if (require("electron-squirrel-startup")) {
     app.quit()
 }
+
+const appPath = app.getAppPath()
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         autoHideMenuBar: true,
-        icon: path.resolve(app.getAppPath(), 'assets', 'icon.png'),
+        icon: path.resolve(appPath, "assets", "icon.png"),
         webPreferences: {
             nodeIntegration: true,
-            preload: path.resolve(__dirname, 'preload.js')
+            preload: path.resolve(__dirname, "preload.js")
         }
     })
 
-    mainWindow.loadFile(path.resolve(app.getAppPath(), 'public', 'index.html'))
+    mainWindow.loadFile(path.resolve(appPath, "public", "index.html"))
 }
 
 const isUnicWindow = app.requestSingleInstanceLock() //Verifica se o app já foi iniciado
@@ -33,30 +37,30 @@ if (!isUnicWindow) {
     app.whenReady().then(createWindow)
 }
 
-app.on('second-instance', () => {
+app.on("second-instance", () => {
     const win = BrowserWindow.getAllWindows()[0]
     if (win.isMinimized()) win.restore()
     win.center()
     win.focus()
 })
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
         app.quit()
     }
 })
 
-app.on('activate', () => {
+app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
 })
 
-ipcMain.on('close', () => {
+ipcMain.on("close", () => {
     const win = BrowserWindow.getFocusedWindow() as BrowserWindow
     win.close()
 })
 
-ipcMain.on('app-version', event => {
+ipcMain.on("app-version", event => {
     event.returnValue = app.getVersion()
 })

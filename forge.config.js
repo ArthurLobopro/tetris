@@ -5,7 +5,6 @@ const { version } = package
 
 module.exports = {
     packagerConfig: {
-        name: 'tetris',
         icon: path.resolve(__dirname, './build/icon'),
         ignore: [
             "\\.git",
@@ -37,7 +36,7 @@ module.exports = {
         {
             name: "@electron-forge/maker-deb",
             config: {
-                name: "tetris",
+                name: "tetris.js",
                 productName: "Tetris.js",
                 genericName: "Tetris.js",
                 description: "A simple tetris game",
