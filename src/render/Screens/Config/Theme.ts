@@ -115,7 +115,7 @@ export class ThemeConfigScreen extends DynamicGameBasedScreen {
                 action === "save" && saveConfig()
 
                 this.close()
-                this.game.screenManager.screens.config.show()
+                this.game.screenManager.screens.config.focus()
             }
         })
 
