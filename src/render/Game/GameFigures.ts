@@ -1,55 +1,59 @@
-import { Figure, Figures } from "../Figures"
-import { Game } from "./Game"
+import { Figure, type Figures } from "../Figures";
+import type { Game } from "./Game";
 
-export type figure = ReturnType<typeof Figures.random>
+export type figure = ReturnType<typeof Figures.random>;
 
 export class GameFigures {
-    #game: Game
-    declare atualFigure: Figure
-    declare nextFigure: Figure
+    #game: Game;
+    declare atualFigure: Figure;
+    declare nextFigure: Figure;
 
     constructor(game: Game) {
-        this.#game = game
-        this.nextFigure = new Figure()
-        this.atualFigure = new Figure()
+        this.#game = game;
+        this.nextFigure = new Figure();
+        this.atualFigure = new Figure();
     }
 
     moveRight() {
-        this.atualFigure.x++
+        this.atualFigure.x++;
     }
 
     moveLeft() {
-        this.atualFigure.x--
+        this.atualFigure.x--;
     }
 
     down() {
-        this.atualFigure.y++
+        this.atualFigure.y++;
     }
 
     addFigurePoints() {
-        const { blocks } = this.atualFigure.figure
+        const { blocks } = this.atualFigure.figure;
 
-        const figureBlocks = blocks.flat().filter(block => block.type === 'block').length
+        const figureBlocks = blocks
+            .flat()
+            .filter((block) => block.type === "block").length;
 
-        this.#game.addPoints(figureBlocks * this.#game.pointsPerBlock)
+        this.#game.addPoints(figureBlocks * this.#game.pointsPerBlock);
     }
 
     spawnFigure() {
-        this.#game.controller.preventMove(new Promise(res => {
-            this.atualFigure
-                .turnInto(this.nextFigure.figure)
-                .setCoords({
-                    x: Math.trunc(this.#game.width / 2 - this.atualFigure.width / 2),
-                    y: -this.atualFigure.height + 1
-                })
+        this.#game.controller.preventMove(
+            new Promise((res) => {
+                this.atualFigure.turnInto(this.nextFigure.figure).setCoords({
+                    x: Math.trunc(
+                        this.#game.width / 2 - this.atualFigure.width / 2,
+                    ),
+                    y: -this.atualFigure.height + 1,
+                });
 
-            this.spawnNextFigure()
+                this.spawnNextFigure();
 
-            res(true)
-        }))
+                res(true);
+            }),
+        );
     }
 
     private spawnNextFigure() {
-        this.nextFigure.turnIntoRandom()
+        this.nextFigure.turnIntoRandom();
     }
 }
