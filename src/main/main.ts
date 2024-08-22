@@ -1,5 +1,5 @@
-import { BrowserWindow, app, ipcMain } from "electron";
 import path from "node:path";
+import { BrowserWindow, app, ipcMain } from "electron";
 import { updateElectronApp } from "update-electron-app";
 
 import "electron-css-injector/main";
