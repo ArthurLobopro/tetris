@@ -24,7 +24,7 @@
     "@electron-fonts/nunito": "^1.1.0",
     "@electron-fonts/press-start-2p": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.0.1",
+    "electron-store": "^10.0.0",
     "update-electron-app": "^3.0.0",
     "zod-electron-store": "^1.0.1"
   },
