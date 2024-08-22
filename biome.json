@@ -10,7 +10,8 @@
             "complexity": {
                 "useLiteralKeys": "off",
                 "noForEach": "off",
-                "noStaticOnlyClass": "off"
+                "noStaticOnlyClass": "off",
+                "noThisInStatic": "off"
             },
             "suspicious": {
                 "noExplicitAny": "off"
