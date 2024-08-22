@@ -1,18 +1,18 @@
-import { app, BrowserWindow, ipcMain } from "electron"
-import path from "path"
-import { updateElectronApp } from "update-electron-app"
+import { BrowserWindow, app, ipcMain } from "electron";
+import path from "node:path";
+import { updateElectronApp } from "update-electron-app";
 
-import "electron-css-injector/main"
-import "../storage/Store"
+import "electron-css-injector/main";
+import "../storage/Store";
 
-updateElectronApp()
+updateElectronApp();
 
 // Faz com que o programa não inicie várias vezes durante a instalação
 if (require("electron-squirrel-startup")) {
-    app.quit()
+    app.quit();
 }
 
-const appPath = app.getAppPath()
+const appPath = app.getAppPath();
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
@@ -22,45 +22,45 @@ const createWindow = () => {
         icon: path.resolve(appPath, "assets", "icon.png"),
         webPreferences: {
             nodeIntegration: true,
-            preload: path.resolve(__dirname, "preload.js")
-        }
-    })
+            preload: path.resolve(__dirname, "preload.js"),
+        },
+    });
 
-    mainWindow.loadFile(path.resolve(appPath, "public", "index.html"))
-}
+    mainWindow.loadFile(path.resolve(appPath, "public", "index.html"));
+};
 
-const isUnicWindow = app.requestSingleInstanceLock() //Verifica se o app já foi iniciado
+const isUnicWindow = app.requestSingleInstanceLock(); //Verifica se o app já foi iniciado
 
 if (!isUnicWindow) {
-    app.quit() // Caso o app já tiver sido aberto ele é fechado
+    app.quit(); // Caso o app já tiver sido aberto ele é fechado
 } else {
-    app.whenReady().then(createWindow)
+    app.whenReady().then(createWindow);
 }
 
 app.on("second-instance", () => {
-    const win = BrowserWindow.getAllWindows()[0]
-    if (win.isMinimized()) win.restore()
-    win.center()
-    win.focus()
-})
+    const win = BrowserWindow.getAllWindows()[0];
+    if (win.isMinimized()) win.restore();
+    win.center();
+    win.focus();
+});
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
-        app.quit()
+        app.quit();
     }
-})
+});
 
 app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
+        createWindow();
     }
-})
+});
 
 ipcMain.on("close", () => {
-    const win = BrowserWindow.getFocusedWindow() as BrowserWindow
-    win.close()
-})
+    const win = BrowserWindow.getFocusedWindow() as BrowserWindow;
+    win.close();
+});
 
-ipcMain.on("app-version", event => {
-    event.returnValue = app.getVersion()
-})
+ipcMain.on("app-version", (event) => {
+    event.returnValue = app.getVersion();
+});
