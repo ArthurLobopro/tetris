@@ -1,11 +1,11 @@
-import { DynamicNavigableScreen, Screen } from "./Screen"
+import { DynamicNavigableScreen, type Screen } from "./Screen";
 
 export class ControlsScreen extends DynamicNavigableScreen {
-    declare beforeScreen: Screen
+    declare beforeScreen: Screen;
 
     build() {
-        const constrols_screen = document.createElement("div")
-        constrols_screen.className = "telas-wrapper"
+        const constrols_screen = document.createElement("div");
+        constrols_screen.className = "telas-wrapper";
         constrols_screen.innerHTML = `
             <div class="telas-wrapper">
                 <fieldset id="controls">
@@ -50,21 +50,23 @@ export class ControlsScreen extends DynamicNavigableScreen {
                         <button class="focus">Voltar</button>
                     </div>
                 </fieldset>
-            </div>`
+            </div>`;
 
-        const return_button = constrols_screen.querySelector('button') as HTMLButtonElement
-        return_button.onclick = () => this.close()
+        const return_button = constrols_screen.querySelector(
+            "button",
+        ) as HTMLButtonElement;
+        return_button.onclick = () => this.close();
 
-        return constrols_screen
+        return constrols_screen;
     }
 
     close() {
-        super.close()
-        this.beforeScreen?.show()
+        super.close();
+        this.beforeScreen?.show();
     }
 
     show(beforeScreen?: Screen) {
-        super.show()
-        if (beforeScreen) this.beforeScreen = beforeScreen
+        super.show();
+        if (beforeScreen) this.beforeScreen = beforeScreen;
     }
 }

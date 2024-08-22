@@ -1,7 +1,7 @@
-import { Game } from "./Game/Game"
+import { Game } from "./Game/Game";
 
-const game = new Game()
+const game = new Game();
 
-game.init()
+game.init();
 
-window.onkeydown = event => game.screenManager._atualScreen.onKeyDown(event)
+window.onkeydown = (event) => game.screenManager._atualScreen.onKeyDown(event);

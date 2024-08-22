@@ -1,19 +1,19 @@
-import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { DynamicGameBasedScreen } from "../Screen"
+import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences";
+import { DynamicGameBasedScreen } from "../Screen";
 
 export class VelocityConfigScreen extends DynamicGameBasedScreen {
     build() {
-        const { velocity } = UserPreferences
-        const configTemp = UserPreferences.get()
+        const { velocity } = UserPreferences;
+        const configTemp = UserPreferences.get();
 
         const saveConfig = () => {
-            UserPreferences.set(configTemp)
-            this.game.userPreferences.velocity = UserPreferences.velocity
-            this.game.velocity = UserPreferences.velocity
-        }
+            UserPreferences.set(configTemp);
+            this.game.userPreferences.velocity = UserPreferences.velocity;
+            this.game.velocity = UserPreferences.velocity;
+        };
 
-        const velocity_screen = document.createElement('div')
-        velocity_screen.className = 'telas-wrapper'
+        const velocity_screen = document.createElement("div");
+        velocity_screen.className = "telas-wrapper";
         velocity_screen.innerHTML = `
         <fieldset>
             <legend class="title">Velocidade</legend>        
@@ -39,32 +39,39 @@ export class VelocityConfigScreen extends DynamicGameBasedScreen {
                     Cancelar
                 </button>
             </div>
-        </fieldset>`
+        </fieldset>`;
 
-        const checks = velocity_screen.querySelectorAll<HTMLDivElement>('.radio')
+        const checks =
+            velocity_screen.querySelectorAll<HTMLDivElement>(".radio");
 
-        checks.forEach(check => {
+        checks.forEach((check) => {
             check.onclick = () => {
-                checks.forEach(e => e.dataset.check = "false")
+                checks.forEach((e) => {
+                    e.dataset.check = "false";
+                });
 
-                check.dataset.check = "true"
-                configTemp.velocity = check.dataset.value as "slow" | "normal" | "fast"
-            }
-        })
+                check.dataset.check = "true";
+                configTemp.velocity = check.dataset.value as
+                    | "slow"
+                    | "normal"
+                    | "fast";
+            };
+        });
 
-        const buttons = velocity_screen.querySelectorAll<HTMLButtonElement>('button')
+        const buttons =
+            velocity_screen.querySelectorAll<HTMLButtonElement>("button");
 
-        buttons.forEach(button => {
+        buttons.forEach((button) => {
             button.onclick = () => {
-                const { action } = button.dataset
+                const { action } = button.dataset;
 
-                action === "save" && saveConfig()
+                action === "save" && saveConfig();
 
-                this.close()
-                this.game.screenManager.screens.config.focus()
-            }
-        })
+                this.close();
+                this.game.screenManager.screens.config.focus();
+            };
+        });
 
-        return velocity_screen
+        return velocity_screen;
     }
 }
