@@ -1,17 +1,17 @@
-import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences"
-import { DynamicGameBasedScreen } from "../Screen"
+import { UserPreferencesController as UserPreferences } from "../../../storage/controllers/UserPreferences";
+import { DynamicGameBasedScreen } from "../Screen";
 
 export class MusicConfigScreen extends DynamicGameBasedScreen {
     build() {
-        const configTemp = UserPreferences.get()
+        const configTemp = UserPreferences.get();
 
         const saveConfig = () => {
-            UserPreferences.set(configTemp)
-            this.game.userPreferences = UserPreferences.get()
-        }
+            UserPreferences.set(configTemp);
+            this.game.userPreferences = UserPreferences.get();
+        };
 
-        const music_screen = document.createElement('div')
-        music_screen.className = "telas-wrapper"
+        const music_screen = document.createElement("div");
+        music_screen.className = "telas-wrapper";
         music_screen.innerHTML = `
         <fieldset>
             <legend>Música</legend>
@@ -29,36 +29,40 @@ export class MusicConfigScreen extends DynamicGameBasedScreen {
                         Cancelar
                     </button>
                 </div>
-        </fieldset>`
+        </fieldset>`;
 
-        const music_input = music_screen.querySelector('#music') as HTMLDivElement
+        const music_input = music_screen.querySelector(
+            "#music",
+        ) as HTMLDivElement;
         music_input.onclick = () => {
-            const value = music_input.dataset.check === "true"
-            music_input.dataset.check = (!value).toString()
-            configTemp.music = !value
-        }
+            const value = music_input.dataset.check === "true";
+            music_input.dataset.check = (!value).toString();
+            configTemp.music = !value;
+        };
 
-        const volume_input = music_screen.querySelector('#volume') as HTMLInputElement
+        const volume_input = music_screen.querySelector(
+            "#volume",
+        ) as HTMLInputElement;
         volume_input.onchange = () => {
-            const { valueAsNumber: value } = volume_input
-            configTemp.musicVolume = value / 100
-        }
+            const { valueAsNumber: value } = volume_input;
+            configTemp.musicVolume = value / 100;
+        };
 
-        const buttons = music_screen.querySelectorAll('button')
-        buttons.forEach(button => {
+        const buttons = music_screen.querySelectorAll("button");
+        buttons.forEach((button) => {
             button.onclick = () => {
-                const { action } = button.dataset
+                const { action } = button.dataset;
 
                 if (action === "save") {
-                    saveConfig()
-                    this.game.reloadConfig()
+                    saveConfig();
+                    this.game.reloadConfig();
                 }
 
-                this.close()
-                this.game.screenManager.screens.config.focus()
-            }
-        })
+                this.close();
+                this.game.screenManager.screens.config.focus();
+            };
+        });
 
-        return music_screen
+        return music_screen;
     }
 }

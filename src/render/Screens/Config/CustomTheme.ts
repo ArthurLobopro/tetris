@@ -1,31 +1,36 @@
-import { ThemesController as Themes } from "../../../storage/controllers/Themes"
-import { Figures, figureName } from "../../Figures"
-import { ScreenManager } from "../../ScreenManager"
-import { DynamicGameBasedScreen } from "../Screen"
-import { FiguresViewer } from "./figuresViewer"
+import { ThemesController as Themes } from "../../../storage/controllers/Themes";
+import { Figures, type figureName } from "../../Figures";
+import { ScreenManager } from "../../ScreenManager";
+import { DynamicGameBasedScreen } from "../Screen";
+import { FiguresViewer } from "./figuresViewer";
 
 export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
     build() {
-        const colors = Themes.custom
+        const colors = Themes.custom;
 
-        const saveConfig = () => Themes.custom = colors
-
-        const resetBackground = () => colors.background = Themes.custom.background
-        const resetLines = () => colors.lines = Themes.custom.lines
+        const saveConfig = () => {
+            Themes.custom = colors;
+        };
+        const resetBackground = () => {
+            colors.background = Themes.custom.background;
+        };
+        const resetLines = () => {
+            colors.lines = Themes.custom.lines;
+        };
         const resetFigure = (figureName: figureName) => {
-            colors.figures[figureName] = Themes.custom.figures[figureName]
-        }
+            colors.figures[figureName] = Themes.custom.figures[figureName];
+        };
 
         const copyCustomTheme = () => {
-            resetBackground()
-            resetLines()
-            Figures.figuresNames.forEach(resetFigure)
-        }
+            resetBackground();
+            resetLines();
+            Figures.figuresNames.forEach(resetFigure);
+        };
 
-        copyCustomTheme()
+        copyCustomTheme();
 
-        const customThemeScreen = document.createElement('div')
-        customThemeScreen.className = "telas-wrapper"
+        const customThemeScreen = document.createElement("div");
+        customThemeScreen.className = "telas-wrapper";
         customThemeScreen.innerHTML = `
         <fieldset id="customTheme">
             <legend>Customizar Tema</legend>
@@ -52,7 +57,7 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                     <div class="line">
                         Figura atual
                         <div>
-                            <input type="color" value="${colors.figures['square']}" data-name="figure" id="color-figure">
+                            <input type="color" value="${colors.figures["square"]}" data-name="figure" id="color-figure">
                             <button value="figure">Zerar</button>
                         </div>
                     </div>
@@ -67,86 +72,103 @@ export class CustomThemeConfigScreen extends DynamicGameBasedScreen {
                     </div>
                 </div>
             </div>
-        </fieldset>`
+        </fieldset>`;
 
         const inputActions = {
             background(input: HTMLInputElement) {
-                colors.background = input.value
-                figuresViewer.setColors(colors)
+                colors.background = input.value;
+                figuresViewer.setColors(colors);
             },
             lines(input: HTMLInputElement) {
-                colors.lines = input.value
-                figuresViewer.setColors(colors)
+                colors.lines = input.value;
+                figuresViewer.setColors(colors);
             },
             figure(input: HTMLInputElement) {
-                const atualFigure = figuresViewer.atualFigureName
-                colors.figures[atualFigure] = input.value
-                figuresViewer.setColors(colors)
-            }
-        }
+                const atualFigure = figuresViewer.atualFigureName;
+                colors.figures[atualFigure] = input.value;
+                figuresViewer.setColors(colors);
+            },
+        };
 
-        type inputActionsKey = keyof typeof inputActions
+        type inputActionsKey = keyof typeof inputActions;
 
-        const colorInputs = customThemeScreen.querySelectorAll<HTMLInputElement>('input[type="color"]')
-        colorInputs.forEach(input => {
+        const colorInputs =
+            customThemeScreen.querySelectorAll<HTMLInputElement>(
+                'input[type="color"]',
+            );
+        colorInputs.forEach((input) => {
             input.oninput = () => {
-                const { name } = input.dataset
+                const { name } = input.dataset;
 
-                inputActions[name as inputActionsKey](input)
-            }
-        })
+                inputActions[name as inputActionsKey](input);
+            };
+        });
 
         const onChangeFigure = () => {
-            const atualFigure = figuresViewer.atualFigureName
-            const figureInput = document.getElementById('color-figure') as HTMLInputElement
-            figureInput.value = colors.figures[atualFigure]
-        }
+            const atualFigure = figuresViewer.atualFigureName;
+            const figureInput = document.getElementById(
+                "color-figure",
+            ) as HTMLInputElement;
+            figureInput.value = colors.figures[atualFigure];
+        };
 
         const figuresViewer = new FiguresViewer({
             colors,
             onChangeFigure,
-            game: this.game
-        })
+            game: this.game,
+        });
 
-        const viewWrapper = customThemeScreen.querySelector(".view-wrapper") as HTMLDivElement
-        viewWrapper.appendChild(figuresViewer.viewer)
+        const viewWrapper = customThemeScreen.querySelector(
+            ".view-wrapper",
+        ) as HTMLDivElement;
+        viewWrapper.appendChild(figuresViewer.viewer);
 
-        const resetButtons = customThemeScreen.querySelectorAll<HTMLButtonElement>('.line > div > button')
+        const resetButtons =
+            customThemeScreen.querySelectorAll<HTMLButtonElement>(
+                ".line > div > button",
+            );
 
-        resetButtons.forEach(button => {
+        resetButtons.forEach((button) => {
             button.onclick = () => {
                 const functions = {
                     background: resetBackground,
                     lines: resetLines,
-                    figure: () => resetFigure(figuresViewer.atualFigureName)
-                }
+                    figure: () => resetFigure(figuresViewer.atualFigureName),
+                };
 
-                type key = keyof typeof functions
+                type key = keyof typeof functions;
 
-                const type = button.value
-                functions?.[type as key]?.()
-                figuresViewer.setColors(colors)
-                const color_input = customThemeScreen.querySelector(`[data-name="${type}"]`) as HTMLInputElement
+                const type = button.value;
+                functions?.[type as key]?.();
+                figuresViewer.setColors(colors);
+                const color_input = customThemeScreen.querySelector(
+                    `[data-name="${type}"]`,
+                ) as HTMLInputElement;
 
-                type colorskey = "background" | "lines"
+                type colorskey = "background" | "lines";
 
-                color_input.value = type === "figure" ?
-                    colors.figures[figuresViewer.atualFigureName] : colors[type as colorskey]
-            }
-        })
+                color_input.value =
+                    type === "figure"
+                        ? colors.figures[figuresViewer.atualFigureName]
+                        : colors[type as colorskey];
+            };
+        });
 
-        const buttons = customThemeScreen.querySelectorAll<HTMLButtonElement>('.buttons button')
-        buttons.forEach(button => {
+        const buttons =
+            customThemeScreen.querySelectorAll<HTMLButtonElement>(
+                ".buttons button",
+            );
+        buttons.forEach((button) => {
             button.onclick = () => {
-                const { action } = button.dataset
+                const { action } = button.dataset;
 
-                action === "save" && saveConfig()
+                action === "save" && saveConfig();
 
-                this.close()
-                ScreenManager.instance._lastScreen.show()
-            }
-        })
+                this.close();
+                ScreenManager.instance._lastScreen.show();
+            };
+        });
 
-        return customThemeScreen
+        return customThemeScreen;
     }
 }

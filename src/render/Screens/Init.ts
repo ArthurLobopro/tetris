@@ -1,20 +1,20 @@
-import { ipcRenderer } from "electron"
-import { Game } from "../Game/Game"
-import { ScreenManager } from "../ScreenManager"
-import { DynamicNavigableScreen } from "./Screen"
+import { ipcRenderer } from "electron";
+import type { Game } from "../Game/Game";
+import { ScreenManager } from "../ScreenManager";
+import { DynamicNavigableScreen } from "./Screen";
 
 export class InitScreen extends DynamicNavigableScreen {
-    #game: Game
+    #game: Game;
 
     constructor(game: Game) {
-        super()
-        this.reset()
-        this.#game = game
+        super();
+        this.reset();
+        this.#game = game;
     }
 
     build() {
-        const initScreen = document.createElement('div')
-        initScreen.className = "telas-wrapper"
+        const initScreen = document.createElement("div");
+        initScreen.className = "telas-wrapper";
         initScreen.innerHTML = `
         <fieldset id="init">
             <legend>Início</legend>
@@ -25,39 +25,39 @@ export class InitScreen extends DynamicNavigableScreen {
                 <button data-action="about">SOBRE</button>
                 <button data-action="exit">SAIR</button>
             </div>
-        </fieldset>`
+        </fieldset>`;
 
         const actions = {
             start: () => {
-                this.close()
-                ScreenManager.screens.game.show()
-                this.#game.newGame()
+                this.close();
+                ScreenManager.screens.game.show();
+                this.#game.newGame();
             },
             config: () => {
-                this.close()
-                ScreenManager.screens.config.show(this)
+                this.close();
+                ScreenManager.screens.config.show(this);
             },
             controls: () => {
-                this.close()
-                ScreenManager.screens.controls.show(this)
+                this.close();
+                ScreenManager.screens.controls.show(this);
             },
             about: () => {
-                this.close()
-                ScreenManager.screens.about.show()
+                this.close();
+                ScreenManager.screens.about.show();
             },
-            exit: () => ipcRenderer.send('close')
-        }
+            exit: () => ipcRenderer.send("close"),
+        };
 
-        type key = keyof typeof actions
+        type key = keyof typeof actions;
 
-        const buttons = initScreen.querySelectorAll('button')
-        buttons.forEach(button => {
+        const buttons = initScreen.querySelectorAll("button");
+        buttons.forEach((button) => {
             button.onclick = () => {
-                const { action } = button.dataset
-                actions?.[action as key]?.()
-            }
-        })
+                const { action } = button.dataset;
+                actions?.[action as key]?.();
+            };
+        });
 
-        return initScreen
+        return initScreen;
     }
 }
