@@ -1,32 +1,31 @@
-
-import Store from "zod-electron-store"
-import { themeMigrations, userPreferencesMigrations } from "./Migrations"
+import Store from "zod-electron-store";
+import { themeMigrations, userPreferencesMigrations } from "./Migrations";
 
 import {
-    GameSchema,
-    PreferencesSchema,
-    ThemeSchema,
-    ThemesSchema,
+    type GameSchema,
+    type PreferencesSchema,
+    type ThemeSchema,
+    type ThemesSchema,
     gameSchema,
     preferencesSchema,
-    themesSchema
-} from "./StoreSchemas"
+    themesSchema,
+} from "./StoreSchemas";
 
-const dataPath = "gameData"
+const dataPath = "gameData";
 
 export const gameData = new Store<GameSchema>({
     cwd: `${dataPath}/data`,
     schema: gameSchema,
     name: "data",
-    clearInvalidConfig: true
-})
+    clearInvalidConfig: true,
+});
 
 export const userPreferences = new Store<PreferencesSchema>({
     cwd: `${dataPath}/userPreferences`,
     schema: preferencesSchema,
     //@ts-ignore
-    migrations: userPreferencesMigrations
-})
+    migrations: userPreferencesMigrations,
+});
 
 export const themes = new Store<ThemesSchema>({
     cwd: `${dataPath}/themes`,
@@ -34,16 +33,28 @@ export const themes = new Store<ThemesSchema>({
     name: "themes",
     clearInvalidConfig: true,
     // @ts-ignore
-    migrations: themeMigrations
-})
+    migrations: themeMigrations,
+});
 
 const store = {
-    setUserPreferences(preferences: PreferencesSchema) { userPreferences.set(preferences) },
-    setGameData(configName: string, value: any) { gameData.set(configName, value) },
-    setTheme(customTheme: ThemeSchema) { themes.set("custom", customTheme) },
-    getUserPreferences() { return userPreferences.store },
-    getGameData() { return gameData.store },
-    getThemes() { return themes.store }
-}
+    setUserPreferences(preferences: PreferencesSchema) {
+        userPreferences.set(preferences);
+    },
+    setGameData(configName: string, value: any) {
+        gameData.set(configName, value);
+    },
+    setTheme(customTheme: ThemeSchema) {
+        themes.set("custom", customTheme);
+    },
+    getUserPreferences() {
+        return userPreferences.store;
+    },
+    getGameData() {
+        return gameData.store;
+    },
+    getThemes() {
+        return themes.store;
+    },
+};
 
-export default store
+export default store;
